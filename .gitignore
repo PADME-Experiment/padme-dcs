@@ -30,3 +30,13 @@
 *.exe
 *.out
 *.app
+.*.swp
+Session.vim
+html/
+*.pcm
+*.pdf
+*.dat
+*.png
+fit.log
+a.out
+#*#

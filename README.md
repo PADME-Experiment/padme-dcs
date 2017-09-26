@@ -1,7 +1,7 @@
 # padme-dcs
-Detector Control System for PADME experiment
+Detector Control System for the PADME experiment
 
----
+--------------------------------------
 
 ### Some CAEN links related to HV power supplies:
 - [CAEN HV Wrapper Library](http://www.caen.it/jsp/Template2/CaenProd.jsp?parent=42&idmod=835)
@@ -10,3 +10,13 @@ Detector Control System for PADME experiment
   - [OPC Server User Manual](http://www.caen.it/servlet/checkCaenManualFile?Id=10487)
 - [Web based Control Software](http://www.caen.it/jsp/Template2/CaenProd.jsp?parent=42&idmod=843)
 - [GECO2020](http://www.caen.it/jsp/Template2/CaenProd.jsp?parent=42&idmod=833)
+
+
+
+--------------------------------------
+
+
+### PADME flow chart
+
+![img.svg](http://www.lnf.infn.it/~georgiev/padme-flowchart.svg?sanitize=true)
+[Full image here](http://www.lnf.infn.it/~georgiev/padme-flowchart.svg?sanitize=true)
