@@ -12,11 +12,11 @@ Detector Control System for the PADME experiment
 - [GECO2020](http://www.caen.it/jsp/Template2/CaenProd.jsp?parent=42&idmod=833)
 
 
-
+ 
 --------------------------------------
 
 
 ### PADME flow chart
 
-![img.svg](http://www.lnf.infn.it/~georgiev/padme-flowchart.svg?sanitize=true)
+![img.svg](http://www.lnf.infn.it/~georgiev/padme-flowchart.svg)
 [Full image here](http://www.lnf.infn.it/~georgiev/padme-flowchart.svg?sanitize=true)
