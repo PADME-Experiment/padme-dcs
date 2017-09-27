@@ -1,7 +1,8 @@
-#!/bin/dot -Tsvg
+#!/bin/dot -T"svg" -O
 
 digraph PADME_flowchart {
   newrank=true;/*{{{*/
+  //graph[rankstep=2] doesnt work....
   remincross=true;
   compound=true;
   graph [ layout=dot] //, ratio=auto, splines=true, splines=spline];
@@ -45,7 +46,6 @@ digraph PADME_flowchart {
       machine_vacuum_pumps    [label="Vacuum pumps" ];
       machine_cooling         [label="Chillers"     ];
       machine_ventilation     [label="Ventilation"  ];
-      //machine_magnet_current  [label="Magnet current"];
       machine_linac_spectrometer
       machine_linac_modeepem  [label="Linac mode e+/e-"];
       machine_btf_target
@@ -90,19 +90,27 @@ digraph PADME_flowchart {
       drv_temp;
       drv_humid;
     }
-    subgraph  cluster_drv_controls{
+    subgraph  cluster_drv_controls_machine{
       graph[rank=same];
-      label="Control\nDrivers";
+      label="Machine\nControl Drivers";
       drv_vacuum_pumps   [label="Vacuum pumps" ];
       drv_cooling        [label="Chillers"     ];
       drv_ventilation    [label="Ventilation"  ];
       drv_magnet_current [label="Magnet current"];
       drv_collimators    [label="Collimators"];
+    }
+    subgraph  cluster_drv_controls_exp{
+      graph[rank=same];
+      label="Experiment\nControl Drivers";
       drv_HV_caen        [label="CAEN HV"];
       drv_HV_NIM_SiPM    [label="SiPM control"];
       drv_Mimosa         [label="Mimosa PwSup"];
-
+      drv_TimePix        [label="TimePix In/Out"];
     }
+
+
+
+
     subgraph cluster_drv_IO{
     node[width=3.5];
       graph[rank=same];
@@ -154,7 +162,11 @@ digraph PADME_flowchart {
       }
       subgraph cluster_Mimosa{
         label="Mimosa";
-        HW_Mimosa_ch
+        HW_Mimosa_ch;
+      }
+      subgraph cluster_TimePix{
+        label="TimePix";
+      HW_TimePix[label=<<b>TimePix</b><br/>Should it report In/Out<br/>to Kerner or RunControl<br/>>];
       }
     }
   }/*}}}*/
@@ -165,8 +177,13 @@ digraph PADME_flowchart {
     RunControl [label=<<b>Run Control</b><br/> - Initial config of Digitizers<br align="left"/> - Takes care of acquisition<br align="left"/> - Manages the RunDB info<br align="left"/> - Defines the trigger<br align="left"/>>];
     label="Padme-fw";
     { node[shape=cylinder];
-      fw_HDD_digiraw  [label="RAW\nDAQ"];
-      fw_HDD_rootraw  [label="RAW\nROOT"];
+      fw_HDD_digiraw     [label="RAW\nDAQ"];
+      fw_HDD_timepixraw  [label="RAW\nTimePix"];
+      fw_HDD_rootraw     [label="RAW\nROOT"];
+    }
+    {rank=same;
+    fw_HDD_digiraw   ;
+    fw_HDD_timepixraw;
     }
 
 
@@ -178,7 +195,7 @@ digraph PADME_flowchart {
       fw_PromptAnalysis [label=<<b>Prompt Analysis</b><br/><b>Provides realtime info:</b><br align="left"/> - Channel occupacy<br align="left"/> - Time offsets<br align="left"/> - Beam characteristics<br align="left"/>>];
       fw_ComprehensiveAnalysis[label=<<b>Comprehensive<br align="center"/>Analysis Modules</b><br/> - Multiple modules<br align="left"/>   = T0 calculation<br align="left"/>   = Gain calibration<br align="left"/>>];
     }
-    fw_CDR [label=<<b>CDR (Central Data Recording)</b><br/><b>Transfers root-raw files to:</b><br align="left"/> - Bologna tapes<br align="left"/> - Frascati tapes<br align="left"/> - Rome HDDs<br align="left"/> - ???<br align="left"/>>];
+    fw_CDR [label=<<b>CDR (Central Data Recording)</b><br/><b>Transfers root-raw files to:</b><br align="left"/>1) LNF Tier2 disk<br align="left"/>2) Copy to tapes<br align="left"/>    - Bologna tapes<br align="left"/>    - LNF tapes<br align="left"/>Opt) Rome HDDs<br align="left"/>>];
 
 
     {rank=same;
@@ -253,7 +270,8 @@ digraph PADME_flowchart {
 
     MapDB   [label=<<b>MapDB</b><br/> - PwSupCh-DetCh<br align="left"/> - DetCh-DAQCh<br align="left"/> - all the cabling<br align="left"/>SQL or Text?<br/>>];
 
-    RunDB   [label=<<b>RunDB</b><br/> - Trigger<br align="left"/> - Included/Excluded det<br align="left"/> - Per run conditions<br align="left"/> - ????<br align="left"/>>]
+    RunDB   [label=<<b>RunDB</b><br/> - Trigger<br align="left"/> - Included/Excluded det<br align="left"/> - Per run conditions<br align="left"/> - ????<br align="left"/>>];
+    RunConfDB   [label=<<b>RunCondDB</b><br/> - Beam parameters<br align="left"/>>];
 
     GeoDB   [label=<<b>GeoDB</b><br/> - Coordinates<br align="left"/> - Serial numbers<br align="left"/> - PwSupp.Ch - Det.Ch<br align="left"/> - Det.Ch - Digi.Ch<br align="left"/>>]
 
@@ -267,30 +285,34 @@ digraph PADME_flowchart {
 
 
 
-    {edge[label="???",fontcolor=red,style=dashed,color=red,constraint=false];
-      GeoDB->MapDB[dir=both, label="MapDB and GeoDB may be merged or\nMapDB.txt can be generated from GeoDB"];
+    {edge[label="???",fontcolor=red,style=dashed,color=red];
+      GeoDB->MapDB[dir=both, label="MapDB and GeoDB may be merged or\nMapDB.txt can be generated from GeoDB",constraint=false];
+      RunDB->RunConfDB[dir=both, label="These two can be single DB"];
       //RunDB->CalDB[dir=both]; // it is not needed. they will be neede on analysis level
     }
 
 
     {edge[style=invis]
+      //RunConfDB->GeoDB->CalDB->
       LogDB->MapDB->CfgDB;
     }
   }/*}}}*/
 
 
-  drv_Mimosa->HW_MimosaSupp->HW_Mimosa_ch->MimosaDAQ
+  drv_Mimosa->HW_MimosaSupp->HW_Mimosa_ch->MimosaDAQ;
+  MimosaDAQ->RunControl[label="beam spot, divergence"];
 
-
-    GeoDB->{fw_PromptAnalysis,fw_OnlineMonitor,fw_ComprehensiveAnalysis}
-  CalDB->{fw_PromptAnalysis,fw_OnlineMonitor,fw_ComprehensiveAnalysis}[concentrate=true]
-    fw_ComprehensiveAnalysis->CalDB;
+  GeoDB->{fw_PromptAnalysis,fw_OnlineMonitor,fw_ComprehensiveAnalysis}
+  //{fw_PromptAnalysis,fw_OnlineMonitor,fw_ComprehensiveAnalysis}->GeoDB
+  CalDB->{fw_PromptAnalysis,fw_OnlineMonitor,fw_ComprehensiveAnalysis}[concentrate=false];
+  fw_ComprehensiveAnalysis->CalDB;
 
 
 
 
 
   RunControl->RunDB;
+  RunControl->RunConfDB;
   //HIRunControl->RunControl;
 
   logger->LogDB;
@@ -320,16 +342,23 @@ digraph PADME_flowchart {
   drv_IO_broadcast-> decision;
   decision-> notify;
 
+  RunControl;
+
+{edge[constraint=false]
+  RunControl->Trigger[constraint=false];
+  RunControl->HW_Digitizer;
+  RunControl->fw_DAQ[constraint=false];
+  RunControl->HW_Digitizer_TimePix[concentrate=false];
+  //Trigger->RunControl;
+}
 
 
   Trigger[label="Trigger|DAFNE\nCosmics\nPeriodic\nRandom"];
-  Trigger -> HW_Digitizer[constraint=false];
+  Trigger -> HW_Digitizer[constraint=true,label=""];
+  HW_Digitizer->Trigger  [constraint=true,label="Sync"];
 
-  RunControl;
-  RunControl->HW_Digitizer;
-  RunControl->fw_DAQ[constraint=false];
-  RunControl->Trigger;
-  //Trigger->RunControl;
+
+
 
 
 
@@ -342,11 +371,13 @@ digraph PADME_flowchart {
   HW_Target_ch ->HW_Digitizer;
   HW_SAC_ch -> HW_Digitizer;
 
+  HW_TimePix->HW_Digitizer_TimePix;
 
   drv_HV_NIM_SiPM  ->  HW_NIM_SiPM_Module  [label="Eth",dir=both];
   HW_NIM_SiPM_Module-> HW_EPVeto_ch [label="Twisted\npair"];
 
   HW_Digitizer [label="Digitizers\nCAEN V1742"];
+  HW_Digitizer_TimePix[label=<<b>TimePix digitizer</b><br/>>];
 
 
   drv_HV_caen  ->  HW_CAEN_HV [label="Eth",dir=both];
@@ -354,14 +385,18 @@ digraph PADME_flowchart {
   HW_CAEN_HV -> HW_SAC_ch [label="HV cables"];
 
 
+  {rank=same;HW_Digitizer,HW_Digitizer_TimePix, MimosaDAQ}
+
+
+
+  drv_TimePix->HW_TimePix
 
 
 
 
 
-
-  // edges
-  gauge_vacuum      ->drv_pressure;
+    // edges
+    gauge_vacuum      ->drv_pressure;
   gauge_ambtemp     ->drv_temp;
   gauge_ambhumid    ->drv_humid;
   gauge_ambpressure ->drv_pressure;
@@ -371,7 +406,6 @@ digraph PADME_flowchart {
   drv_vacuum_pumps  ->machine_vacuum_pumps  ;
   drv_cooling       ->machine_cooling       ;
   drv_ventilation   ->machine_ventilation   ;
-  drv_magnet_current->machine_magnet_current;
 
 
 
@@ -420,13 +454,14 @@ digraph PADME_flowchart {
 
 
     HW_Digitizer -> fw_DAQ[label="CAENET2\noptics"];
+  HW_Digitizer_TimePix ->fw_HDD_timepixraw;
 
 
   //{rank=same;Trigger, fw_DAQ;}
 
   //{ rank=same; 1 ; gauge_vacuum }
   { rank=same; 2 ; drv_cooling}
-  { rank=same; 3 ; HW_MimosaSupp; machine_magnet_current}
+  { rank=same; 3 ; HW_MimosaSupp; }
   { rank=same; 4 ; HW_EPVeto_ch, Trigger}
   { rank=same; 5 ; HW_Digitizer}
   { rank=same; 6 ; RunControl}
