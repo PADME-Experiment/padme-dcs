@@ -41,5 +41,5 @@ html/
 *.svg
 fit.log
 a.out
-/wiki/
+*.wiki/
 #*#
