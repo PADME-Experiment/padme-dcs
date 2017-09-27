@@ -19,4 +19,8 @@ Detector Control System for the PADME experiment
 ### PADME flow chart
 
 ![img.svg](http://www.lnf.infn.it/~georgiev/padme-flowchart.svg)
-[Full image here](http://www.lnf.infn.it/~georgiev/padme-flowchart.svg?sanitize=true)
+PADME Flowchart
+[svg](http://www.lnf.infn.it/~georgiev/padme-flowchart.svg)
+[png](http://www.lnf.infn.it/~georgiev/padme-flowchart.png)
+
+?sanitize=true)

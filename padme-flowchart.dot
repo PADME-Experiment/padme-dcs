@@ -1,4 +1,4 @@
-#!/bin/dot -T"svg" -O
+#!/bin/dot -Tsvg
 
 digraph PADME_flowchart {
   newrank=true;/*{{{*/
