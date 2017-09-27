@@ -42,4 +42,6 @@ html/
 fit.log
 a.out
 *.wiki/
-#*#
+\#*#
+*-tmp
+*.tmp
