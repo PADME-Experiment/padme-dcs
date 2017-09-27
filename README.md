@@ -11,6 +11,24 @@ Detector Control System for the PADME experiment
 - [Web based Control Software](http://www.caen.it/jsp/Template2/CaenProd.jsp?parent=42&idmod=843)
 - [GECO2020](http://www.caen.it/jsp/Template2/CaenProd.jsp?parent=42&idmod=833)
 
+### PADME HVs:
+- Mainframe [CAEN-SY4527]
+- Crate controller (CPU) [CAEN-A4528]
+- HV boards - [CAEN-A7030]
+
+There are available:
+- Crate [CAEN-SY1527LC]
+- HV board [CAEN-A1733]
+
+
+[CAEN-SY4527]: http://www.caen.it/jsp/Template2/CaenProd.jsp?idmod=752&parent=20
+[CAEN-A4528]: http://www.caen.it/jsp/Template2/CaenProd.jsp?idmod=811&parent=20
+[CAEN-A7030]: http://www.caen.it/jsp/Template2/CaenProd.jsp?idmod=944&parent=20
+
+
+[CAEN-SY1527LC]: http://www.caen.it/jsp/Template2/CaenProd.jsp?idmod=491&parent=20
+[CAEN-A1733]: http://www.caen.it/jsp/Template2/CaenProd.jsp?parent=20&idmod=174
+
 
  
 --------------------------------------
