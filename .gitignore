@@ -31,12 +31,14 @@
 *.out
 *.app
 .*.swp
+.*.un~
 Session.vim
 html/
 *.pcm
 *.pdf
 *.dat
 *.png
+*.svg
 fit.log
 a.out
 #*#
