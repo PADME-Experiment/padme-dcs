@@ -7,7 +7,7 @@
 class CaenSY4527_except:public fwk::Exception{
   public:
     CaenSY4527_except(){fType="CaenSY4527_except";}
-    CaenSY4527_except& CommunicationFailure(int i);
+    CaenSY4527_except& CommunicationFailure(int i,const std::string& add=std::string());
 };
 
 
@@ -17,11 +17,12 @@ class CaenSY4527{
     CaenSY4527();
     ~CaenSY4527();
   private:
+    void ComDeinit();
     void ComInit(
         const std::string&ipaddr="192.168.0.1",
         const std::string&user="admin",
         const std::string&pass="admin");
-    private:
+  private:
     int fCaenCrateHandle;
 };
 

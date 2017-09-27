@@ -18,7 +18,7 @@
  *   utl::MessageBus_except&
  * utl::MessageBus_except::CannotCreateFile(const std::string&fn)
  * {
- *   fWhat="File '"+fn+"' cannot be created.";
+ *   fWhat=+"File '"+fn+"' cannot be created.";
  *   return *this;
  * }
  *   utl::MessageBus_except&
@@ -38,6 +38,7 @@ namespace fwk{
       const std::string& GetWhat()const noexcept{return fWhat;}
       const std::string& GetType()const noexcept{return fType;}
     protected:
+      Exception():fWhat("\n"){}
       virtual ~Exception(){}
       void SetType(Exception& a){fType=typeid(a).name();}
       std::string fWhat;
