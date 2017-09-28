@@ -62,8 +62,9 @@ CaenSY4527_except::CAENWrapperRetStatus(int caenhandler,int retstatus, const std
 
 
 CaenSY4527::CaenSY4527(){
-  GetCrateMap();
   ComInit();
+  GetCrateMap();
+  GetExecCommList();
 }
 
 
@@ -141,9 +142,18 @@ CaenSY4527::GetCrateMap()
   void
 CaenSY4527::GetExecCommList() ///Get list of possible 
 {
+  ushort numcom;
+  char*comnamelist;
 
-  //  CAENHVLIB_API CAENHVRESULT  CAENHV_GetExecCommList(int handle,
-  //      ushort *NumComm, char **CommNameList);
+  int ret=CAENHV_GetExecCommList(fCaenCrateHandle,&numcom,&comnamelist);
+  if(ret!=CAENHV_OK)
+    CaenSY4527_except::CAENWrapperRetStatus(fCaenCrateHandle,ret);
+
+  for(int i=0;i<numcom;++i){
+    std::cout<<comnamelist<<"   ";
+  } std::cout<<std::endl;
+
+  delete[] comnamelist;
 
 }
 
