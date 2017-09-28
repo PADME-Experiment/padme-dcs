@@ -22,6 +22,7 @@ class CaenSY4527{
         const std::string&ipaddr="192.168.0.1",
         const std::string&user="admin",
         const std::string&pass="admin");
+    void GetCrateMap();
   private:
     int fCaenCrateHandle;
 };

@@ -11,6 +11,7 @@ CaenSY4527_except::CommunicationFailure(int caenhandler,const std::string& add)
 
 CaenSY4527::CaenSY4527(){
   ComInit();
+  GetCrateMap();
 }
 
 
@@ -41,10 +42,35 @@ CaenSY4527::ComDeinit()
 {
   int ret = CAENHV_DeinitSystem(fCaenCrateHandle);
   if(ret != CAENHV_OK)
-    throw  CaenSY4527_except().CommunicationFailure(fCaenCrateHandle,
-        "return value "+std::to_string(ret));
+    throw  CaenSY4527_except().CommunicationFailure(fCaenCrateHandle, "return value "+std::to_string(ret));
 }
 
+void
+CaenSY4527::GetCrateMap()
+{
+  ushort nrslots, *nrchlist, *sernumlist;
+  char *modellist,*descrlist;
+  unsigned char *firmwaremin,*firmawaremax;
+
+ int ret = CAENHV_GetCrateMap(fCaenCrateHandle,
+ &nrslots,            //ushort *NrOfSlot,
+ &nrchlist,           //ushort **NrofChList,
+ &modellist,          //char **ModelList,
+ &descrlist,          //char **DescriptionList,
+ &sernumlist,         //ushort **SerNumList,
+ &firmwaremin,        //uchar **FmwRelMinList,
+ &firmawaremax);      //uchar **FmwRelMaxList);
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  if(ret != CAENHV_OK)
+    throw  CaenSY4527_except().CommunicationFailure(fCaenCrateHandle, "return value "+std::to_string(ret));
+}
 
 
 
