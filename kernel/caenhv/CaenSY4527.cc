@@ -139,7 +139,7 @@ CaenSY4527::GetExecCommList() ///Get list of possible
     CaenSY4527_except::CAENWrapperRetStatus(fCaenCrateHandle,ret);
 
   for(int i=0;i<numcom;++i){
-    std::cout<<comnamelist<<"   ";
+    std::cout<<comnamelist[i]<<"   ";
   } std::cout<<std::endl;
 
   delete[] comnamelist;
@@ -158,7 +158,7 @@ CaenSY4527::GetSysPropList() ///Get list of possible
     CaenSY4527_except::CAENWrapperRetStatus(fCaenCrateHandle,ret);
 
   for(int i=0;i<numcom;++i){
-    std::cout<<comnamelist<<"   ";
+    std::cout<<comnamelist[i]<<"   ";
   } std::cout<<std::endl;
 
   delete[] comnamelist;
