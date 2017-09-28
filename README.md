@@ -1,6 +1,5 @@
 # padme-dcs
 Detector Control System for the PADME experiment
-![svg](http://www.lnf.infn.it/~georgiev/padme-flowchart.svg)
 
 
 --------------------------------------
@@ -36,6 +35,6 @@ There are available:
 --------------------------------------
 
 # PADME flow chart
-![img](http://www.lnf.infn.it/~georgiev/padme-kernel.svg)
+![svg](http://www.lnf.infn.it/~georgiev/padme-flowchart.svg)
 [svg](http://www.lnf.infn.it/~georgiev/padme-flowchart.svg)
 [png](http://www.lnf.infn.it/~georgiev/padme-flowchart.png)
