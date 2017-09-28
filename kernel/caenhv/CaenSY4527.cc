@@ -8,7 +8,6 @@ CaenSY4527_except::CAENWrapperRetStatus(int caenhandler,int retstatus, const std
   std::string str("CAENHVWrapper returned error ("+std::to_string(retstatus)+") : '" + a + "'");
   if(add.size()>0)str+="\n"+add;
 
-  throw  CaenSY4527_except::Except_OK               (str) ;
   switch (retstatus){
     case CAENHV_SYSERR               : throw CaenSY4527_except::Except_SYSERR               (str) ;break;
     case CAENHV_WRITEERR             : throw CaenSY4527_except::Except_WRITEERR             (str) ;break;
