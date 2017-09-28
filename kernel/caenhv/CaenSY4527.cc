@@ -105,12 +105,16 @@ CaenSY4527::GetCrateMap()
 
   if(ret != CAENHV_OK)
     CaenSY4527_except::CAENWrapperRetStatus(fCaenCrateHandle,ret);
+  std::vector<std::string>modelVec;
+  std::vector<std::string>descrVec;
+  ConvCharListVector(nrslots,modellist,modelVec);
+  ConvCharListVector(nrslots,descrlist,descrVec);
 
   for(int i=0;i<nrslots;++i){
     std::cout
       <<"nrchlist    ["<<i<<"]'"<<nrchlist         [i] <<"'"<<std::endl
-      <<"modellist   ["<<i<<"]'"<<modellist        [i] <<"'"<<std::endl
-      <<"descrlist   ["<<i<<"]'"<<descrlist        [i] <<"'"<<std::endl
+      <<"modellist   ["<<i<<"]'"<<modelVec        [i] <<"'"<<std::endl
+      <<"descrlist   ["<<i<<"]'"<<descrVec        [i] <<"'"<<std::endl
       <<"sernumlist  ["<<i<<"]'"<<sernumlist       [i] <<"'"<<std::endl
       <<"firmwaremin ["<<i<<"]'"<<int(firmwaremin  [i])<<"'"<<std::endl
       <<"firmawaremax["<<i<<"]'"<<int(firmawaremax [i])<<"'"<<std::endl
@@ -137,10 +141,11 @@ CaenSY4527::GetExecCommList() ///Get list of possible
   int ret=CAENHV_GetExecCommList(fCaenCrateHandle,&numcom,&comnamelist);
   if(ret!=CAENHV_OK)
     CaenSY4527_except::CAENWrapperRetStatus(fCaenCrateHandle,ret);
-  std::string tmp;
+  std::vector<std::string> list;
+  ConvCharListVector(numcom,comnamelist,list);
+  int len=0;
   for(int i=0;i<numcom;++i){
-    tmp=comnamelist[tmp.size()];
-    std::cout<<tmp<<"   ";
+    std::cout<<list[i]<<"   ";
   } std::cout<<std::endl;
 
   delete[] comnamelist;
@@ -158,11 +163,12 @@ CaenSY4527::GetSysPropList() ///Get list of possible
   if(ret!=CAENHV_OK)
     CaenSY4527_except::CAENWrapperRetStatus(fCaenCrateHandle,ret);
 
+  std::vector<std::string> list;
+  ConvCharListVector(numcom,comnamelist,list);
+
   int len=0;
   for(int i=0;i<numcom;++i){
-    std::string tmp=comnamelist[len];
-    len+=tmp.size()+1;
-    std::cout<<tmp<<"   ";
+    std::cout<<list[i]<<"   ";
   } std::cout<<std::endl;
 
   delete[] comnamelist;
@@ -173,3 +179,14 @@ CaenSY4527::GetSysPropList() ///Get list of possible
 
 
 
+  void
+CaenSY4527::ConvCharListVector(unsigned short n,const char* l,std::vector<std::string>&v)
+{
+  v.clear();
+  int len=0;
+  for(int i=0;i<n;++i){
+    std::string tmp(&l[len]);
+    len+=tmp.size()+1;
+    v.push_back(tmp);
+  }
+}
