@@ -1,7 +1,7 @@
 #include "CaenSY4527.h"   //in c file
 #include <caenlib/CAENHVWrapper.h>
 #include<iostream>
-/*{{{*/
+
   CaenSY4527_except&
 CaenSY4527_except::CAENWrapperRetStatus(int caenhandler,int retstatus, const std::string& add)
 { std::string a(CAENHV_GetError(caenhandler));
@@ -53,22 +53,8 @@ CaenSY4527_except::CAENWrapperRetStatus(int caenhandler,int retstatus, const std
 
 
 
-
-
-/*}}}*/
-
-
-
-
-
-
-
-
   void
-CaenSY4527::ComInit(
-    const std::string&ipaddr,
-    const std::string&user,
-    const std::string&pass)
+CaenSY4527::ComInit( const std::string&ipaddr, const std::string&user, const std::string&pass)
 {
   CAENHVRESULT ret;
   CAENHV_SYSTEM_TYPE_t sys_type = (CAENHV_SYSTEM_TYPE_t) SY4527; // 0: SY1527, 2: SY4527
@@ -79,6 +65,7 @@ CaenSY4527::ComInit(
         "IP = "+ipaddr+"\nuser = "+user+"\npass = "+pass);
   }
 }
+
   void
 CaenSY4527::ComDeinit()
 {
@@ -119,16 +106,15 @@ CaenSY4527::GetCrateMap()
       <<"firmwaremin ["<<i<<"]'"<<int(firmwaremin  [i])<<"'"<<std::endl
       <<"firmawaremax["<<i<<"]'"<<int(firmawaremax [i])<<"'"<<std::endl
       <<std::endl;
-
   }
 
   std::cerr<<"bef del "<<__FILE__<<__LINE__<<__func__<<std::endl;
-  delete[] nrchlist    ;/// must be dealocated by the user
-  delete[] modellist   ;/// must be dealocated by the user
-  delete[] descrlist   ;/// must be dealocated by the user
-  delete[] sernumlist  ;/// must be dealocated by the user
-  delete[] firmwaremin ;/// must be dealocated by the user
-  delete[] firmawaremax;/// must be dealocated by the user
+  CAENHV_Free(nrchlist    );/// must be dealocated by the user
+  CAENHV_Free(modellist   );/// must be dealocated by the user
+  CAENHV_Free(descrlist   );/// must be dealocated by the user
+  CAENHV_Free(sernumlist  );/// must be dealocated by the user
+  CAENHV_Free(firmwaremin );/// must be dealocated by the user
+  CAENHV_Free(firmawaremax);/// must be dealocated by the user
 }
 
 
@@ -148,7 +134,7 @@ CaenSY4527::GetExecCommList() ///Get list of possible
     std::cout<<list[i]<<"   ";
   } std::cout<<std::endl;
 
-  delete[] comnamelist;
+  CAENHV_Free(comnamelist);
 
 }
 
@@ -171,7 +157,7 @@ CaenSY4527::GetSysPropList() ///Get list of possible
     std::cout<<list[i]<<"   ";
   } std::cout<<std::endl;
 
-  delete[] comnamelist;
+  CAENHV_Free(comnamelist);
 
 }
 
