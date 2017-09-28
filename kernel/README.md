@@ -38,7 +38,7 @@ This can be one or multiple processes which listens and/or polls hardware device
 ###### Broadcast info (DBLogger)
 ###### Setparameter (HI, Inteligence module)
 
-
+![img](http://www.lnf.infn.it/~georgiev/padme-kernel.svg)
 
 -----
 -----
