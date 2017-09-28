@@ -2,6 +2,8 @@
 #define  _DCS_kernel_caenhv_CaenSY4527_h_ 1
 #include "CaenSY4527.h"   //in c file
 
+#include<vector>
+
 
 #include "fwk/fwkException.hh"
 class CaenSY4527_except:public fwk::Exception{
@@ -115,6 +117,11 @@ class CaenSY4527{
 
   private:
     int fCaenCrateHandle;
+
+
+    private:
+    void ConvCharListVector(unsigned short n,const char*
+    l,std::vector<std::string>&v);
 };
 
 
