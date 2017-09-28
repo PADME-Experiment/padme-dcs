@@ -1,9 +1,9 @@
-#include "caenhv/CaenSY4527.h"
+#include "drv/DrvCaenHV.h"
 #include<iostream>
 int main(){
 
 try{
-  CaenSY4527 a;
+  DrvCaenHV a;
 }
 catch(const fwk::Exception& e){
   std::cerr<<e.what()<<std::endl;
