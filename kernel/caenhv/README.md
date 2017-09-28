@@ -18,3 +18,6 @@ In [CAEN HV wrapper manual] they say that some arrays should be deallocated by t
 
 [CAEN HV wrapper manual]: http://www.caen.it/servlet/checkCaenManualFile?Id=12609
 
+
+### CaenA7030.h
+in the constructor it should receive the number of the channels
