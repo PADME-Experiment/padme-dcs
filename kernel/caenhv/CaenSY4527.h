@@ -92,8 +92,15 @@ class CaenSY4527_except:public fwk::Exception{
 
 class CaenSY4527{
   public:
-    CaenSY4527();
-    ~CaenSY4527();
+    CaenSY4527(){
+      ComInit();
+      GetCrateMap();
+      GetExecCommList();
+      GetSysPropList();
+    }
+    ~CaenSY4527(){
+      ComDeinit();
+    }
   private:
     void ComDeinit();
     void ComInit(
@@ -102,6 +109,7 @@ class CaenSY4527{
         const std::string&pass="admin");
     void GetCrateMap();
     void GetExecCommList();
+    void GetSysPropList();
 
 
 

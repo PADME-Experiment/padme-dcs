@@ -1,7 +1,7 @@
 #include "CaenSY4527.h"   //in c file
 #include <caenlib/CAENHVWrapper.h>
 #include<iostream>
-
+/*{{{*/
   CaenSY4527_except&
 CaenSY4527_except::CAENWrapperRetStatus(int caenhandler,int retstatus, const std::string& add)
 { std::string a(CAENHV_GetError(caenhandler));
@@ -55,22 +55,11 @@ CaenSY4527_except::CAENWrapperRetStatus(int caenhandler,int retstatus, const std
 
 
 
+/*}}}*/
 
 
 
 
-
-
-CaenSY4527::CaenSY4527(){
-  ComInit();
-  GetCrateMap();
-  GetExecCommList();
-}
-
-
-CaenSY4527::~CaenSY4527(){
-  ComDeinit();
-}
 
 
 
@@ -146,6 +135,25 @@ CaenSY4527::GetExecCommList() ///Get list of possible
   char*comnamelist;
 
   int ret=CAENHV_GetExecCommList(fCaenCrateHandle,&numcom,&comnamelist);
+  if(ret!=CAENHV_OK)
+    CaenSY4527_except::CAENWrapperRetStatus(fCaenCrateHandle,ret);
+
+  for(int i=0;i<numcom;++i){
+    std::cout<<comnamelist<<"   ";
+  } std::cout<<std::endl;
+
+  delete[] comnamelist;
+
+}
+
+
+  void
+CaenSY4527::GetSysPropList() ///Get list of possible 
+{
+  ushort numcom;
+  char*comnamelist;
+
+  int ret=CAENHV_GetSysPropList(fCaenCrateHandle,&numcom,&comnamelist);
   if(ret!=CAENHV_OK)
     CaenSY4527_except::CAENWrapperRetStatus(fCaenCrateHandle,ret);
 
