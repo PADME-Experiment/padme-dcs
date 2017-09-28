@@ -158,9 +158,10 @@ CaenSY4527::GetSysPropList() ///Get list of possible
   if(ret!=CAENHV_OK)
     CaenSY4527_except::CAENWrapperRetStatus(fCaenCrateHandle,ret);
 
-  std::string tmp;
+  int len=0;
   for(int i=0;i<numcom;++i){
-    tmp=comnamelist[tmp.size()];
+    std::string tmp=comnamelist[len];
+    len+=tmp.size()+1;
     std::cout<<tmp<<"   ";
   } std::cout<<std::endl;
 
