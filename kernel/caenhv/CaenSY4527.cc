@@ -11,8 +11,8 @@ CaenSY4527_except::CommunicationFailure(int caenhandler,const std::string& add)
 }
 
 CaenSY4527::CaenSY4527(){
-  GetCrateMap();
   ComInit();
+  GetCrateMap();
 }
 
 
