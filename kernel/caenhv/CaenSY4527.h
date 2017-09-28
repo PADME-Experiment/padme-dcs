@@ -23,6 +23,10 @@ class CaenSY4527{
         const std::string&user="admin",
         const std::string&pass="admin");
     void GetCrateMap();
+    void GetExecCommList();
+
+
+
   private:
     int fCaenCrateHandle;
 };

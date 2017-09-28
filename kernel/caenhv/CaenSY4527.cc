@@ -11,8 +11,8 @@ CaenSY4527_except::CommunicationFailure(int caenhandler,const std::string& add)
 }
 
 CaenSY4527::CaenSY4527(){
-  ComInit();
   GetCrateMap();
+  ComInit();
 }
 
 
@@ -64,22 +64,34 @@ CaenSY4527::GetCrateMap()
 
  for(int i=0;i<nrslots;++i){
    std::cout
-     <<"nrchlist    ["<<i<<"]'"<<nrchlist     [i]<<"'"<<std::endl
-     <<"modellist   ["<<i<<"]'"<<modellist    [i]<<"'"<<std::endl
-     <<"descrlist   ["<<i<<"]'"<<descrlist    [i]<<"'"<<std::endl
-     <<"sernumlist  ["<<i<<"]'"<<sernumlist   [i]<<"'"<<std::endl
+     <<"nrchlist    ["<<i<<"]'"<<nrchlist         [i] <<"'"<<std::endl
+     <<"modellist   ["<<i<<"]'"<<modellist        [i] <<"'"<<std::endl
+     <<"descrlist   ["<<i<<"]'"<<descrlist        [i] <<"'"<<std::endl
+     <<"sernumlist  ["<<i<<"]'"<<sernumlist       [i] <<"'"<<std::endl
      <<"firmwaremin ["<<i<<"]'"<<int(firmwaremin  [i])<<"'"<<std::endl
      <<"firmawaremax["<<i<<"]'"<<int(firmawaremax [i])<<"'"<<std::endl
      <<std::endl;
 
  }
-
-
+ delete[] nrchlist    ;/// must be dealocated by the user
+ delete[] modellist   ;/// must be dealocated by the user
+ delete[] descrlist   ;/// must be dealocated by the user
+ delete[] sernumlist  ;/// must be dealocated by the user
+ delete[] firmwaremin ;/// must be dealocated by the user
+ delete[] firmawaremax;/// must be dealocated by the user
  if(ret != CAENHV_OK)
    throw  CaenSY4527_except().CommunicationFailure(fCaenCrateHandle, "return value "+std::to_string(ret));
 }
 
 
+  void
+CaenSY4527::GetExecCommList() ///Get list of possible 
+{
+
+//  CAENHVLIB_API CAENHVRESULT  CAENHV_GetExecCommList(int handle,
+//      ushort *NumComm, char **CommNameList);
+
+}
 
 
 
