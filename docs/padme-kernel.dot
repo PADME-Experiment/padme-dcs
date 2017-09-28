@@ -1,0 +1,643 @@
+#!/bin/dot -Tsvg
+
+digraph PADME_Kernel {
+
+  newrank=true;/*{{{*/
+  //graph[rankstep=2] doesnt work....
+  remincross=true;
+  compound=true;
+  graph [ layout=dot] //, ratio=auto, splines=true, splines=spline];
+  graph [rankdir=LR];
+  {
+    node [shape = none];
+    edge[arrowhead=none];
+edge[style=invis]
+node[fontcolor=invis]
+    //1  ->
+    2  -> 3  -> 4  -> 5  -> 6 // -> 7  // -> 8  -> 9  -> 10 -> 11 -> 12 -> 13 -> 14 -> 15 -> 16 -> 17 -> 18 -> 19 -> 20;
+  }
+  //graph[splines=true, splines=spline];
+  //edge [splines=false, splines="",fontcolor=red, label="UU"];
+  //edge[dir=both,label="edge"];
+  fontsize=26;
+  fontnames=svg;
+  node[shape=record];/*}}}*/
+
+edge[constraint=false]
+
+
+
+  Manager[fontsize=52 style=filled bgcolor=lightblue fillcolor=lightblue]
+  subgraph cluster_MemoryMap{
+    {graph[style=filled color=lightgrey];node[style=filled,fillcolor=white];
+      node[width=4];
+      label="PADME SubSystems";
+      label="Memory Map of the HW";
+      {
+        label="";
+  subgraph cluster_Magnets{
+    label="Machine"
+    rank=same
+      MM_Magnet1[label=<<b>Magnet1</b><br/>Current<br/>Magnetic Field<br/><b>Timestamp</b>>];
+    MM_Magnet2[label=<<b>Magnet2</b><br/>Current<br/>Magnetic Field<br/><b>Timestamp</b>>];
+  }
+
+  subgraph cluster_MM_HVCrate1{
+    label="CAEN HV crate 1"
+      MMHV1_crate[bgcolor=red,fillcolor=red, label=<<b>Crate</b><br/>Fan speed<br/>Current draw<br/><b>Timestamp</b>>];
+    {
+      label="board 1"
+        rank=same;
+      graph[style=filled color=red]
+        subgraph cluster_MM_HV1board1{
+          MMHV1_board1[label=<<b>board1</b><br/>Temperature<br/>SerialNumber<br/><b>Timestamp</b>>];
+          MMHV1_b1_ch1
+            MMHV1_b1_ch2
+            MMHV1_b1_ch3
+        }
+    }
+    subgraph cluster_MM_HV1board2{
+      rank=same;
+      label="board 2"
+        graph[style=filled color=red]
+        MMHV1_board2[label=<<b>board2</b><br/>Temperature<br/>SerialNumber<br/><b>Timestamp</b>>];
+      MMHV1_b2_ch1
+        MMHV1_b2_ch2
+        MMHV1_b2_ch3
+    }
+
+
+  }
+      }
+    }
+  }
+
+
+  {rank=same
+    MM_Magnet1
+    MM_Magnet2
+    MMHV1_b1_ch2
+    5
+  }
+  {rank=same
+    MM_Magnet2
+    MMHV1_b2_ch2
+      MMHV1_crate
+      6
+  }
+
+
+  subgraph cluster_drivers{
+    graph[style=filled color=yellow];node[style=filled,fillcolor=white];
+    rank=same
+      label="Drivers\nCommunicate with HW"
+      CAEN_HV[label="CaenHV IPaddr user pass"]
+      SiPM_HV[label="SiPMHV IPaddr"]
+      Magnet [label="Magnet IPaddr"]
+  }
+
+  subgraph cluster_services{
+    label="Services"
+    graph[style=filled color=cyan];node[style=filled,fillcolor=white];
+      rank=same
+      Update    [label="Update\nHow often;   HW.Ch;   SetOfValues"];
+    GetInfo
+      Broadcast
+  }
+    TCP_IP_IO[fontsize=48 style=filled bgcolor=pink fillcolor=pink]
+
+  Manager->{Update, GetInfo, Broadcast}-> TCP_IP_IO
+
+  Manager->{ CAEN_HV, SiPM_HV, Magnet}[label="instantiate"]
+    Update->{ CAEN_HV, SiPM_HV, Magnet}
+
+
+
+  Conf[fontsize=23 style=filled bgcolor=green fillcolor=green label=<<b>Conf</b><br/>Device ID ; Driver  ; parameters<br align="left"/>CaenHV1   ; drvCaen ;  192.168.0.1   admin   admin <br align="left"/>>];
+  Manager -> Conf[dir=back]
+
+
+
+
+  {GetInfo,Broadcast,Update} -> {MM_Magnet1, MM_Magnet2, MMHV1_crate, MMHV1_board1, MMHV1_b1_ch1, MMHV1_b1_ch2, MMHV1_b1_ch3, MMHV1_board2, MMHV1_b2_ch1, MMHV1_b2_ch2, MMHV1_b2_ch3}
+  //{ rank=same; 1 ; gauge_vacuum }
+  { rank=same; 2 ; Conf;SiPM_HV }
+  { rank=same; 3 ; Manager;  TCP_IP_IO}
+  { rank=same; 4 ;  Update}
+  //{ rank=same; 5  MMHV1_board1}
+  //{ rank=same; 6  MMHV1_board2}
+  //{ rank=same; 7  }
+  // { rank=same; 7 ; RunControl}
+  // { rank=same; 8 ; }
+  // { rank=same; 9 ;}
+  // { rank=same; 10; decision}
+  // { rank=same; 11;    }
+  // { rank=same; 12; HIControl}
+  // { rank=same; 13; LogDB}
+  // { rank=same; 14; }
+  // { rank=same; 15; drv_IO_requestInfo}
+  // { rank=same; 16; }
+  //Trigger->LogDB
+
+
+}
+
+
+
+///     digraph PADME_flowchart {
+///       newrank=true;/*{{{*/
+///       //graph[rankstep=2] doesnt work....
+///       remincross=true;
+///       compound=true;
+///       graph [ layout=dot] //, ratio=auto, splines=true, splines=spline];
+///       graph [rankdir=LR];
+///     
+///       {
+///         node [shape = none];
+///         edge[arrowhead=none];
+///         //1  ->
+///         2  -> 3  -> 4  -> 5  -> 6  -> 7  -> 8  -> 9  -> 10 -> 11 -> 12 -> 13 -> 14 -> 15 -> 16 -> 17 -> 18 -> 19 -> 20;
+///       }
+///     
+///       //graph[splines=true, splines=spline];
+///       //edge [splines=false, splines="",fontcolor=red, label="UU"];
+///       //edge[dir=both,label="edge"];
+///       fontsize=26;
+///       fontnames=svg;
+///       node[shape=record];/*}}}*/
+///     
+///     
+///     
+///     
+///       {//Harware units /*{{{*/
+///         graph[style=filled color=lightgrey];node[style=filled,fillcolor=white];
+///         subgraph cluster_gauges{
+///           node[width=2];
+///           label="Gauges";
+///           gauge_vacuum       [label="Vacuum"];
+///           gauge_ambtemp      [label="Ambient temp"];
+///           gauge_ambhumid     [label="Ambient humid"];
+///           gauge_ambpressure  [label="Ambient press"];
+///           gauge_temp         [label="Machine temp"];
+///           gauge_mag_field    [label="Magnet strength"];
+///         }
+///         subgraph cluster_machine_controls{
+///           {
+///         graph[style=filled color=white];//node[style=filled,fillcolor=white];
+///           node[width=2];
+///           graph[rank=same];
+///           label="Machine\ncontrols";
+///           machine_vacuum_pumps    [label="Vacuum pumps" ];
+///           machine_cooling         [label="Chillers"     ];
+///           machine_ventilation     [label="Ventilation"  ];
+///           machine_linac_spectrometer
+///           machine_linac_modeepem  [label="Linac mode e+/e-"];
+///           machine_btf_target
+///     
+///         subgraph cluster_linac_pulsed_magnets{
+///           label="Linac\nPulsed magnets";
+///           machine_pulsed_magnets_dhstb01;
+///           machine_pulsed_magnets_dhstb02;
+///         }
+///         subgraph cluster_btf_magnets{
+///           label="BTF magnets";
+///           machine_btf_magnets_quatb01;
+///           machine_btf_magnets_quatb02;
+///           machine_btf_magnets_quatb03;
+///           machine_btf_magnets_quatb04;
+///         }
+///         subgraph cluster_collimators{
+///           machine_collimators_slttb01;
+///           machine_collimators_slttb02;
+///           machine_collimators_slttb03;
+///           machine_collimators_slttb04;
+///         }
+///         machine_wcm;
+///         machine_gun_pulser[label=<<b>Gun pulser</b><br/> - width<br align="left"/> - amplitude<br align="left"/> - grid<br align="left"/>>]
+///           }
+///         }
+///       }/*}}}*/
+///     
+///       {//Kernel Drivers /*{{{*/
+///         node[width=2];
+///         graph[style=filled color=yellow];node[style=filled,fillcolor=white];
+///         {rank=same;
+///           // drv_mag_field;
+///           // drv_vacuum_pumps;
+///           // drv_IO_requestInfo;
+///         }
+///         subgraph cluster_drv_gauges{
+///           graph[rank=same];
+///           label="Monitor\nDrivers";
+///           drv_mag_field;
+///           drv_pressure;
+///           drv_temp;
+///           drv_humid;
+///         }
+///         subgraph  cluster_drv_controls_machine{
+///           graph[rank=same];
+///           label="Machine\nControl Drivers";
+///           drv_vacuum_pumps   [label="Vacuum pumps" ];
+///           drv_cooling        [label="Chillers"     ];
+///           drv_ventilation    [label="Ventilation"  ];
+///           drv_magnet_current [label="Magnet current"];
+///           drv_collimators    [label="Collimators"];
+///         }
+///         subgraph  cluster_drv_controls_exp{
+///           graph[rank=same];
+///           label="Experiment\nControl Drivers";
+///           drv_HV_caen        [label="CAEN HV"];
+///           drv_HV_NIM_SiPM    [label="SiPM control"];
+///           drv_Mimosa         [label="Mimosa PwSup"];
+///           drv_TimePix        [label="TimePix In/Out"];
+///         }
+///     
+///     
+///     
+///     
+///         subgraph cluster_drv_IO{
+///         node[width=3.5];
+///           graph[rank=same];
+///           label="I/O Drivers";
+///           drv_IO_requestInfo [label="Request specific value\nCheck alive"];
+///           drv_IO_SetValues   [label="HW Control (Set Values)"];
+///           drv_IO_broadcast   [label="HW status Broadcast"];
+///         }
+///       }/*}}}*/
+///     
+///       subgraph cluster_PwSupplies{/*{{{*/
+///         graph[style=filled color=red];node[style=filled,fillcolor=white];
+///         node[width=2];
+///         label="Power\nSupplies";
+///         rank=same;
+///         HW_NIM_SiPM_Module   [label="<f0>SiPM NIM module | <f1> SiPM power supply \n Amplify analogue signals"];
+///         HW_CAEN_HV [label=<CAEN HV crate<br align="right"/>>]; //Eth control
+///         HW_MimosaSupp
+///       }/*}}}*/
+///     
+///       subgraph cluster_PADME_DET{/*{{{*/
+///         node[width=4];
+///         label="PADME SubSystems";
+///     
+///         rank=same;
+///     
+///     
+///         {graph[style=filled color=lightgrey];node[style=filled,fillcolor=white];
+///           subgraph cluster_ECAL {
+///             //node [style=filled]; color=blue;
+///             label="ECal";
+///             HW_ECAL_ch    [label="ECAL channel\nPMT channel"];
+///           }
+///           subgraph cluster_SAC {
+///             label="SAC";
+///             HW_SAC_ch    [label="SAC channel\nPMT channel"];
+///           }
+///           subgraph cluster_EPVeto {
+///             label="EPVeto";
+///             HW_EPVeto_ch  [label="EPVeto channel\nSiPM channel\nNIM module control"]
+///           }
+///           subgraph cluster_HEPVeto {
+///             label="HEPVeto";
+///             HW_HEPVeto_ch [label="HEPVeto channel\nSiPM channel"]
+///           }
+///           subgraph cluster_Target{
+///             label="Target";
+///             HW_Target_ch
+///           }
+///           subgraph cluster_Mimosa{
+///             label="Mimosa";
+///             HW_Mimosa_ch;
+///           }
+///           subgraph cluster_TimePix{
+///             label="TimePix";
+///           HW_TimePix[label=<<b>TimePix</b><br/>Should it report In/Out<br/>to Kerner or RunControl<br/>>];
+///           }
+///         }
+///       }/*}}}*/
+///     
+///     
+///       subgraph cluster_padme_fw{/*{{{*/
+///         graph[style=filled color=lightblue];node[style=filled,fillcolor=white];
+///         RunControl [label=<<b>Run Control</b><br/> - Initial config of Digitizers<br align="left"/> - Takes care of acquisition<br align="left"/> - Manages the RunDB info<br align="left"/> - Defines the trigger<br align="left"/>>];
+///         label="Padme-fw";
+///         { node[shape=cylinder];
+///           fw_HDD_digiraw     [label="RAW\nDAQ"];
+///           fw_HDD_timepixraw  [label="RAW\nTimePix"];
+///           fw_HDD_rootraw     [label="RAW\nROOT"];
+///         }
+///         {rank=same;
+///         fw_HDD_digiraw   ;
+///         fw_HDD_timepixraw;
+///         }
+///     
+///     
+///     
+///         { node[shape=""];
+///           fw_DAQ            [label="DAQ"];
+///           fw_L1             [label=<<b>Level1</b><br/> - Realigns the digitizer-raw files<br align="left"/> - Produces root-raw files<br align="left"/>>];
+///           fw_OnlineMonitor  [label=<<b>Online Monitor</b><br/> <b>Provides plots for:</b><br align="left"/>   = Channel occupancy<br align="left"/>   = Time alignment<br align="left"/>   = Beam characteristics<br align="left"/>   = ???<br align="left"/>   = ???<br align="left"/>   = ???<br align="left"/>>];
+///           fw_PromptAnalysis [label=<<b>Prompt Analysis</b><br/><b>Provides realtime info:</b><br align="left"/> - Channel occupacy<br align="left"/> - Time offsets<br align="left"/> - Beam characteristics<br align="left"/>>];
+///           fw_ComprehensiveAnalysis[label=<<b>Comprehensive<br align="center"/>Analysis Modules</b><br/> - Multiple modules<br align="left"/>   = T0 calculation<br align="left"/>   = Gain calibration<br align="left"/>>];
+///         }
+///         fw_CDR [label=<<b>CDR (Central Data Recording)</b><br/><b>Transfers root-raw files to:</b><br align="left"/>1) LNF Tier2 disk<br align="left"/>2) Copy to tapes<br align="left"/>    - Bologna tapes<br align="left"/>    - LNF tapes<br align="left"/>Opt) Rome HDDs<br align="left"/>>];
+///     
+///     
+///         {rank=same;
+///           fw_CDR;
+///           //fw_ComprehensiveAnalysis
+///         }
+///     
+///         {rank=same;
+///           //fw_CDR;
+///           //fw_ComprehensiveAnalysis
+///           fw_OnlineMonitor;
+///           fw_PromptAnalysis;
+///           fw_L1
+///         }
+///         {edge[label="HDD-I/O"];
+///           fw_DAQ -> fw_HDD_digiraw;
+///           fw_HDD_digiraw-> fw_L1  ;
+///           fw_L1 -> fw_HDD_rootraw ;
+///           fw_HDD_digiraw->fw_OnlineMonitor;
+///           fw_HDD_rootraw -> { fw_CDR, fw_ComprehensiveAnalysis}
+///         }
+///     
+///         {edge[label="???",fontcolor=red,style=dashed,color=red];
+///           fw_DAQ->fw_PromptAnalysis[label="instant"];
+///           fw_HDD_digiraw->fw_PromptAnalysis[label="1-30 min"];
+///           {edge[control=faslse];
+///             fw_OnlineMonitor->fw_PromptAnalysis[dir=both,label="These two should run\nbasicaly the same algorithm.\nThe online monitor should \nalso visualize the result"];
+///           }
+///         }
+///     
+///         fw_CDR->fw_ComprehensiveAnalysis[dir=both,constraint=true];
+///     
+///     
+///       }/*}}}*/
+///     
+///     
+///       subgraph cluster_PADME_DCS {/*{{{*/
+///         graph[style=filled color=orange];node[style=filled,fillcolor=white];
+///     
+///         label="PADME DCS";
+///         decision [label=<<b>Inteligence module<br/>Monitors:</b><br align="left"/>- occupancy plots<br align="left"/>- VMon IMon thrends<br align="left"/><b>Takes action:</b><br align="left"/> - Triggers notification<br align="left"/> - Restarts the run<br align="left"/> - Applies corrections to HW<br align="left"/>>];
+///         logger [shape=box,label=<<b>logger</b><br/>This process listens<br/>to the broadcasts and<br/>write them in the DB<br/>>];
+///         ControlServer;
+///         //{rank=same;
+///         //  ControlServer;
+///         //  logger;
+///         //}
+///         subgraph cluster_HI
+///         {
+///           label="DCS Human Interface";
+///           graph[style=filled color=pink];node[style=filled,fillcolor=white];
+///           {
+///             rank=same;
+///             node[shape=Mcircle];
+///             HIControl[label=<<b>HI Control</b><br/> - Switch on/off devices<br align="left"/> - Set parameters to dev<br align="left"/> >];
+///             HILogView[label=<<b>HI LogView</b><br/> - Query the LogDB<br align="left"/> - Listens to broadcasts<br align="left"/> - www or native?<br align="left"/>>];
+///           }
+///           notify   [label=<<b>Notifier</b><br/> - e-mail<br align="left"/> - SMS<br align="left"/> - ELog<br align="left"/> - RSS<br align="left"/> - ???<br align="left"/>>];
+///     
+///           //HIRunControl;
+///         }
+///       }/*}}}*/
+///     
+///     //label=<<b>Level1</b><br/><br align="left"/><br align="left"/><br align="left"/><br align="left"/><br align="left"/><br align="left"/><br align="left"/><br align="left"/>>
+///       subgraph cluster_PADME_DB {/*{{{*/
+///         graph[style=filled color=cyan];node[style=filled,fillcolor=white];
+///         //rank=same;
+///         label="PADME DB";
+///         LogDB   [label=<<b>LogDB</b><br/> - High voltages<br align="left"/> - Currents<br align="left"/> - Parameters of the Environment<br align="left"/>>];
+///     
+///         CfgDB   [label=<<b>CfgDB</b><br/> - Nominal parameters per DetCh<br align="left"/>SQL or TXT?<br/>Reuse LAVDB??<br/>>];
+///     
+///         MapDB   [label=<<b>MapDB</b><br/> - PwSupCh-DetCh<br align="left"/> - DetCh-DAQCh<br align="left"/> - all the cabling<br align="left"/>SQL or Text?<br/>>];
+///     
+///         RunDB   [label=<<b>RunDB</b><br/> - Trigger<br align="left"/> - Included/Excluded det<br align="left"/> - Per run conditions<br align="left"/> - ????<br align="left"/>>];
+///         RunConfDB   [label=<<b>RunCondDB</b><br/> - Beam parameters<br align="left"/>>];
+///     
+///         GeoDB   [label=<<b>GeoDB</b><br/> - Coordinates<br align="left"/> - Serial numbers<br align="left"/> - PwSupp.Ch - Det.Ch<br align="left"/> - Det.Ch - Digi.Ch<br align="left"/>>]
+///     
+///         CalDB   [label=<<b>CalDB</b><br/> - Gains<br align="left"/> - Efficiencies<br align="left"/> - Light yields<br align="left"/>>];
+///         //"CalDB|Callibration\ncoefficients"
+///     
+///         {rank=same;
+///           //GeoDB;
+///           //CalDB;
+///         }
+///     
+///     
+///     
+///         {edge[label="???",fontcolor=red,style=dashed,color=red];
+///           GeoDB->MapDB[dir=both, label="MapDB and GeoDB may be merged or\nMapDB.txt can be generated from GeoDB",constraint=false];
+///           RunDB->RunConfDB[dir=both, label="These two can be single DB"];
+///           //RunDB->CalDB[dir=both]; // it is not needed. they will be neede on analysis level
+///         }
+///     
+///     
+///         {edge[style=invis]
+///           //RunConfDB->GeoDB->CalDB->
+///           LogDB->MapDB->CfgDB;
+///         }
+///       }/*}}}*/
+///     
+///     
+///       drv_Mimosa->HW_MimosaSupp->HW_Mimosa_ch->MimosaDAQ;
+///       MimosaDAQ->RunControl[label="beam spot, divergence"];
+///     
+///       GeoDB->{fw_PromptAnalysis,fw_OnlineMonitor,fw_ComprehensiveAnalysis}
+///       //{fw_PromptAnalysis,fw_OnlineMonitor,fw_ComprehensiveAnalysis}->GeoDB
+///       CalDB->{fw_PromptAnalysis,fw_OnlineMonitor,fw_ComprehensiveAnalysis}[concentrate=false];
+///       fw_ComprehensiveAnalysis->CalDB;
+///     
+///     
+///     
+///     
+///     
+///       RunControl->RunDB;
+///       RunControl->RunConfDB;
+///       //HIRunControl->RunControl;
+///     
+///       logger->LogDB;
+///     
+///       drv_IO_broadcast ->logger;
+///     
+///       HIControl-> ControlServer;
+///       //ControlServer->HIControl;
+///     
+///       ControlServer->drv_IO_SetValues;
+///       //drv_IO_SetValues->ControlServer;
+///     
+///       HIControl->CfgDB[dir=both];
+///       drv_IO_broadcast->HILogView;
+///       HILogView->LogDB;
+///       HIControl->MapDB;
+///     
+///       {
+///         //edge[style=invis]
+///         fw_PromptAnalysis->decision;
+///         decision->ControlServer;
+///         LogDB->decision;
+///         decision->RunControl;
+///         Trigger->decision;
+///         drv_IO_requestInfo->decision;
+///       }
+///       drv_IO_broadcast-> decision;
+///       decision-> notify;
+///     
+///       RunControl;
+///     
+///     {edge[constraint=false]
+///       RunControl->Trigger[constraint=false];
+///       RunControl->HW_Digitizer;
+///       RunControl->fw_DAQ[constraint=false];
+///       RunControl->HW_Digitizer_TimePix[concentrate=false];
+///       //Trigger->RunControl;
+///     }
+///     
+///     
+///       Trigger[label="Trigger|DAFNE\nCosmics\nPeriodic\nRandom"];
+///       Trigger -> HW_Digitizer[constraint=true,label=""];
+///       HW_Digitizer->Trigger  [constraint=true,label="Sync"];
+///     
+///     
+///     
+///     
+///     
+///     
+///     
+///     
+///     
+///       HW_ECAL_ch   ->HW_Digitizer;
+///       HW_EPVeto_ch ->HW_Digitizer;
+///       HW_HEPVeto_ch->HW_Digitizer;
+///       HW_Target_ch ->HW_Digitizer;
+///       HW_SAC_ch -> HW_Digitizer;
+///     
+///       HW_TimePix->HW_Digitizer_TimePix;
+///     
+///       drv_HV_NIM_SiPM  ->  HW_NIM_SiPM_Module  [label="Eth",dir=both];
+///       HW_NIM_SiPM_Module-> HW_EPVeto_ch [label="Twisted\npair"];
+///     
+///       HW_Digitizer [label="Digitizers\nCAEN V1742"];
+///       HW_Digitizer_TimePix[label=<<b>TimePix digitizer</b><br/>>];
+///     
+///     
+///       drv_HV_caen  ->  HW_CAEN_HV [label="Eth",dir=both];
+///       HW_CAEN_HV -> HW_ECAL_ch [label="HV cables"];
+///       HW_CAEN_HV -> HW_SAC_ch [label="HV cables"];
+///     
+///     
+///       {rank=same;HW_Digitizer,HW_Digitizer_TimePix, MimosaDAQ}
+///     
+///     
+///     
+///       drv_TimePix->HW_TimePix
+///     
+///     
+///     
+///     
+///     
+///         // edges
+///         gauge_vacuum      ->drv_pressure;
+///       gauge_ambtemp     ->drv_temp;
+///       gauge_ambhumid    ->drv_humid;
+///       gauge_ambpressure ->drv_pressure;
+///       gauge_temp        ->drv_temp;
+///       gauge_mag_field   ->drv_mag_field;
+///     
+///       drv_vacuum_pumps  ->machine_vacuum_pumps  ;
+///       drv_cooling       ->machine_cooling       ;
+///       drv_ventilation   ->machine_ventilation   ;
+///     
+///     
+///     
+///     
+///     
+///     
+///     
+///       machine_linac_spectrometer
+///         machine_linac_modeepem 
+///         machine_btf_target
+///         drv_magnet_current->{
+///           machine_pulsed_magnets_dhstb01
+///             machine_pulsed_magnets_dhstb02
+///             machine_btf_magnets_quatb01
+///             machine_btf_magnets_quatb02
+///             machine_btf_magnets_quatb03
+///             machine_btf_magnets_quatb04
+///         }
+///       drv_collimators->{
+///         machine_collimators_slttb01
+///           machine_collimators_slttb02
+///           machine_collimators_slttb03
+///           machine_collimators_slttb04
+///       }
+///       machine_wcm
+///         machine_gun_pulser
+///     
+///     
+///     
+///     
+///     
+///     
+///     
+///     
+///     
+///     
+///     
+///     
+///     
+///     
+///     
+///     
+///     
+///     
+///     
+///     
+///     
+///         HW_Digitizer -> fw_DAQ[label="CAENET2\noptics"];
+///       HW_Digitizer_TimePix ->fw_HDD_timepixraw;
+///     
+///     
+///       //{rank=same;Trigger, fw_DAQ;}
+///     
+///       //{ rank=same; 1 ; gauge_vacuum }
+///       { rank=same; 2 ; drv_cooling}
+///       { rank=same; 3 ; HW_MimosaSupp; }
+///       { rank=same; 4 ; HW_EPVeto_ch, Trigger}
+///       { rank=same; 5 ; HW_Digitizer}
+///       { rank=same; 6 ; RunControl}
+///       { rank=same; 7 ; fw_DAQ;}
+///       // { rank=same; 7 ; RunControl}
+///       // { rank=same; 8 ; }
+///       // { rank=same; 9 ;}
+///       // { rank=same; 10; decision}
+///       // { rank=same; 11;    }
+///       // { rank=same; 12; HIControl}
+///       // { rank=same; 13; LogDB}
+///       // { rank=same; 14; }
+///       // { rank=same; 15; drv_IO_requestInfo}
+///       // { rank=same; 16; }
+///       { rank=same; 17; }
+///       { rank=same; 18; }
+///       { rank=same; 19; }
+///       { rank=same; 20; }
+///       //Trigger->LogDB
+///     
+///     
+///     
+///       label="PADME experiment data flow";
+///     }
+///     
+///     
+///     
+///     
+///     //HINTS:
+///     //drivers ->logger[ltail=cluster_drivers];
+///     //edge[style=invis]
+///     //edge[constraint=false];
+///     //edge[concentrate=false];
+///     //label=<<b>Level1</b><br/><br align="left"/><br align="left"/><br align="left"/><br align="left"/><br align="left"/><br align="left"/><br align="left"/><br align="left"/>>
+///     
