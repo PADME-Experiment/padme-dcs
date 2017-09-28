@@ -2,8 +2,8 @@
 #include<iostream>
 int main(){
 
-try{
   CaenSY4527 a;
+try{
 }
 catch(const std::exception& e){
   std::cerr<<e.what()<<std::endl;

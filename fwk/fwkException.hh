@@ -35,14 +35,15 @@ namespace fwk{
   class Exception:public std::exception{
     public:
       const char* what() const noexcept {return fWhat.c_str();}
-      const std::string& GetWhat()const noexcept{return fWhat;}
-      const std::string& GetType()const noexcept{return fType;}
+      //const std::string& GetWhat()const noexcept{return fWhat;}
+      //const std::string& GetType()const noexcept{return fType;}
     protected:
-      Exception():fWhat("\n"){}
+      //Exception(){}
+      Exception(const std::string& s):fWhat(s){}
       virtual ~Exception(){}
-      void SetType(Exception& a){fType=typeid(a).name();}
+      //void SetType(Exception& a){fType=typeid(a).name();}
       std::string fWhat;
-      std::string fType;
+      //std::string fType;
   };
 }
 
