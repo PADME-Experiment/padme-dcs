@@ -1,5 +1,8 @@
 ccfiles=$(shell find kernel -name "*.cc")
 hhfiles=$(shell find kernel -name "*.h")
+
+
+.PHONY: kernel.exe
 kernel.exe: $(ccfiles) $(hhfiles)
 	g++ $(ccfiles) -I. -Lcaenlib -lcaenhvwrapper -lc -o kernel.exe -DUNIX -lcaenhvwrapper -lncurses -lpthread -ldl -lm
 
