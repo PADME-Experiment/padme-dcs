@@ -68,8 +68,8 @@ CaenSY4527::GetCrateMap()
      <<"modellist   ["<<i<<"]'"<<modellist    [i]<<"'"<<std::endl
      <<"descrlist   ["<<i<<"]'"<<descrlist    [i]<<"'"<<std::endl
      <<"sernumlist  ["<<i<<"]'"<<sernumlist   [i]<<"'"<<std::endl
-     <<"firmwaremin ["<<i<<"]'"<<firmwaremin  [i]<<"'"<<std::endl
-     <<"firmawaremax["<<i<<"]'"<<firmawaremax [i]<<"'"<<std::endl
+     <<"firmwaremin ["<<i<<"]'"<<int(firmwaremin  [i])<<"'"<<std::endl
+     <<"firmawaremax["<<i<<"]'"<<int(firmawaremax [i])<<"'"<<std::endl
      <<std::endl;
 
  }
