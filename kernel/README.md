@@ -3,9 +3,46 @@ All the drivers should be packed in the kernel.
 The kernel provides the communication with the hardware and represents the hardware status in the computer memory.
 It also allows users to get and set parameters to the hardware.
 
+Subparts of the kernel:
+
+### Manager / Initialiser
+This should initialise everything.
+1. Read configuration from file
+   ```
+    | Device ID | Driver  | parameters  
+    | CaenHV1   | drvCaen | "192.168.0.1" "admin" "admin"
+   ```
+1. Initialise the drivers and keeps connection with HW
+1. Compare the actual configuration with what was expected from MapDB
+1. Build representation of the hardware in the memory
+   - all the fields should be structures of value + update timestamp + status
+1. Forks services
+   - Each service runs independently
+
+### Drivers
+Drivers should implement the communication methods with the hardware. They can be instantiated by the manager, opening a connection with a particular device.
+
+### Services
+##### Update
+This can be one or multiple processes which listens and/or polls hardware devices and update the Memory Map. There should be parameter for the poll frequency.
+```
+| how often [s] | HW.Ch         | values
+|            30 | crate1        | Fan speed, current draw
+|            30 | crate1.b4     | Temp
+|             3 | crate1.b4.ch8 | IMon VMon V0Set?
+```
+- Values: voltages, currents, fan RPMs temps
+- Timestamps: together with the values updates the timestamps. This might be helpful to be sure that the information is up to date
+##### TCP services
+###### GetInfo (HI, some other proc)
+###### Broadcast info (DBLogger)
+###### Setparameter (HI, Inteligence module)
 
 
 
+-----
+-----
+-----
 
 # CAEN high voltage driver
 
