@@ -1,5 +1,6 @@
 #include "CaenSY4527.h"   //in c file
 #include <caenlib/CAENHVWrapper.h>
+#include<iostream>
 
   CaenSY4527_except&
 CaenSY4527_except::CommunicationFailure(int caenhandler,const std::string& add)
@@ -61,24 +62,22 @@ CaenSY4527::GetCrateMap()
  &firmwaremin,        //uchar **FmwRelMinList,
  &firmawaremax);      //uchar **FmwRelMaxList);
 
- 
- 
- 
- 
- 
- 
- 
-  if(ret != CAENHV_OK)
-    throw  CaenSY4527_except().CommunicationFailure(fCaenCrateHandle, "return value "+std::to_string(ret));
+ for(int i=0;i<nrslots;++i){
+   std::cout
+     <<nrchlist     []
+     <<modellist    []
+     <<descrlist    []
+     <<sernumlist   []
+     <<firmwaremin  []
+     <<firmawaremax []
+     <<std::endl;
+
+ }
+
+
+ if(ret != CAENHV_OK)
+   throw  CaenSY4527_except().CommunicationFailure(fCaenCrateHandle, "return value "+std::to_string(ret));
 }
-
-
-
-
-
-
-
-
 
 
 
