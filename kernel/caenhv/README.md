@@ -2,7 +2,7 @@
 
 ### CAEN create driver
 - maintains the connection with the crate
-- Creates _create map_:
+- Creates _crate map_:
   - dynamic allocation on the board classes
   - check if it is what we expect from MapDB
   - should have button to recreate the map
