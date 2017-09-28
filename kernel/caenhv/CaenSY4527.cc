@@ -64,12 +64,12 @@ CaenSY4527::GetCrateMap()
 
  for(int i=0;i<nrslots;++i){
    std::cout
-     <<nrchlist     []
-     <<modellist    []
-     <<descrlist    []
-     <<sernumlist   []
-     <<firmwaremin  []
-     <<firmawaremax []
+     <<nrchlist     [i]
+     <<modellist    [i]
+     <<descrlist    [i]
+     <<sernumlist   [i]
+     <<firmwaremin  [i]
+     <<firmawaremax [i]
      <<std::endl;
 
  }
