@@ -2,7 +2,7 @@
 ## Detector Control System for the PADME experiment
 
 --------------------------------------
-### [PADME flow chart](http://www.lnf.infn.it/~georgiev/padme-kernel.svg)
+### [PADME flow chart](http://www.lnf.infn.it/~georgiev/padme-flowchart.svg)
 [svg](http://www.lnf.infn.it/~georgiev/padme-flowchart.svg) [png](http://www.lnf.infn.it/~georgiev/padme-flowchart.png)
 
 ### [PADME kernel - Documentation](https://github.com/PADME-Experiment/padme-dcs/blob/georgievgeorgi-patch-1/kernel/README.md)
