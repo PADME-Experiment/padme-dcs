@@ -91,7 +91,7 @@ edge[constraint=false]
     graph[style=filled color=yellow];node[style=filled,fillcolor=white];
     rank=same
       label="Drivers\nCommunicate with HW"
-      CAEN_HV[label="CaenHV IPaddr user pass"]
+      CAEN_HV[label="CaenHV IPaddr user pass\n-Set/Get\n-Events\n- Subscribe"]
       SiPM_HV[label="SiPMHV IPaddr"]
       Magnet [label="Magnet IPaddr"]
   }
