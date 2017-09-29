@@ -11,7 +11,7 @@ digraph PADME_basic {
   //graph[splines=true, splines=spline];
   //edge [splines=false, splines="",fontcolor=red, label="UU"];
   //edge[dir=both,label="edge"];
-  fontsize=26;
+  //fontsize=26;
   fontnames=svg;
   node[shape=record];/*}}}*/
 
@@ -23,27 +23,27 @@ digraph PADME_basic {
     HI[fillcolor=pink]
     DCS[fillcolor=orange]
     RC [fillcolor=yellow]
-    HWAcc[fillcolor=grey,shape=Mcircle]
-    HWAux[fillcolor=grey]
-    HWSup[fillcolor=red]
-    HWDet[fillcolor=grey]
+    Acc[fillcolor=grey,shape=Mcircle]
+    Aux[fillcolor=grey]
+    Sup[fillcolor=red]
+    Det[fillcolor=grey]
     DAQ[shape=house]
     TRG[shape=invtriangle]
-    DB[fillcolor=cyan]
+    DB[shape=cylinder,fillcolor=cyan]
     CDR[shape=cylinder,fillcolor=green]
     FW[fillcolor=lightblue]
-    FWAnl[shape=pentagon]
-    Disovery[shape=tripleoctagon]//star]
+    Anl[shape=pentagon,fillcolor=greenyellow]
+    Discovery[label="A'\nDiscovery",shape=tripleoctagon,fillcolor=black,fontcolor=white,fontsize=30]//star]
 
     HI->{RC,DCS}
     RC->{DAQ,TRG}
-    DCS->{ HWAcc HWAux HWSup HWDet}
-    HWAux->HWAcc//[constraint=false]
-    HWAcc->HWDet//[constraint=false]
-    HWSup->HWDet
-    HWAcc->TRG[constraint=false]
+    DCS->{ Acc Aux Sup Det}
+    Aux->Acc//[constraint=false]
+    Acc->Det//[constraint=false]
+    Sup->Det
+    Acc->TRG[constraint=false]
     TRG->DAQ
-    HWDet->DAQ
+    Det->DAQ
     DAQ->FW
     FW->CDR
     //DB->FW
@@ -51,9 +51,9 @@ digraph PADME_basic {
 
     RC->DB[dir=both]
     DCS->DB[dir=both]
-    CDR->FWAnl->Disovery
-    DB-> FWAnl[dir=both]
-    HI->HWAcc
+    CDR->Anl->Discovery
+    DB-> Anl[dir=both]
+    HI->Acc
 
 
 
