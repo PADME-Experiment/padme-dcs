@@ -10,6 +10,9 @@
 
 --------------------------------------
 
+![img](http://www.lnf.infn.it/~georgiev/padme-basic.png)
+
+
 ### Some CAEN links related to HV power supplies:
 - [CAEN HV Wrapper Library](http://www.caen.it/jsp/Template2/CaenProd.jsp?parent=42&idmod=835)
   - [CAEN HV Wrapper User Manual](http://www.caen.it/servlet/checkCaenManualFile?Id=12609)
