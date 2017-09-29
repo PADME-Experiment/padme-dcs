@@ -1,7 +1,17 @@
 # padme-dcs
-Detector Control System for the PADME experiment
+## Detector Control System for the PADME experiment
 
 --------------------------------------
+### [PADME flow chart](http://www.lnf.infn.it/~georgiev/padme-flowchart.svg)
+[svg](http://www.lnf.infn.it/~georgiev/padme-flowchart.svg) [png](http://www.lnf.infn.it/~georgiev/padme-flowchart.png)
+
+### [PADME kernel - Documentation](https://github.com/PADME-Experiment/padme-dcs/blob/georgievgeorgi-patch-1/kernel/README.md)
+[svg](http://www.lnf.infn.it/~georgiev/padme-kernel.svg) [png](http://www.lnf.infn.it/~georgiev/padme-kernel.png)
+
+--------------------------------------
+
+![img](http://www.lnf.infn.it/~georgiev/padme-basic.png)
+
 
 ### Some CAEN links related to HV power supplies:
 - [CAEN HV Wrapper Library](http://www.caen.it/jsp/Template2/CaenProd.jsp?parent=42&idmod=835)
@@ -29,12 +39,3 @@ There are available:
 [CAEN-SY1527LC]: http://www.caen.it/jsp/Template2/CaenProd.jsp?idmod=491&parent=20
 [CAEN-A1733]: http://www.caen.it/jsp/Template2/CaenProd.jsp?parent=20&idmod=174
 
-
- 
---------------------------------------
-
-
-### PADME flow chart
-
-[svg](http://www.lnf.infn.it/~georgiev/padme-flowchart.svg)
-[png](http://www.lnf.infn.it/~georgiev/padme-flowchart.png)
