@@ -40,11 +40,16 @@ namespace fwk{
     protected:
       //Exception(){}
       Exception(const std::string& s):fWhat(s){fType=typeid(this).name();}
+      Exception(){}
       virtual ~Exception(){}
       void SetType(Exception& a){fType=typeid(a).name();}
-      void T(){fType=typeid(this).name();}
+      //void T(){fType=typeid(this).name();}
       std::string fWhat;
       std::string fType;
+  };
+  class Exception_tobefixed:public Exception{
+    public:
+      Exception_tobefixed(const std::string& s):Exception(s){}
   };
 }
 

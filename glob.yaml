@@ -1,0 +1,9 @@
+- Args: [IPAddr:192.168.0.1, User:admin, Pass:admin]
+  Label: "CAENHV1"
+  ParentLabel: ""
+  DriverType: "CAEN_SY4527"
+
+- Args: ""
+  Label: "CAENHV1.board1"
+  ParentLabel: "CAENHV1"
+  DriverType: CAEN_A7030

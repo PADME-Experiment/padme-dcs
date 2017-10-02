@@ -2,10 +2,14 @@
 #define  _DCS_kernel_drv_DrvCaenHV_h_ 1
 #include "DrvCaenHV.h"   //in c file
 
+#include"VDeviceDriver.h"
+
+
+#include "fwk/fwkException.h"
+#include "fwk/utlMessageBus.h"
+
 #include<vector>
-
-
-#include "fwk/fwkException.hh"
+#include<memory>
 class DrvCaenHV_except:public fwk::Exception{
   public:
     class Except_OK                   ;
@@ -95,20 +99,23 @@ class DrvCaenHV_except::Except_LOGOUTFAILED         : public DrvCaenHV_except {p
 class DrvCaenHV_except::Except_LINKNOTSUPPORTED     : public DrvCaenHV_except {public: Except_LINKNOTSUPPORTED    (const std::string&s):DrvCaenHV_except(s){ fwk::Exception::SetType(*this); }; };
 class DrvCaenHV_except::Except_USERPASSFAILED       : public DrvCaenHV_except {public: Except_USERPASSFAILED      (const std::string&s):DrvCaenHV_except(s){ fwk::Exception::SetType(*this); }; };
 
-class DrvCaenHV{
+class DrvCaenHV:public VDeviceDriver{
   public:
-    DrvCaenHV(){
-      throw  DrvCaenHV_except::Except_OK
-        ("whatstr") ;
-      ComInit();
-      GetCrateMap();
-      GetExecCommList();
-      GetSysPropList();
+    //DrvCaenHV(){INFO("dummy");}
+    DrvCaenHV(const std::string&lab,std::shared_ptr<VDeviceDriver>a):VDeviceDriver(lab,a)
+    {
+      INFO("pars");
+      //throw  DrvCaenHV_except::Except_OK ("whatstr") ;
+      //ComInit();
+      //GetCrateMap();
+      //GetExecCommList();
+      //GetSysPropList();
     }
     ~DrvCaenHV(){
-      ComDeinit();
+      //ComDeinit();
+      INFO("");
     }
-  private:
+  public:
     void ComDeinit();
     void ComInit(
         const std::string&ipaddr="192.168.0.1",
@@ -122,6 +129,7 @@ class DrvCaenHV{
 
   private:
     int fCaenCrateHandle;
+
 
 
   private:
