@@ -10,7 +10,7 @@ class VValue{
     VValue():
       fLastUpdate(0) {}
     virtual ~VValue(){}
-    T GetValue()const{
+    T GetVal()const{
       return fValue;
     }
     const T& operator<<(const T & rhs){
@@ -18,7 +18,7 @@ class VValue{
       //std::time(&fLastUpdate);
       return fValue;
     }
-    double GetValueAge()const{
+    double GetAge()const{
       time_t now;
       std::time(&now);
       return std::difftime(now,fLastUpdate);

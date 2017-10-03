@@ -11,6 +11,8 @@
 
 #include<vector>
 #include<memory>
+#include<cstdint>
+#include<sstream>
 class DrvCaenHV_except:public fwk::Exception{
   public:
     class Except_OK                   ;
@@ -104,9 +106,9 @@ class DrvCaenHV:public VDeviceDriver{
   public:
     //DrvCaenHV(){INFO("dummy");}
     DrvCaenHV(const std::string&lab,std::shared_ptr<VDeviceDriver>a):VDeviceDriver(lab,a)
-    {
-      INFO("pars");
-    }
+  {
+    INFO("pars");
+  }
     ~DrvCaenHV(){
       //ComDeinit();
       INFO("");
@@ -117,7 +119,27 @@ class DrvCaenHV:public VDeviceDriver{
       GetCrateMap();
       GetExecCommList();
       GetSysPropList();
-      GetSysProp_ModelName();
+      GetSysProp_Sessions      ();
+      GetSysProp_ModelName     ();
+      GetSysProp_SwRelease     ();
+      GetSysProp_GenSignCfg    ();
+      GetSysProp_FrontPanIn    ();
+      GetSysProp_FrontPanOut   ();
+      GetSysProp_ResFlagCfg    ();
+      GetSysProp_HvPwSM        ();
+      GetSysProp_HVFanStat     ();
+      GetSysProp_ClkFreq       ();
+      GetSysProp_HVClkConf     ();
+      GetSysProp_IPAddr        ();
+      GetSysProp_IPNetMsk      ();
+      GetSysProp_IPGw          ();
+      GetSysProp_PWCurrent     ();
+      GetSysProp_OutputLevel   ();
+      GetSysProp_SymbolicName  ();
+      GetSysProp_CmdQueueStatus();
+      GetSysProp_CPULoad       ();
+      GetSysProp_MemoryStatus  ();
+      DebugDump();
       INFO("");
     }
 
@@ -131,9 +153,10 @@ class DrvCaenHV:public VDeviceDriver{
     void SetIPAddress(const std::string&s){fIPAddress=s;}
     void SetUsername (const std::string&s){fUsername =s;}
     void SetPassword (const std::string&s){fPassword =s;};
-    void GetSysProp(const std::string&cmd, void* res);
-    void GetSysProp_ModelName();
     void AssertInit();
+
+
+
 
 
 
@@ -149,8 +172,87 @@ class DrvCaenHV:public VDeviceDriver{
     void ConvCharListVector(unsigned short n,const char*
         l,std::vector<std::string>&v);
 
+
+  public:
+    void GetSysProp(const std::string&cmd, void* res);
+    void GetSysProp_Sessions      ();
+    void GetSysProp_ModelName     ();
+    void GetSysProp_SwRelease     ();
+    void GetSysProp_GenSignCfg    ();
+    void GetSysProp_FrontPanIn    ();
+    void GetSysProp_FrontPanOut   ();
+    void GetSysProp_ResFlagCfg    ();
+    void GetSysProp_HvPwSM        ();
+    void GetSysProp_HVFanStat     ();
+    void GetSysProp_ClkFreq       ();
+    void GetSysProp_HVClkConf     ();
+    void GetSysProp_IPAddr        ();
+    void GetSysProp_IPNetMsk      ();
+    void GetSysProp_IPGw          ();
+    void GetSysProp_PWCurrent     ();
+    void GetSysProp_OutputLevel   ();
+    void GetSysProp_SymbolicName  ();
+    void GetSysProp_CmdQueueStatus();
+    void GetSysProp_CPULoad       ();
+    void GetSysProp_MemoryStatus  ();
+
+
+
+
   private: // values
-    CaenHVValue<std::string> fModelName;
+    CaenHVValue<std::string> fSessions        ;
+    CaenHVValue<std::string> fModelName       ;
+    CaenHVValue<std::string> fSwRelease       ;
+    CaenHVValue<uint16_t   > fGenSignCfg      ;
+    CaenHVValue<uint16_t   > fFrontPanIn      ;
+    CaenHVValue<uint16_t   > fFrontPanOut     ;
+    CaenHVValue<uint16_t   > fResFlagCfg      ;
+    CaenHVValue<std::string> fHvPwSM          ;
+    CaenHVValue<std::string> fHVFanStat       ;
+    CaenHVValue<uint16_t   > fClkFreq         ;
+    CaenHVValue<std::string> fHVClkConf       ;
+    CaenHVValue<std::string> fIPAddr          ;
+    CaenHVValue<std::string> fIPNetMsk        ;
+    CaenHVValue<std::string> fIPGw            ;
+    CaenHVValue<std::string> fPWCurrent       ;
+    CaenHVValue<uint16_t   > fOutputLevel     ;
+    CaenHVValue<std::string> fSymbolicName    ;
+    CaenHVValue<uint16_t   > fCmdQueueStatus  ;
+    CaenHVValue<std::string> fCPULoad         ;
+    CaenHVValue<std::string> fMemoryStatus    ;
+
+    //CaenHVValue<std::string> fResFlag      ;  //not documented
+    //CaenHVValue<std::string> fHVFanSpeed   ;  //not documented
+    //CaenHVValue<std::string> fPWFanStat    ;  //not documented
+    //CaenHVValue<std::string> fPWVoltage    ;  //not documented
+    //CaenHVValue<std::string> fDummyReg     ;  //not documented
+    //CaenHVValue<std::string> fCMDExecMode  ;  //not documented
+
+
+    public: // DEBUG
+    void DebugDump(){
+      std::stringstream ss;
+      ss.clear();ss.str("fSessions      ");ss<<fSessions      .GetVal()<<"  "<<fSessions      .GetAge();INFO(ss.str());
+      ss.clear();ss.str("fModelName     ");ss<<fModelName     .GetVal()<<"  "<<fModelName     .GetAge();INFO(ss.str());
+      ss.clear();ss.str("fSwRelease     ");ss<<fSwRelease     .GetVal()<<"  "<<fSwRelease     .GetAge();INFO(ss.str());
+      ss.clear();ss.str("fGenSignCfg    ");ss<<fGenSignCfg    .GetVal()<<"  "<<fGenSignCfg    .GetAge();INFO(ss.str());
+      ss.clear();ss.str("fFrontPanIn    ");ss<<fFrontPanIn    .GetVal()<<"  "<<fFrontPanIn    .GetAge();INFO(ss.str());
+      ss.clear();ss.str("fFrontPanOut   ");ss<<fFrontPanOut   .GetVal()<<"  "<<fFrontPanOut   .GetAge();INFO(ss.str());
+      ss.clear();ss.str("fResFlagCfg    ");ss<<fResFlagCfg    .GetVal()<<"  "<<fResFlagCfg    .GetAge();INFO(ss.str());
+      ss.clear();ss.str("fHvPwSM        ");ss<<fHvPwSM        .GetVal()<<"  "<<fHvPwSM        .GetAge();INFO(ss.str());
+      ss.clear();ss.str("fHVFanStat     ");ss<<fHVFanStat     .GetVal()<<"  "<<fHVFanStat     .GetAge();INFO(ss.str());
+      ss.clear();ss.str("fClkFreq       ");ss<<fClkFreq       .GetVal()<<"  "<<fClkFreq       .GetAge();INFO(ss.str());
+      ss.clear();ss.str("fHVClkConf     ");ss<<fHVClkConf     .GetVal()<<"  "<<fHVClkConf     .GetAge();INFO(ss.str());
+      ss.clear();ss.str("fIPAddr        ");ss<<fIPAddr        .GetVal()<<"  "<<fIPAddr        .GetAge();INFO(ss.str());
+      ss.clear();ss.str("fIPNetMsk      ");ss<<fIPNetMsk      .GetVal()<<"  "<<fIPNetMsk      .GetAge();INFO(ss.str());
+      ss.clear();ss.str("fIPGw          ");ss<<fIPGw          .GetVal()<<"  "<<fIPGw          .GetAge();INFO(ss.str());
+      ss.clear();ss.str("fPWCurrent     ");ss<<fPWCurrent     .GetVal()<<"  "<<fPWCurrent     .GetAge();INFO(ss.str());
+      ss.clear();ss.str("fOutputLevel   ");ss<<fOutputLevel   .GetVal()<<"  "<<fOutputLevel   .GetAge();INFO(ss.str());
+      ss.clear();ss.str("fSymbolicName  ");ss<<fSymbolicName  .GetVal()<<"  "<<fSymbolicName  .GetAge();INFO(ss.str());
+      ss.clear();ss.str("fCmdQueueStatus");ss<<fCmdQueueStatus.GetVal()<<"  "<<fCmdQueueStatus.GetAge();INFO(ss.str());
+      ss.clear();ss.str("fCPULoad       ");ss<<fCPULoad       .GetVal()<<"  "<<fCPULoad       .GetAge();INFO(ss.str());
+      ss.clear();ss.str("fMemoryStatus  ");ss<<fMemoryStatus  .GetVal()<<"  "<<fMemoryStatus  .GetAge();INFO(ss.str());
+    }
 };
 
 
