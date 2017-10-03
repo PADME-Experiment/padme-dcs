@@ -10,14 +10,12 @@ class VValue{
     VValue():
       fLastUpdate(0) {}
     virtual ~VValue(){}
-    T GetVal()const{
-      return fValue;
-    }
     const T& operator<<(const T & rhs){
       this->fValue=rhs;
       std::time(&fLastUpdate);
       return fValue;
     }
+    T GetVal()const{ return fValue; }
     double GetAge()const{
       time_t now;
       std::time(&now);
