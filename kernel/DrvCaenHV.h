@@ -163,6 +163,7 @@ class DrvCaenHV:public VDeviceDriver, public VDaemonSingleThread{
     void SetUsername (const std::string&s){fUsername =s;}
     void SetPassword (const std::string&s){fPassword =s;};
     void AssertInit();
+    int  GetCaenCrateHandle(){return fCaenCrateHandle;}
 
 
 

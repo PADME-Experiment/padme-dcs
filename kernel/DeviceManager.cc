@@ -13,6 +13,7 @@ class HVDumper: public VDaemonSingleThread{
   void OnCycle() {
     std::this_thread::sleep_for(std::chrono::seconds(1));
     DeviceManager::GetInstance().Get("CAENHV1")->DebugDump();
+    DeviceManager::GetInstance().Get("CAENHV1")->Get("CAENHV1.board1")->DebugDump();
   }
   void OnStop(){}
 };
