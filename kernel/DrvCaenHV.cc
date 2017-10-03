@@ -200,6 +200,7 @@ DrvCaenHV::GetSysProp_ModelName()
   char tmp[80];
   GetSysProp("ModelName",tmp);
   fModelName<<tmp;
+  INFO(tmp);
   INFO(fModelName.GetValue());
 }
 
