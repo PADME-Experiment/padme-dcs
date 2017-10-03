@@ -1,11 +1,15 @@
 #include "VDaemon.h"   //in c file
+#include "fwk/utlMessageBus.h"
 
 
   void
 VDaemonSingleThread::Daemonize()
 {
+  INFO("");
   fRun=true;
+  INFO("will start");
  fThread=new std::thread (&VDaemonSingleThread::StartCycling,this);
+  INFO("started");
 }
 
   void

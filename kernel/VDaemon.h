@@ -12,12 +12,14 @@ class VDaemonSingleThread{
     void StopThread();
     void JoinThread();
   protected:
-    bool fRun;
     void StartCycling();
     virtual void OnStart() =0;
     virtual void OnCycle() =0;//std::this_thread::sleep_for(std::chrono::seconds(1));
     virtual void OnStop()  =0;
+
+  protected:
     std::thread* fThread;
+    bool fRun;
 };
 
 

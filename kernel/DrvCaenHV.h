@@ -121,9 +121,9 @@ class DrvCaenHV:public VDeviceDriver, public VDaemonSingleThread{
       //ComDeinit();
       INFO("");
     }
-    void OnStart() {}
-    void OnCycle() {std::this_thread::sleep_for(std::chrono::seconds(3));DebugUpdate();}
-    void OnStop()  {}
+    virtual void OnStart() {}
+    virtual void OnCycle() {std::this_thread::sleep_for(std::chrono::seconds(3));DebugUpdate();}
+    virtual void OnStop()  {}
     void ConnectToDevice() {ComInit  ();}
     void DisconnectDevice(){ComDeinit();}
     void DebugUpdate(){

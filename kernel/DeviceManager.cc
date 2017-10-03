@@ -74,7 +74,7 @@ DeviceManager::ProcessConfig(const std::string& cfg)
   HVDumper hvdumper;
   hvdumper.Daemonize();
 
-  std::dynamic_pointer_cast<VDeviceDriverDaemonizable>(DeviceManager::GetInstance().Get("CAENHV1"))->Daemonize();
+  std::dynamic_pointer_cast<VDaemonSingleThread>(DeviceManager::GetInstance().Get("CAENHV1"))->Daemonize();
 
   for(int i=0;i<30;++i){ //wait 30 sec
     std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -82,7 +82,7 @@ DeviceManager::ProcessConfig(const std::string& cfg)
   }
 
   INFO("will join caenhv");
-  std::dynamic_pointer_cast<VDeviceDriverDaemonizable>(DeviceManager::GetInstance().Get("CAENHV1"))->JoinThread();
+  std::dynamic_pointer_cast<VDaemonSingleThread>(DeviceManager::GetInstance().Get("CAENHV1"))->JoinThread();
   SUCCESS("caenhv joined");
   INFO("will join hvdumper");
     hvdumper.JoinThread();
