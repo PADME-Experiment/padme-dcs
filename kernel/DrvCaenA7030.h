@@ -39,7 +39,7 @@ class DrvCaenA7030N:public VCaenHVBoard{
   public:// FIXME debug only
     void GetParentInfo(){INFO(GetParent()->GetName());}
     void UpdateValues(){
-      GetChParam_Name   ();
+      //GetChParam_Name   ();
       GetChParam_V0Set  ();
       GetChParam_I0Set  ();
       GetChParam_V1Set  ();

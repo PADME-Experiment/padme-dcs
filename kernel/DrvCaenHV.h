@@ -122,7 +122,11 @@ class DrvCaenHV:public VDeviceDriver, public VDaemonSingleThread{
       INFO("");
     }
     virtual void OnStart() {}
-    virtual void OnCycle() {std::this_thread::sleep_for(std::chrono::seconds(3));DebugUpdate();}
+    virtual void OnCycle() {std::this_thread::sleep_for(std::chrono::seconds(3));DebugUpdate();
+      VDeviceDriver::ElemIter devit;
+      devit=static_cast<VDeviceDriver::ElemIter>(nullptr);
+      while(GetNext(devit)){devit->second->DebugUpdate();}
+    }
     virtual void OnStop()  {}
     void ConnectToDevice() {ComInit  ();}
     void DisconnectDevice(){ComDeinit();}
@@ -239,7 +243,7 @@ class DrvCaenHV:public VDeviceDriver, public VDaemonSingleThread{
     //CaenHVValue<std::string> fCMDExecMode  ;  //not documented
 
 
-    public: // DEBUG
+  public: // DEBUG
     void DebugDump(){
       std::stringstream ss;
       ss.str(std::string());ss.clear();ss<<"fSessions       "<<fSessions      .GetVal()<<" @- "<<fSessions      .GetAge();INFO(ss.str());

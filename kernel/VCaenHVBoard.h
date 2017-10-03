@@ -29,6 +29,7 @@ class VCaenHVBoard:public VDeviceDriver{
     virtual ~VCaenHVBoard(){}
     void SetNumChannels(unsigned int i){fNumberOfChannels=i;}
     void SetSlot       (unsigned int i){fSlotNumber      =i;}
+    void UpdateAll();
   protected:
     void AssertNumberOfChannels(){
       //TODO
