@@ -4,6 +4,7 @@
 #include "DrvCaenHV.h"
 #include "DrvCaenA7030.h"
 #include<memory>
+#include<fstream>
 
   DeviceManager&
 DeviceManager::GetInstance()
@@ -15,7 +16,8 @@ DeviceManager::GetInstance()
   void
 DeviceManager::ProcessConfig(const std::string& cfg)
 {
-  YAML::Node config = YAML::LoadFile(cfg);
+  std::ifstream yamlconfigf(cfg);
+  YAML::Node config = YAML::Load(yamlconfigf);
   for(int nod_i=0;nod_i<config.size();++nod_i){
     if(config[nod_i]["ParentLabel"].as<std::string>()!="PADME")
       continue; // non global device
