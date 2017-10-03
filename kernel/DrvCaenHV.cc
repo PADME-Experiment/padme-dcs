@@ -161,9 +161,16 @@ DrvCaenHV::GetSysPropList() ///Get list of possible
 }
 
 
+  void
+DrvCaenHV::AssertInit()
+{
+  ComInit();
+}
 
 
 
+
+//TODO: tazi funkciya da otide v utl ili fwk
   void
 DrvCaenHV::ConvCharListVector(unsigned short n,const char* l,std::vector<std::string>&v)
 {
@@ -175,3 +182,26 @@ DrvCaenHV::ConvCharListVector(unsigned short n,const char* l,std::vector<std::st
     v.push_back(tmp);
   }
 }
+
+
+
+  void
+DrvCaenHV::GetSysProp(const std::string&cmd, void* res)
+{
+  int ret=CAENHV_GetSysProp(fCaenCrateHandle,cmd.c_str(),&res);
+  if(ret!=CAENHV_OK)
+    DrvCaenHV_except::CAENWrapperRetStatus(fCaenCrateHandle,ret);
+//Sessions   ModelName   SwRelease   GenSignCfg   FrontPanIn   FrontPanOut   ResFlagCfg   ResFlag   HvPwSM   HVFanStat   ClkFreq   HVClkConf   IPAddr   IPNetMsk   IPGw   PWCurrent   OutputLevel   SymbolicName   CmdQueueStatus   CPULoad   MemoryStatus   HVFanSpeed   PWFanStat   PWVoltage   DummyReg   CMDExecMode
+}
+
+  void
+DrvCaenHV::GetSysProp_ModelName()
+{
+  char tmp[80];
+  GetSysProp("ModelName",tmp);
+  fModelName<<tmp;
+  INFO(fModelName.GetValue());
+}
+
+
+

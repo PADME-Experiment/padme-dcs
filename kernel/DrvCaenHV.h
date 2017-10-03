@@ -130,6 +130,9 @@ class DrvCaenHV:public VDeviceDriver{
     void SetIPAddress(const std::string&s){fIPAddress=s;}
     void SetUsername (const std::string&s){fUsername =s;}
     void SetPassword (const std::string&s){fPassword =s;};
+    void GetSysProp(const std::string&cmd, void* res);
+    void GetSysProp_ModelName();
+    void AssertInit();
 
 
 
@@ -144,6 +147,9 @@ class DrvCaenHV:public VDeviceDriver{
   private:
     void ConvCharListVector(unsigned short n,const char*
         l,std::vector<std::string>&v);
+
+  private: // values
+    CaenHVValue<std::string> fModelName;
 };
 
 

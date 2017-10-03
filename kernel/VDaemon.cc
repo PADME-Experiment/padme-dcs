@@ -2,15 +2,15 @@
 
 
   void
-VDaemon::Daemonize()
+VDaemonSingleThread::Daemonize()
 {
   fRun=true;
  // fThread=new 
-  std::thread (&VDaemon::StartCycling,this).detach();
+  std::thread (&VDaemonSingleThread::StartCycling,this).detach();
 }
 
   void
-VDaemon::StartCycling()
+VDaemonSingleThread::StartCycling()
 {
   OnStart();
   while(fRun){
@@ -20,7 +20,7 @@ VDaemon::StartCycling()
 }
 
   void
-VDaemon::Kill()
+VDaemonSingleThread::Kill()
 {
   fRun=false;
 }

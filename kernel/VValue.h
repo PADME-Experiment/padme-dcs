@@ -13,6 +13,11 @@ class VValue{
     T GetValue()const{
       return fValue;
     }
+    const T& operator<<(const T & rhs){
+      this->fValue=rhs;
+      //std::time(&fLastUpdate);
+      return fValue;
+    }
     double GetValueAge()const{
       time_t now;
       std::time(&now);
@@ -23,8 +28,12 @@ class VValue{
   protected:
     time_t fLastUpdate;
     T fValue;
-
-
 };
+
+
+template <class T>
+class CaenHVCrateValue:public VValue<T>{
+};
+
 
 #endif

@@ -1,6 +1,7 @@
 #ifndef  _DCS_kernel_VDeviceDriver_h_
 #define  _DCS_kernel_VDeviceDriver_h_ 1
 #include "VDeviceDriver.h"   //in c file
+#include "VDaemon.h"
 #include "fwk/fwkException.h"
 #include "fwk/utlMessageBus.h"
 #include<string>
@@ -21,26 +22,22 @@ class VDeviceDriver{
     const std::string& GetName()const{return fLabel;}
     virtual void DebugInfo(){}
 
-    bool GetNext(ElemIter& it){
-      std::stringstream ss;
-      ss<<&(*it);
-      INFO(ss.str());
-      if(it==static_cast<ElemIter>(nullptr))
-        it=fAllDevs.begin();
-      else ++it;
-      if(it==fAllDevs.end()){
-        it=static_cast<ElemIter>(nullptr);
-        INFO("false");
-        return false;
-      }
-      INFO("true");
-      return true;
-
-    }
+    bool GetNext(ElemIter& it);
+    void AssertInit();
   protected:
     std::string fLabel;
     std::map<std::string,std::shared_ptr<VDeviceDriver>> fAllDevs;
     std::shared_ptr<VDeviceDriver> fParent;
 };
+
+class VDeviceDriverDaemonizable:public VDeviceDriver,public VDaemonSingleThread{
+  public:
+    VDeviceDriverDaemonizable(
+        const std::string& lab,
+        std::shared_ptr<VDeviceDriver> par):
+      VDeviceDriver(lab,par){}
+};
+
+
 
 #endif

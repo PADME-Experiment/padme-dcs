@@ -50,6 +50,7 @@ DeviceManager::ProcessConfig(const std::string& cfg)
     }else if(drvtype=="NYAKOJ DRUG DETEKTOR"){
     }
   }
+
   VDeviceDriver::ElemIter devit=static_cast<VDeviceDriver::ElemIter>(nullptr);
   while(GetNext(devit)){devit->second->DebugInfo();}
 

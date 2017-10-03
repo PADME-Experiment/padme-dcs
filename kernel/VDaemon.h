@@ -2,10 +2,10 @@
 #define  _DCS_kernel_VDaemon_h_ 1
 #include <thread>
 
-class VDaemon{
+class VDaemonSingleThread{
   public:
-    VDaemon():fRun(false){}
-    virtual ~VDaemon(){}
+    VDaemonSingleThread():fRun(false){}
+    virtual ~VDaemonSingleThread(){}
 
     void Daemonize();
     void Kill();
@@ -17,5 +17,6 @@ class VDaemon{
     virtual void OnStop()=0;
     //std::thread* fThread;
 };
+
 
 #endif
