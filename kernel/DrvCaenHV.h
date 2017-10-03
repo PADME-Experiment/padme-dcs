@@ -117,6 +117,7 @@ class DrvCaenHV:public VDeviceDriver{
       GetCrateMap();
       GetExecCommList();
       GetSysPropList();
+      GetSysProp_ModelName();
       INFO("");
     }
 
