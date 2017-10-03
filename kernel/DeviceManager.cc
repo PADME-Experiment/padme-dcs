@@ -42,7 +42,7 @@ DeviceManager::ProcessConfig(const std::string& cfg)
     const std::string& parlble=config[nod_i]["ParentLabel"].as<std::string>();
     if(drvtype=="CAEN_A7030"){
       auto board=std::dynamic_pointer_cast<DrvCaenA7030>(
-          AddDevice(devlble,std::make_shared<DrvCaenA7030>(devlble,Get(parlble)))
+          Get(parlble)->AddDevice(devlble,std::make_shared<DrvCaenA7030>(devlble,Get(parlble)))
           );
       board->GetParentInfo();
       board->SetNumChannels ( config[nod_i]["Args"]["NChannels"  ].as<unsigned int>());
