@@ -5,8 +5,8 @@
 #include"fwk/utlMessageBus.h"
 
 int main(){
-  try{
     DeviceManager::GetInstance().ProcessConfig("glob.yaml");
+  try{
   }
   catch(const fwk::Exception& e){
     std::cerr<<e.what()<<std::endl;

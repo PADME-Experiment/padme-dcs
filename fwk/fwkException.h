@@ -3,6 +3,8 @@
 #include<typeinfo>
 #include<string>
 
+#define FIXME_EXCEPTION( err___ ) ( fwk::Exception_tobefixed(std::string(__FILE__)+":"+std::to_string(__LINE__) +"  ("+__FUNCTION__ +")  "+ err___))
+
 /**
  * This is a example header file
  * class MessageBus_except:public fwk::Exception{

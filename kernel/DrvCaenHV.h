@@ -3,6 +3,7 @@
 #include "DrvCaenHV.h"   //in c file
 
 #include"VDeviceDriver.h"
+#include "VCaenHVBoard.h"
 
 
 #include "fwk/fwkException.h"
@@ -105,30 +106,36 @@ class DrvCaenHV:public VDeviceDriver{
     DrvCaenHV(const std::string&lab,std::shared_ptr<VDeviceDriver>a):VDeviceDriver(lab,a)
     {
       INFO("pars");
-      //throw  DrvCaenHV_except::Except_OK ("whatstr") ;
-      //ComInit();
-      //GetCrateMap();
-      //GetExecCommList();
-      //GetSysPropList();
     }
     ~DrvCaenHV(){
       //ComDeinit();
       INFO("");
     }
+    void DebugInfo(){
+      ComInit();
+      GetCrateMap();
+      GetExecCommList();
+      GetSysPropList();
+    }
+
+
   public:
     void ComDeinit();
-    void ComInit(
-        const std::string&ipaddr="192.168.0.1",
-        const std::string&user="admin",
-        const std::string&pass="admin");
+    void ComInit();
     void GetCrateMap();
     void GetExecCommList();
     void GetSysPropList();
+    void SetIPAddress(const std::string&s){fIPAddress=s;}
+    void SetUsername (const std::string&s){fUsername =s;}
+    void SetPassword (const std::string&s){fPassword =s;};
 
 
 
   private:
     int fCaenCrateHandle;
+    std::string fIPAddress;
+    std::string fUsername;
+    std::string fPassword;
 
 
 

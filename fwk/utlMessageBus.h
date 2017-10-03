@@ -77,7 +77,10 @@ namespace utl{
       //        NewMessage(t, l, message.str());
       //      }
     private:
-      MessageBus():fDebugLevel(5),fTimeFormat("%FT%T%z"),fUseLocalTime(false){};
+      MessageBus():
+        //fTimeFormat("%FT%T%z"),fUseLocalTime(true),
+        fTimeFormat("@%s"),fUseLocalTime(false),
+        fDebugLevel(5) {};
       ~MessageBus(){if(fFile.is_open()) fFile.close();}
       unsigned int fDebugLevel;
       std::ofstream fFile;

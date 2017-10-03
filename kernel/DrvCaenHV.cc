@@ -6,7 +6,7 @@
 DrvCaenHV_except::CAENWrapperRetStatus(int caenhandler,int retstatus, const std::string& add)
 { std::string a(CAENHV_GetError(caenhandler));
   std::string str("CAENHVWrapper returned error ("+std::to_string(retstatus)+") : '" + a + "'");
-  if(add.size()>0)str+="\n"+add;
+  if(add.size()>0)str+="   "+add;
 
   switch (retstatus){
     case CAENHV_SYSERR               : throw DrvCaenHV_except::Except_SYSERR               (str) ;break;
@@ -53,15 +53,15 @@ DrvCaenHV_except::CAENWrapperRetStatus(int caenhandler,int retstatus, const std:
 
 
   void
-DrvCaenHV::ComInit( const std::string&ipaddr, const std::string&user, const std::string&pass)
+DrvCaenHV::ComInit()
 {
   CAENHVRESULT ret;
   CAENHV_SYSTEM_TYPE_t sys_type = (CAENHV_SYSTEM_TYPE_t) SY4527; // 0: SY1527, 2: SY4527
   int link_type = LINKTYPE_TCPIP;
-  ret = CAENHV_InitSystem(sys_type, link_type, (void*)ipaddr.c_str(), user.c_str(), pass.c_str(), &fCaenCrateHandle);
+  ret = CAENHV_InitSystem(sys_type, link_type, (void*)fIPAddress.c_str(), fUsername.c_str(), fPassword.c_str(), &fCaenCrateHandle);
   if(ret != CAENHV_OK){
     DrvCaenHV_except::CAENWrapperRetStatus(fCaenCrateHandle,ret,
-        "IP = "+ipaddr+"\nuser = "+user+"\npass = "+pass);
+        "IP = "+fIPAddress+"  user = "+fUsername+"  pass = "+fPassword);
   }
 }
 
