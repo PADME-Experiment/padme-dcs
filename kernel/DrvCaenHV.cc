@@ -188,7 +188,7 @@ DrvCaenHV::ConvCharListVector(unsigned short n,const char* l,std::vector<std::st
   void
 DrvCaenHV::GetSysProp(const std::string&cmd, void* res)
 {
-  int ret=CAENHV_GetSysProp(fCaenCrateHandle,cmd.c_str(),&res);
+  int ret=CAENHV_GetSysProp(fCaenCrateHandle,cmd.c_str(),res);
   if(ret!=CAENHV_OK)
     DrvCaenHV_except::CAENWrapperRetStatus(fCaenCrateHandle,ret);
   //Sessions   ModelName   SwRelease   GenSignCfg   FrontPanIn   FrontPanOut   ResFlagCfg   ResFlag   HvPwSM   HVFanStat   ClkFreq   HVClkConf   IPAddr   IPNetMsk   IPGw   PWCurrent   OutputLevel   SymbolicName   CmdQueueStatus   CPULoad   MemoryStatus   HVFanSpeed   PWFanStat   PWVoltage   DummyReg   CMDExecMode
