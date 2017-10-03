@@ -6,10 +6,10 @@
 
 #include <string>
 
-class DrvCaenA7030:public VCaenHVBoard{
+class DrvCaenA7030N:public VCaenHVBoard{
   public:
-    DrvCaenA7030(const std::string& s, std::shared_ptr<VDeviceDriver>d):VCaenHVBoard(s,d){INFO("");}
-    ~DrvCaenA7030(){INFO("");}
+    DrvCaenA7030N(const std::string& s, std::shared_ptr<VDeviceDriver>d):VCaenHVBoard(s,d){INFO("");}
+    ~DrvCaenA7030N(){INFO("");}
     void GetParentInfo(){INFO(GetParent()->GetName());}
 };
 

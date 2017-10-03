@@ -5,6 +5,9 @@
 #include"fwk/utlMessageBus.h"
 
 int main(){
+
+
+
     DeviceManager::GetInstance().ProcessConfig("glob.yaml");
   try{
   }

@@ -6,4 +6,4 @@
 - Args: {Slot: 1, NChannels: 48}
   Label: "CAENHV1.board1"
   ParentLabel: "CAENHV1"
-  DriverType: CAEN_A7030
+  DriverType: CAEN_A7030N
