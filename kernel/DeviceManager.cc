@@ -63,6 +63,7 @@ DeviceManager::ProcessConfig(const std::string& cfg)
       board->GetParentInfo();
       board->SetNumChannels ( config[nod_i]["Args"]["NChannels"  ].as<unsigned int>());
       board->SetSlot        ( config[nod_i]["Args"]["Slot"       ].as<unsigned int>());
+      board->AssertInit();
     }else if(drvtype=="NYAKOJ DRUG DETEKTOR"){
     }
   }
