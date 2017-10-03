@@ -15,7 +15,7 @@ class VValue{
     }
     const T& operator<<(const T & rhs){
       this->fValue=rhs;
-      //std::time(&fLastUpdate);
+      std::time(&fLastUpdate);
       return fValue;
     }
     double GetAge()const{

@@ -194,7 +194,7 @@ DrvCaenHV::GetSysProp(const std::string&cmd, void* res)
 }
 
 
-void DrvCaenHV::GetSysProp_Sessions      (){char tmp[80];GetSysProp("Sessions"       , tmp);fSessions      <<tmp;}
+void DrvCaenHV::GetSysProp_Sessions      (){char tmp[500];GetSysProp("Sessions"       , tmp);fSessions      <<tmp;}
 void DrvCaenHV::GetSysProp_ModelName     (){char tmp[80];GetSysProp("ModelName"      , tmp);fModelName     <<tmp;}
 void DrvCaenHV::GetSysProp_SwRelease     (){char tmp[80];GetSysProp("SwRelease"      , tmp);fSwRelease     <<tmp;}
 void DrvCaenHV::GetSysProp_GenSignCfg    (){uint16_t tmp;GetSysProp("GenSignCfg"     ,&tmp);fGenSignCfg    <<tmp;}
