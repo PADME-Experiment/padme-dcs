@@ -5,6 +5,22 @@
 #include "DrvCaenA7030.h"
 #include<memory>
 
+
+
+
+class HVDumper: public VDaemonSingleThread{
+  void OnStart() {}
+  void OnCycle() {
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    DeviceManager::GetInstance().Get("CAENHV1")->DebugDump();
+  }
+  void OnStop(){}
+};
+
+
+
+
+
   DeviceManager&
 DeviceManager::GetInstance()
 {
@@ -15,6 +31,7 @@ DeviceManager::GetInstance()
   void
 DeviceManager::ProcessConfig(const std::string& cfg)
 {
+
   YAML::Node config = YAML::LoadFile(cfg);
   for(int nod_i=0;nod_i<config.size();++nod_i){
     if(config[nod_i]["ParentLabel"].as<std::string>()!="PADME")
@@ -32,8 +49,6 @@ DeviceManager::ProcessConfig(const std::string& cfg)
     }else if(drvtype=="NYAKOJ DRUG DETEKTOR"){
     }
   }
-
-
   for(int nod_i=0;nod_i<config.size();++nod_i){
     if(config[nod_i]["ParentLabel"].as<std::string>().size()==0)
       continue;
@@ -51,8 +66,30 @@ DeviceManager::ProcessConfig(const std::string& cfg)
     }
   }
 
-  VDeviceDriver::ElemIter devit=static_cast<VDeviceDriver::ElemIter>(nullptr);
-  while(GetNext(devit)){devit->second->DebugInfo();}
+  VDeviceDriver::ElemIter devit;
+  devit=static_cast<VDeviceDriver::ElemIter>(nullptr);
+  while(GetNext(devit)){devit->second->ConnectToDevice();}
+
+
+  HVDumper hvdumper;
+  hvdumper.Daemonize();
+
+  std::dynamic_pointer_cast<VDeviceDriverDaemonizable>(DeviceManager::GetInstance().Get("CAENHV1"))->Daemonize();
+
+  for(int i=0;i<30;++i){ //wait 30 sec
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    INFO(std::to_string(i));
+  }
+
+  INFO("will join caenhv");
+  std::dynamic_pointer_cast<VDeviceDriverDaemonizable>(DeviceManager::GetInstance().Get("CAENHV1"))->JoinThread();
+  SUCCESS("caenhv joined");
+  INFO("will join hvdumper");
+    hvdumper.JoinThread();
+  SUCCESS("hvdumper joined");
+
+  devit=static_cast<VDeviceDriver::ElemIter>(nullptr);
+  while(GetNext(devit)){devit->second->DisconnectDevice();}
 
 
 

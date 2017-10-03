@@ -4,11 +4,13 @@
 #include<iostream>
 #include"fwk/utlMessageBus.h"
 
+
+
 int main(){
 
 
 
-    DeviceManager::GetInstance().ProcessConfig("glob.yaml");
+  DeviceManager::GetInstance().ProcessConfig("glob.yaml");
   try{
   }
   catch(const fwk::Exception& e){

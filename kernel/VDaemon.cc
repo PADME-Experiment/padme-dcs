@@ -5,8 +5,7 @@
 VDaemonSingleThread::Daemonize()
 {
   fRun=true;
- // fThread=new 
-  std::thread (&VDaemonSingleThread::StartCycling,this).detach();
+ fThread=new std::thread (&VDaemonSingleThread::StartCycling,this);
 }
 
   void
@@ -20,7 +19,17 @@ VDaemonSingleThread::StartCycling()
 }
 
   void
-VDaemonSingleThread::Kill()
+VDaemonSingleThread::JoinThread()
 {
   fRun=false;
+  fThread->join();
+  delete fThread;
+}
+
+  void
+VDaemonSingleThread::KillThread()
+{
+  fRun=false;
+  fThread->detach();
+  delete fThread;
 }

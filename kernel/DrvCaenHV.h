@@ -102,7 +102,15 @@ class DrvCaenHV_except::Except_LOGOUTFAILED         : public DrvCaenHV_except {p
 class DrvCaenHV_except::Except_LINKNOTSUPPORTED     : public DrvCaenHV_except {public: Except_LINKNOTSUPPORTED    (const std::string&s):DrvCaenHV_except(s){ fwk::Exception::SetType(*this); }; };
 class DrvCaenHV_except::Except_USERPASSFAILED       : public DrvCaenHV_except {public: Except_USERPASSFAILED      (const std::string&s):DrvCaenHV_except(s){ fwk::Exception::SetType(*this); }; };
 
-class DrvCaenHV:public VDeviceDriver{
+
+
+
+
+
+
+
+
+class DrvCaenHV:public VDeviceDriver, public VDaemonSingleThread{
   public:
     //DrvCaenHV(){INFO("dummy");}
     DrvCaenHV(const std::string&lab,std::shared_ptr<VDeviceDriver>a):VDeviceDriver(lab,a)
@@ -113,12 +121,13 @@ class DrvCaenHV:public VDeviceDriver{
       //ComDeinit();
       INFO("");
     }
-    void DebugInfo(){
+    void OnStart() {}
+    void OnCycle() {std::this_thread::sleep_for(std::chrono::seconds(3));DebugUpdate();}
+    void OnStop()  {}
+    void ConnectToDevice() {ComInit  ();}
+    void DisconnectDevice(){ComDeinit();}
+    void DebugUpdate(){
       INFO("");
-      ComInit();
-      GetCrateMap();
-      GetExecCommList();
-      GetSysPropList();
       INFO("");GetSysProp_Sessions      ();
       INFO("");GetSysProp_ModelName     ();
       INFO("");GetSysProp_SwRelease     ();
@@ -232,26 +241,26 @@ class DrvCaenHV:public VDeviceDriver{
     public: // DEBUG
     void DebugDump(){
       std::stringstream ss;
-      ss.clear();ss.str("fSessions      ");ss<<fSessions      .GetVal()<<"  "<<fSessions      .GetAge();INFO(ss.str());
-      ss.clear();ss.str("fModelName     ");ss<<fModelName     .GetVal()<<"  "<<fModelName     .GetAge();INFO(ss.str());
-      ss.clear();ss.str("fSwRelease     ");ss<<fSwRelease     .GetVal()<<"  "<<fSwRelease     .GetAge();INFO(ss.str());
-      ss.clear();ss.str("fGenSignCfg    ");ss<<fGenSignCfg    .GetVal()<<"  "<<fGenSignCfg    .GetAge();INFO(ss.str());
-      ss.clear();ss.str("fFrontPanIn    ");ss<<fFrontPanIn    .GetVal()<<"  "<<fFrontPanIn    .GetAge();INFO(ss.str());
-      ss.clear();ss.str("fFrontPanOut   ");ss<<fFrontPanOut   .GetVal()<<"  "<<fFrontPanOut   .GetAge();INFO(ss.str());
-      ss.clear();ss.str("fResFlagCfg    ");ss<<fResFlagCfg    .GetVal()<<"  "<<fResFlagCfg    .GetAge();INFO(ss.str());
-      ss.clear();ss.str("fHvPwSM        ");ss<<fHvPwSM        .GetVal()<<"  "<<fHvPwSM        .GetAge();INFO(ss.str());
-      ss.clear();ss.str("fHVFanStat     ");ss<<fHVFanStat     .GetVal()<<"  "<<fHVFanStat     .GetAge();INFO(ss.str());
-      ss.clear();ss.str("fClkFreq       ");ss<<fClkFreq       .GetVal()<<"  "<<fClkFreq       .GetAge();INFO(ss.str());
-      ss.clear();ss.str("fHVClkConf     ");ss<<fHVClkConf     .GetVal()<<"  "<<fHVClkConf     .GetAge();INFO(ss.str());
-      ss.clear();ss.str("fIPAddr        ");ss<<fIPAddr        .GetVal()<<"  "<<fIPAddr        .GetAge();INFO(ss.str());
-      ss.clear();ss.str("fIPNetMsk      ");ss<<fIPNetMsk      .GetVal()<<"  "<<fIPNetMsk      .GetAge();INFO(ss.str());
-      ss.clear();ss.str("fIPGw          ");ss<<fIPGw          .GetVal()<<"  "<<fIPGw          .GetAge();INFO(ss.str());
-      ss.clear();ss.str("fPWCurrent     ");ss<<fPWCurrent     .GetVal()<<"  "<<fPWCurrent     .GetAge();INFO(ss.str());
-      ss.clear();ss.str("fOutputLevel   ");ss<<fOutputLevel   .GetVal()<<"  "<<fOutputLevel   .GetAge();INFO(ss.str());
-      ss.clear();ss.str("fSymbolicName  ");ss<<fSymbolicName  .GetVal()<<"  "<<fSymbolicName  .GetAge();INFO(ss.str());
-      ss.clear();ss.str("fCmdQueueStatus");ss<<fCmdQueueStatus.GetVal()<<"  "<<fCmdQueueStatus.GetAge();INFO(ss.str());
-      ss.clear();ss.str("fCPULoad       ");ss<<fCPULoad       .GetVal()<<"  "<<fCPULoad       .GetAge();INFO(ss.str());
-      ss.clear();ss.str("fMemoryStatus  ");ss<<fMemoryStatus  .GetVal()<<"  "<<fMemoryStatus  .GetAge();INFO(ss.str());
+      ss.str(std::string());ss.clear();ss<<"fSessions       "<<fSessions      .GetVal()<<" @- "<<fSessions      .GetAge();INFO(ss.str());
+      ss.str(std::string());ss.clear();ss<<"fModelName      "<<fModelName     .GetVal()<<" @- "<<fModelName     .GetAge();INFO(ss.str());
+      ss.str(std::string());ss.clear();ss<<"fSwRelease      "<<fSwRelease     .GetVal()<<" @- "<<fSwRelease     .GetAge();INFO(ss.str());
+      ss.str(std::string());ss.clear();ss<<"fGenSignCfg     "<<fGenSignCfg    .GetVal()<<" @- "<<fGenSignCfg    .GetAge();INFO(ss.str());
+      ss.str(std::string());ss.clear();ss<<"fFrontPanIn     "<<fFrontPanIn    .GetVal()<<" @- "<<fFrontPanIn    .GetAge();INFO(ss.str());
+      ss.str(std::string());ss.clear();ss<<"fFrontPanOut    "<<fFrontPanOut   .GetVal()<<" @- "<<fFrontPanOut   .GetAge();INFO(ss.str());
+      ss.str(std::string());ss.clear();ss<<"fResFlagCfg     "<<fResFlagCfg    .GetVal()<<" @- "<<fResFlagCfg    .GetAge();INFO(ss.str());
+      ss.str(std::string());ss.clear();ss<<"fHvPwSM         "<<fHvPwSM        .GetVal()<<" @- "<<fHvPwSM        .GetAge();INFO(ss.str());
+      ss.str(std::string());ss.clear();ss<<"fHVFanStat      "<<fHVFanStat     .GetVal()<<" @- "<<fHVFanStat     .GetAge();INFO(ss.str());
+      ss.str(std::string());ss.clear();ss<<"fClkFreq        "<<fClkFreq       .GetVal()<<" @- "<<fClkFreq       .GetAge();INFO(ss.str());
+      ss.str(std::string());ss.clear();ss<<"fHVClkConf      "<<fHVClkConf     .GetVal()<<" @- "<<fHVClkConf     .GetAge();INFO(ss.str());
+      ss.str(std::string());ss.clear();ss<<"fIPAddr         "<<fIPAddr        .GetVal()<<" @- "<<fIPAddr        .GetAge();INFO(ss.str());
+      ss.str(std::string());ss.clear();ss<<"fIPNetMsk       "<<fIPNetMsk      .GetVal()<<" @- "<<fIPNetMsk      .GetAge();INFO(ss.str());
+      ss.str(std::string());ss.clear();ss<<"fIPGw           "<<fIPGw          .GetVal()<<" @- "<<fIPGw          .GetAge();INFO(ss.str());
+      ss.str(std::string());ss.clear();ss<<"fPWCurrent      "<<fPWCurrent     .GetVal()<<" @- "<<fPWCurrent     .GetAge();INFO(ss.str());
+      ss.str(std::string());ss.clear();ss<<"fOutputLevel    "<<fOutputLevel   .GetVal()<<" @- "<<fOutputLevel   .GetAge();INFO(ss.str());
+      ss.str(std::string());ss.clear();ss<<"fSymbolicName   "<<fSymbolicName  .GetVal()<<" @- "<<fSymbolicName  .GetAge();INFO(ss.str());
+      ss.str(std::string());ss.clear();ss<<"fCmdQueueStatus "<<fCmdQueueStatus.GetVal()<<" @- "<<fCmdQueueStatus.GetAge();INFO(ss.str());
+      ss.str(std::string());ss.clear();ss<<"fCPULoad        "<<fCPULoad       .GetVal()<<" @- "<<fCPULoad       .GetAge();INFO(ss.str());
+      ss.str(std::string());ss.clear();ss<<"fMemoryStatus   "<<fMemoryStatus  .GetVal()<<" @- "<<fMemoryStatus  .GetAge();INFO(ss.str());
     }
 };
 

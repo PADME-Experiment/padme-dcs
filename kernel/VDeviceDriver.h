@@ -20,7 +20,12 @@ class VDeviceDriver{
     std::shared_ptr<VDeviceDriver>Get(const std::string& str){return fAllDevs.at(str);}
     std::shared_ptr<VDeviceDriver>GetParent(){if(fParent.use_count()==0)throw FIXME_EXCEPTION("Parent doesnt exist ");else return fParent;}
     const std::string& GetName()const{return fLabel;}
-    virtual void DebugInfo(){}
+    virtual void DebugUpdate(){}
+    virtual void DebugDump(){}
+    virtual void ConnectToDevice(){}
+    virtual void DisconnectDevice(){}
+
+
 
     bool GetNext(ElemIter& it);
     void AssertInit();
