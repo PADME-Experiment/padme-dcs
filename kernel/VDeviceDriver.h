@@ -25,13 +25,17 @@ class VDeviceDriver{
       std::stringstream ss;
       ss<<&(*it);
       INFO(ss.str());
+      if(it==static_cast<ElemIter>(nullptr))
+        it=fAllDevs.begin();
+      else ++it;
       if(it==fAllDevs.end()){
         it=static_cast<ElemIter>(nullptr);
+        INFO("false");
         return false;
       }
-      if(it==static_cast<ElemIter>(nullptr)) it=fAllDevs.begin();
-      else ++it;
+      INFO("true");
       return true;
+
     }
   protected:
     std::string fLabel;

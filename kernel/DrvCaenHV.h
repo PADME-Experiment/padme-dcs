@@ -112,10 +112,12 @@ class DrvCaenHV:public VDeviceDriver{
       INFO("");
     }
     void DebugInfo(){
+      INFO("");
       ComInit();
       GetCrateMap();
       GetExecCommList();
       GetSysPropList();
+      INFO("");
     }
 
 
