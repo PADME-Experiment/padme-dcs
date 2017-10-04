@@ -70,20 +70,10 @@ class DrvCaenA7030N:public VCaenHVBoard{
       ss.str(std::string());ss.clear(); ss<<"VMon   "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesVMon [i].GetVal()<<"("<<fValuesVMon [i].GetAge()<<"s)"; } INFO(ss.str());
       ss.str(std::string());ss.clear(); ss<<"IMon   "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesIMon [i].GetVal()<<"("<<fValuesIMon [i].GetAge()<<"s)"; } INFO(ss.str());
 
-      ss.str(std::string());ss.clear(); ss<<"Status ";
-      for(int i=0;i<fNumberOfChannels;++i){
-        ss<<" 0x"<<std::bitset<32>(fValuesStatus[i].GetVal())<<"("<<fValuesStatus[i].GetAge()<<"s)";
-      }
-      INFO(ss.str());
-
-      ss.str(std::string());ss.clear(); ss<<"Pw ";
-      for(int i=0;i<fNumberOfChannels;++i){
-        ss<<" 0x"<<std::bitset<32>(fValuesPw[i].GetVal())<<"("<<fValuesPw[i].GetAge()<<"s)";
-      }
-      INFO(ss.str());
-
-
-
+      ss.str(std::string());ss.clear(); ss<<"Status    "; for(int i=0;i<fNumberOfChannels;++i){ ss<<" 0x"<<std::bitset<16>(fValuesStatus [i].GetVal())<<"("<<fValuesStatus [i].GetAge()<<"s)"; } INFO(ss.str());
+      ss.str(std::string());ss.clear(); ss<<"Pw        "; for(int i=0;i<fNumberOfChannels;++i){ ss<<" 0x"<<std::bitset< 3>(fValuesPw     [i].GetVal())<<"("<<fValuesPw     [i].GetAge()<<"s)"; } INFO(ss.str());
+      ss.str(std::string());ss.clear(); ss<<"TripIntPw "; for(int i=0;i<fNumberOfChannels;++i){ ss<<" 0x"<<std::bitset< 3>(fValuesTripInt[i].GetVal())<<"("<<fValuesTripInt[i].GetAge()<<"s)"; } INFO(ss.str());
+      ss.str(std::string());ss.clear(); ss<<"TripExtPw "; for(int i=0;i<fNumberOfChannels;++i){ ss<<" 0x"<<std::bitset< 3>(fValuesTripExt[i].GetVal())<<"("<<fValuesTripExt[i].GetAge()<<"s)"; } INFO(ss.str());
     }
   private:
     std::vector<CaenHVValue<std::string>>fValuesName   ;
