@@ -9,6 +9,7 @@
 #include <string>
 #include<cstdint>
 #include<vector>
+#include <bitset>         // std::bitset
 
 class DrvCaenA7030N:public VCaenHVBoard{
   public:
@@ -62,6 +63,21 @@ class DrvCaenA7030N:public VCaenHVBoard{
         ss<<fValuesVMon[i].GetVal()<<"("<<fValuesVMon[i].GetAge()<<"s)";
       }
       INFO(ss.str());
+
+      ss.str(std::string());ss.clear(); ss<<"Status ";
+      for(int i=0;i<fNumberOfChannels;++i){
+        ss<<" 0x"<<std::bitset<32>(fValuesStatus[i].GetVal())<<"("<<fValuesStatus[i].GetAge()<<"s)";
+      }
+      INFO(ss.str());
+
+      ss.str(std::string());ss.clear(); ss<<"Pw ";
+      for(int i=0;i<fNumberOfChannels;++i){
+        ss<<" 0x"<<std::bitset<32>(fValuesPw[i].GetVal())<<"("<<fValuesPw[i].GetAge()<<"s)";
+      }
+      INFO(ss.str());
+
+
+
     }
   private:
     std::vector<CaenHVValue<std::string>>fValuesName   ;
