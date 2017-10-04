@@ -3,6 +3,7 @@
 #include <thread>
 #include <mutex>
 #include<list>
+#include "fwk/utlMessageBus.h"
 
 class VDaemonSingleThread{
   public:
@@ -40,7 +41,7 @@ class VDaemonService{
 class VDaemonServiceTCP:public VDaemonService{
   public:
     VDaemonServiceTCP(int port):fPort(port){Initialize();}
-    virtual ~VDaemonServiceTCP(){Finalize();}
+    virtual ~VDaemonServiceTCP(){INFO("");Finalize();}
 
   protected:
     virtual void ServiceLoop(const int fd);//=0{} FIXME should be pure virtual

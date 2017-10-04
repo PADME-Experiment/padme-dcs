@@ -89,14 +89,22 @@ VDaemonServiceTCP::Initialize()
   }
 
   fServiceSocket= socket(servinfo->ai_family, servinfo->ai_socktype, servinfo->ai_protocol);
-  if(fServiceSocket==-1){
-    ERROR("socket=-1");
-    return;
-  }
+  if(fServiceSocket==-1){ ERROR("socket=-1"); return; }
 
-  bind(fServiceSocket, servinfo->ai_addr, servinfo->ai_addrlen);
+  int x=1;
+  if(-1==
+      setsockopt(fServiceSocket, SOL_SOCKET, SO_REUSEADDR,&x, sizeof(x))
+    ) { ERROR("setsockopt=-1"); return; }
+
+
+
+  if(-1==
+      bind(fServiceSocket, servinfo->ai_addr, servinfo->ai_addrlen)
+    ) { ERROR("bindresult=-1"); return; }
   freeaddrinfo(servinfo); // free the linked-list
-  listen(fServiceSocket,10);
+  if(-1==
+      listen(fServiceSocket,10)
+    ) { ERROR("listen=-1"); return; }
   INFO("");
 }
 
@@ -124,11 +132,19 @@ VDaemonServiceTCP::ServiceLoop(const int fd)
 {
   // FIXME this function should be pure virtual
   // this is an example only
-  std::string buf;
-  buf.resize(10000,0);
-  while(buf.find("bye",0,3)){
-    int len=recv(fd,&(*buf.begin()),buf.size(),0);
-    std::string received=buf.substr(0,len-2);
+  std::string received;
+  while(received.find("bye",0,3)==std::string::npos){
+    received.clear();
+    char buf[200];
+    int len=recv(fd,buf,sizeof(buf),0);
+    received.append(buf,len);
+    while(received.back()!='\n'){
+      int len=recv(fd,buf,sizeof(buf),0);
+      received.append(buf,len);
+    }
+    received.erase (received.end()-2, received.end());
+    int sentbytes=send(fd,received.data(),received.size(),0);
+
     SUCCESS(received+"  size  "+std::to_string(received.size()));
 
   }
