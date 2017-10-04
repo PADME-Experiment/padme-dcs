@@ -23,6 +23,7 @@ utl::MessageBus_except::UnknownMessageType(utl::MessageBus::eMessageType& mt)
   utl::MessageBus&
 utl::MessageBus::GetInstance()
 {
+    //std::lock_guard<std::mutex> lock(fGetInstanceBarrier);
   static MessageBus a;
   return a;
 }
@@ -50,6 +51,7 @@ utl::MessageBus::NewMessage(
     unsigned int l,
     const std::string& mes)
 {
+    std::lock_guard<std::mutex> lock(fNewMessageBarrier);
   std::stringstream timePref;
   if(fTimeFormat.size()>0){
     std::time_t t=std::time(nullptr);

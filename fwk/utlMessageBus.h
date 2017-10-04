@@ -13,12 +13,13 @@
 #define ERROR(        err___ ) (utl::MessageBus::GetInstance().NewMessage(utl::MessageBus::eMessageType::eError,     0, std::string(__FILE__)+":"+std::to_string(__LINE__) +"  ("+__FUNCTION__ +")  "+ err___))
 #define FATAL_ERROR(  err___ ) (utl::MessageBus::GetInstance().NewMessage(utl::MessageBus::eMessageType::eFatalError,0, std::string(__FILE__)+":"+std::to_string(__LINE__) +"  ("+__FUNCTION__ +")  "+ err___))
 
+#include"fwkException.h"
 
 #include<iostream>
 #include<fstream>
 #include<sstream>
 #include<string>
-#include"fwkException.h"
+#include<mutex>
 
 namespace utl{
   /// MessageBus help to log information from the program execution
@@ -86,7 +87,14 @@ namespace utl{
       std::ofstream fFile;
       std::string fTimeFormat;
       bool fUseLocalTime;
+      std::mutex fGetInstanceBarrier;
+      std::mutex fNewMessageBarrier;
+
   };
+
+
+
+
   class MessageBus_except:public fwk::Exception{
     public:
       MessageBus_except(){fwk::Exception::SetType(*this);}
