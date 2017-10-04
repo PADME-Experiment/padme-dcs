@@ -8,7 +8,7 @@
     //void GetChParam(const std::string&par, void* res);
 
     void DrvCaenA7030N::GetChParam_Name   (){char res[640];GetChParam("Name"   ,res);/*TODO da se polzva onazi fukciya za splitvaneto*/}
-    void DrvCaenA7030N::GetChParam_V0Set  (){float    res[fNumberOfChannels];GetChParam("V0Set"  ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesV0Set  [i]<<res[i];INFO(std::to_string(res[i]));}}
+    void DrvCaenA7030N::GetChParam_V0Set  (){float    res[fNumberOfChannels];GetChParam("V0Set"  ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesV0Set  [i]<<res[i];}}
     void DrvCaenA7030N::GetChParam_I0Set  (){float    res[fNumberOfChannels];GetChParam("I0Set"  ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesI0Set  [i]<<res[i];}}
     void DrvCaenA7030N::GetChParam_V1Set  (){float    res[fNumberOfChannels];GetChParam("V1Set"  ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesV1Set  [i]<<res[i];}}
     void DrvCaenA7030N::GetChParam_I1Set  (){float    res[fNumberOfChannels];GetChParam("I1Set"  ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesI1Set  [i]<<res[i];}}

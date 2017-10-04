@@ -57,8 +57,7 @@ class DrvCaenA7030N:public VCaenHVBoard{
     }
     void DebugDump(){
       std::stringstream ss;
-      ss.str(std::string());ss.clear();
-      ss<<"VMon ";
+      ss.str(std::string());ss.clear(); ss<<"VMon ";
       for(int i=0;i<fNumberOfChannels;++i){
         ss<<fValuesVMon[i].GetVal()<<"("<<fValuesVMon[i].GetAge()<<"s)";
       }
