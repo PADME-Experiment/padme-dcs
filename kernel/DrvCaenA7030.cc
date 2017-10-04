@@ -18,7 +18,7 @@
     void DrvCaenA7030N::GetChParam_SVMax  (){float    res[fNumberOfChannels];GetChParam("SVMax"  ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesSVMax  [i]<<res[i];}}
     void DrvCaenA7030N::GetChParam_VMon   (){float    res[fNumberOfChannels];GetChParam("VMon"   ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesVMon   [i]<<res[i];}}
     void DrvCaenA7030N::GetChParam_IMon   (){float    res[fNumberOfChannels];GetChParam("IMon"   ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesIMon   [i]<<res[i];}}
-    void DrvCaenA7030N::GetChParam_Status (){uint16_t res[fNumberOfChannels];GetChParam("Status" ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesStatus [i]<<res[i];}}
-    void DrvCaenA7030N::GetChParam_Pw     (){uint16_t res[fNumberOfChannels];GetChParam("Pw"     ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesPw     [i]<<res[i];}}
-    void DrvCaenA7030N::GetChParam_TripInt(){uint16_t res[fNumberOfChannels];GetChParam("TripInt",res);for(int i=0;i<fNumberOfChannels;++i){fValuesTripInt[i]<<res[i];}}
-    void DrvCaenA7030N::GetChParam_TripExt(){uint16_t res[fNumberOfChannels];GetChParam("TripExt",res);for(int i=0;i<fNumberOfChannels;++i){fValuesTripExt[i]<<res[i];}}
+    void DrvCaenA7030N::GetChParam_Status (){uint32_t res[fNumberOfChannels];GetChParam("Status" ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesStatus [i]<<res[i];}}
+    void DrvCaenA7030N::GetChParam_Pw     (){uint32_t res[fNumberOfChannels];GetChParam("Pw"     ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesPw     [i]<<res[i];}}
+    void DrvCaenA7030N::GetChParam_TripInt(){uint32_t res[fNumberOfChannels];GetChParam("TripInt",res);for(int i=0;i<fNumberOfChannels;++i){fValuesTripInt[i]<<res[i];}}
+    void DrvCaenA7030N::GetChParam_TripExt(){uint32_t res[fNumberOfChannels];GetChParam("TripExt",res);for(int i=0;i<fNumberOfChannels;++i){fValuesTripExt[i]<<res[i];}}
