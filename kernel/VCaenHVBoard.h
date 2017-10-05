@@ -3,6 +3,7 @@
 
 #include "VDeviceDriver.h"
 #include "VValue.h"
+#include "fwk/utlMessageBus.h"
 
 #include<vector>
 
@@ -68,7 +69,8 @@ class VCaenHVBoard:public VDeviceDriver{
 
   public:// FIXME debug only
     void GetParentInfo(){INFO(GetParent()->GetName());}
-    void GetUpdateAll(){
+    void DebugUpdate(){
+      INFO("");
       //GetChParam_Name   ();
       GetCaenChParam_V0Set  ();
       GetCaenChParam_I0Set  ();

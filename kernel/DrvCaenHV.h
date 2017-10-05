@@ -135,28 +135,27 @@ class DrvCaenHV:public VDeviceDriver, public VDaemonSingleThread{
     //void DisconnectDevice(){ComDeinit();}
     void DebugUpdate(){
       INFO("");
-      INFO("");GetSysProp_Sessions      ();
-      INFO("");GetSysProp_ModelName     ();
-      INFO("");GetSysProp_SwRelease     ();
-      INFO("");GetSysProp_GenSignCfg    ();
-      INFO("");GetSysProp_FrontPanIn    ();
-      INFO("");GetSysProp_FrontPanOut   ();
-      INFO("");GetSysProp_ResFlagCfg    ();
-      INFO("");GetSysProp_HvPwSM        ();
-      INFO("");GetSysProp_HVFanStat     ();
-      INFO("");GetSysProp_ClkFreq       ();
-      INFO("");GetSysProp_HVClkConf     ();
-      INFO("");GetSysProp_IPAddr        ();
-      INFO("");GetSysProp_IPNetMsk      ();
-      INFO("");GetSysProp_IPGw          ();
-      INFO("");GetSysProp_PWCurrent     ();
-      INFO("");GetSysProp_OutputLevel   ();
-      INFO("");GetSysProp_SymbolicName  ();
-      INFO("");GetSysProp_CmdQueueStatus();
-      INFO("");GetSysProp_CPULoad       ();
-      INFO("");GetSysProp_MemoryStatus  ();
-      INFO("");DebugDump();
-      INFO("");
+      GetSysProp_Sessions      ();
+      GetSysProp_ModelName     ();
+      GetSysProp_SwRelease     ();
+      GetSysProp_GenSignCfg    ();
+      GetSysProp_FrontPanIn    ();
+      GetSysProp_FrontPanOut   ();
+      GetSysProp_ResFlagCfg    ();
+      GetSysProp_HvPwSM        ();
+      GetSysProp_HVFanStat     ();
+      GetSysProp_ClkFreq       ();
+      GetSysProp_HVClkConf     ();
+      GetSysProp_IPAddr        ();
+      GetSysProp_IPNetMsk      ();
+      GetSysProp_IPGw          ();
+      GetSysProp_PWCurrent     ();
+      GetSysProp_OutputLevel   ();
+      GetSysProp_SymbolicName  ();
+      GetSysProp_CmdQueueStatus();
+      GetSysProp_CPULoad       ();
+      GetSysProp_MemoryStatus  ();
+      DebugDump();
     }
 
 
