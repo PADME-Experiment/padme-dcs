@@ -150,21 +150,23 @@ VCaenHVBoard::SetParams(int caenHandle,std::set<std::string>setstr)
 VCaenHVBoard::DebugDump()
 {
   std::stringstream ss;
-  ss.str(std::string());ss.clear(); ss<<"Name   "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesName [i].GetVal()<<"("<<fValuesName [i].GetAge()<<"s)"; } INFO(ss.str());
+  //ss.str(std::string());ss.clear(); ss<<"Name   "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesName [i].GetVal()<<"("<<fValuesName [i].GetAge()<<"s)"; } INFO(ss.str());
+
   ss.str(std::string());ss.clear(); ss<<"V0Set  "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesV0Set[i].GetVal()<<"("<<fValuesV0Set[i].GetAge()<<"s)"; } INFO(ss.str());
-  ss.str(std::string());ss.clear(); ss<<"I0Set  "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesI0Set[i].GetVal()<<"("<<fValuesI0Set[i].GetAge()<<"s)"; } INFO(ss.str());
-  ss.str(std::string());ss.clear(); ss<<"V1Set  "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesV1Set[i].GetVal()<<"("<<fValuesV1Set[i].GetAge()<<"s)"; } INFO(ss.str());
-  ss.str(std::string());ss.clear(); ss<<"I1Set  "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesI1Set[i].GetVal()<<"("<<fValuesI1Set[i].GetAge()<<"s)"; } INFO(ss.str());
-  ss.str(std::string());ss.clear(); ss<<"RUp    "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesRUp  [i].GetVal()<<"("<<fValuesRUp  [i].GetAge()<<"s)"; } INFO(ss.str());
-  ss.str(std::string());ss.clear(); ss<<"RDWn   "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesRDWn [i].GetVal()<<"("<<fValuesRDWn [i].GetAge()<<"s)"; } INFO(ss.str());
-  ss.str(std::string());ss.clear(); ss<<"Trip   "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesTrip [i].GetVal()<<"("<<fValuesTrip [i].GetAge()<<"s)"; } INFO(ss.str());
-  ss.str(std::string());ss.clear(); ss<<"SVMax  "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesSVMax[i].GetVal()<<"("<<fValuesSVMax[i].GetAge()<<"s)"; } INFO(ss.str());
+
+//  ss.str(std::string());ss.clear(); ss<<"I0Set  "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesI0Set[i].GetVal()<<"("<<fValuesI0Set[i].GetAge()<<"s)"; } INFO(ss.str());
+//  ss.str(std::string());ss.clear(); ss<<"V1Set  "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesV1Set[i].GetVal()<<"("<<fValuesV1Set[i].GetAge()<<"s)"; } INFO(ss.str());
+//  ss.str(std::string());ss.clear(); ss<<"I1Set  "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesI1Set[i].GetVal()<<"("<<fValuesI1Set[i].GetAge()<<"s)"; } INFO(ss.str());
+//  ss.str(std::string());ss.clear(); ss<<"RUp    "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesRUp  [i].GetVal()<<"("<<fValuesRUp  [i].GetAge()<<"s)"; } INFO(ss.str());
+//  ss.str(std::string());ss.clear(); ss<<"RDWn   "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesRDWn [i].GetVal()<<"("<<fValuesRDWn [i].GetAge()<<"s)"; } INFO(ss.str());
+//  ss.str(std::string());ss.clear(); ss<<"Trip   "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesTrip [i].GetVal()<<"("<<fValuesTrip [i].GetAge()<<"s)"; } INFO(ss.str());
+//  ss.str(std::string());ss.clear(); ss<<"SVMax  "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesSVMax[i].GetVal()<<"("<<fValuesSVMax[i].GetAge()<<"s)"; } INFO(ss.str());
   ss.str(std::string());ss.clear(); ss<<"VMon   "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesVMon [i].GetVal()<<"("<<fValuesVMon [i].GetAge()<<"s)"; } INFO(ss.str());
   ss.str(std::string());ss.clear(); ss<<"IMon   "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesIMon [i].GetVal()<<"("<<fValuesIMon [i].GetAge()<<"s)"; } INFO(ss.str());
 
   ss.str(std::string());ss.clear(); ss<<"Status    "; for(int i=0;i<fNumberOfChannels;++i){ ss<<" 0x"<<std::bitset<16>(fValuesStatus [i].GetVal())<<"("<<fValuesStatus [i].GetAge()<<"s)"; } INFO(ss.str());
   ss.str(std::string());ss.clear(); ss<<"Pw        "; for(int i=0;i<fNumberOfChannels;++i){ ss<<" 0x"<<std::bitset< 3>(fValuesPw     [i].GetVal())<<"("<<fValuesPw     [i].GetAge()<<"s)"; } INFO(ss.str());
-  ss.str(std::string());ss.clear(); ss<<"TripIntPw "; for(int i=0;i<fNumberOfChannels;++i){ ss<<" 0x"<<std::bitset< 3>(fValuesTripInt[i].GetVal())<<"("<<fValuesTripInt[i].GetAge()<<"s)"; } INFO(ss.str());
-  ss.str(std::string());ss.clear(); ss<<"TripExtPw "; for(int i=0;i<fNumberOfChannels;++i){ ss<<" 0x"<<std::bitset< 3>(fValuesTripExt[i].GetVal())<<"("<<fValuesTripExt[i].GetAge()<<"s)"; } INFO(ss.str());
+//  ss.str(std::string());ss.clear(); ss<<"TripIntPw "; for(int i=0;i<fNumberOfChannels;++i){ ss<<" 0x"<<std::bitset< 3>(fValuesTripInt[i].GetVal())<<"("<<fValuesTripInt[i].GetAge()<<"s)"; } INFO(ss.str());
+//  ss.str(std::string());ss.clear(); ss<<"TripExtPw "; for(int i=0;i<fNumberOfChannels;++i){ ss<<" 0x"<<std::bitset< 3>(fValuesTripExt[i].GetVal())<<"("<<fValuesTripExt[i].GetAge()<<"s)"; } INFO(ss.str());
 }
 

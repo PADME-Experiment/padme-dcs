@@ -155,7 +155,7 @@ class DrvCaenHV:public VDeviceDriver, public VDaemonSingleThread{
       GetSysProp_CmdQueueStatus();
       GetSysProp_CPULoad       ();
       GetSysProp_MemoryStatus  ();
-      DebugDump();
+      //DebugDump();
     }
 
 
