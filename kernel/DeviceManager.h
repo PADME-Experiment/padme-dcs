@@ -11,7 +11,12 @@ class DeviceManager:public VDeviceDriver{
   public:
     static DeviceManager& GetInstance();
     void ProcessConfig(const std::string& cfg);
+    void AssertInit(){}
+    void Daemonize(){}
+    void MainLoop();
+    void TrapKillSignals();
   private:
+  //std::list<VServices>
     DeviceManager():VDeviceDriver("padme",std::shared_ptr<VDeviceDriver>(nullptr)){}
     ~DeviceManager(){}
 };

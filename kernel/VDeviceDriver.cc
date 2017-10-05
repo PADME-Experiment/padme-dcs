@@ -1,4 +1,5 @@
 #include "VDeviceDriver.h"   //in c file
+#include "fwk/utlCommaDashListToVector.h"
 
 
 std::shared_ptr<VDeviceDriver>
@@ -7,7 +8,7 @@ VDeviceDriver::AddDevice(const std::string& lab, std::shared_ptr<VDeviceDriver>p
   fAllDevs[lab]=ptr;
   return ptr;
 }
-  bool 
+  bool
 VDeviceDriver::GetNext(ElemIter& it)
 {
   std::stringstream ss;
@@ -22,4 +23,16 @@ VDeviceDriver::GetNext(ElemIter& it)
   }
   return true;
 
+}
+
+  void
+VDeviceDriver::SetParams(std::set<std::string>inset/**< [in] should be copy not reference!*/)
+{
+  std::string group;
+  std::set<std::string>subset;
+  while (utl::ExtractFirstPrefix(inset,subset,group)){
+    for(auto it=subset.begin();it!=subset.end();++it){
+      Get(group)->SetParams(subset);
+    }
+  }
 }

@@ -6,11 +6,11 @@
 
 
 
+
 int main(){
 
-
-
   DeviceManager::GetInstance().ProcessConfig("glob.yaml");
+
   try{
   }
   catch(const fwk::Exception& e){

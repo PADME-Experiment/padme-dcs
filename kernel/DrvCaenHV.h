@@ -112,8 +112,9 @@ class DrvCaenHV_except::Except_USERPASSFAILED       : public DrvCaenHV_except {p
 
 class DrvCaenHV:public VDeviceDriver, public VDaemonSingleThread{
   public:
-    //DrvCaenHV(){INFO("dummy");}
-    DrvCaenHV(const std::string&lab,std::shared_ptr<VDeviceDriver>a):VDeviceDriver(lab,a)
+    //DrvCaenHV(){INFO("DEBUG");}
+    DrvCaenHV(const std::string&lab,std::shared_ptr<VDeviceDriver>a)
+    :VDeviceDriver(lab,a)
   {
     INFO("pars");
   }
@@ -121,15 +122,17 @@ class DrvCaenHV:public VDeviceDriver, public VDaemonSingleThread{
       //ComDeinit();
       INFO("");
     }
-    virtual void OnStart() {}
-    virtual void OnCycle() {std::this_thread::sleep_for(std::chrono::seconds(3));DebugUpdate();
+    ///Opens a Caen comm and passes the handle to subdevices
+    void SetParams(std::set<std::string>);
+    void OnStart() {/* TODO opens handle and call all daughter AssertInits*/}
+    void OnCycle() {std::this_thread::sleep_for(std::chrono::seconds(3));DebugUpdate();
       VDeviceDriver::ElemIter devit;
       devit=static_cast<VDeviceDriver::ElemIter>(nullptr);
       while(GetNext(devit)){devit->second->DebugUpdate();}
     }
-    virtual void OnStop()  {}
-    void ConnectToDevice() {ComInit  ();}
-    void DisconnectDevice(){ComDeinit();}
+    void OnStop()  {}
+    //void ConnectToDevice() {fCaenCrateHandle=ComInit  ();}
+    //void DisconnectDevice(){ComDeinit();}
     void DebugUpdate(){
       INFO("");
       INFO("");GetSysProp_Sessions      ();
@@ -158,8 +161,6 @@ class DrvCaenHV:public VDeviceDriver, public VDaemonSingleThread{
 
 
   public:
-    void ComDeinit();
-    void ComInit();
     void GetCrateMap();
     void GetExecCommList();
     void GetSysPropList();
@@ -167,15 +168,19 @@ class DrvCaenHV:public VDeviceDriver, public VDaemonSingleThread{
     void SetUsername (const std::string&s){fUsername =s;}
     void SetPassword (const std::string&s){fPassword =s;};
     void AssertInit();
+    void Deinitialize();
     int  GetCaenCrateHandle(){return fCaenCrateHandle;}
 
 
 
 
 
+  private:
+    void ComDeinit(int);
+    int  ComInit();
 
   private:
-    int fCaenCrateHandle;
+    int fCaenCrateHandle; ///< This handle is to be used only for reading. All Setters shoul open new one!!!
     std::string fIPAddress;
     std::string fUsername;
     std::string fPassword;

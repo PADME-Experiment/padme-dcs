@@ -2,5 +2,7 @@
 #define  _DCS_kernel_DrvCaenSY4527_h_ 1
 #include "DrvCaenSY4527.h"   //in c file
 
+class VCaenHVCrate :public VDeviceDriver{ };
+class DrvCaenSY4527:public VCaenHVCrate { };
 
 #endif

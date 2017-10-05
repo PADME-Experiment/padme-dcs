@@ -149,3 +149,48 @@ VDaemonServiceTCP::ServiceLoop(const int fd)
 
   }
 }
+
+#include"DeviceManager.h"
+
+  void
+ServiceTCPConfigure::ServiceLoop(const int fd)
+{
+  // FIXME this function should be pure virtual
+  // this is an example only
+  std::string tmpstr;
+  int sentbytes;
+  std::set<std::string> listOfCmds;
+  while(tmpstr.find("bye",0,3)==std::string::npos){
+    tmpstr.clear();
+    char buf[200];
+    int len=recv(fd,buf,sizeof(buf),0);
+    tmpstr.append(buf,len);
+    while(tmpstr.back()!='\n'){
+      int len=recv(fd,buf,sizeof(buf),0);
+      tmpstr.append(buf,len);
+    }
+    tmpstr.erase (tmpstr.end()-2, tmpstr.end()); //removes \r\n
+    listOfCmds.insert(tmpstr);
+  }
+  try{
+    tmpstr="Processing\r\n";
+    sentbytes=send(fd,tmpstr.data(),tmpstr.size(),0);
+    { // This block defines the mutex scope
+      // Multiple clients may be connected. Use of mutex
+      // might be an overkill but is definitely safer!
+      std::lock_guard<std::mutex> guard(fGlobalSetParamsBarrier);
+      DeviceManager::GetInstance().SetParams(listOfCmds);}
+    tmpstr="DONE\r\n\r\n";
+    sentbytes=send(fd,tmpstr.data(),tmpstr.size(),0);
+  }
+  catch(const fwk::Exception&e){//FIXME
+    tmpstr=e.what();
+    sentbytes=send(fd,tmpstr.data(),tmpstr.size(),0);
+  }
+}
+
+
+
+#include<set>
+
+

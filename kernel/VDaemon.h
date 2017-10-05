@@ -55,5 +55,19 @@ class VDaemonServiceTCP:public VDaemonService{
 
 };
 
+#include<string>
+#include<set>
+#include<mutex>
+class ServiceTCPConfigure:public VDaemonServiceTCP{
+  public:
+    void ServiceLoop(const int fd);
+  private:
+    std::mutex fGlobalSetParamsBarrier;
+};
+
+class ServiceTCPInfo:public VDaemonServiceTCP{
+};
+
+
 
 #endif

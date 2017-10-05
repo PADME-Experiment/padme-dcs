@@ -50,13 +50,13 @@ utl::NumFCommaDashListToVector(std::string str)
   return ret;
 }
 
-  std::vector<int>
+  std::vector<unsigned int>
 utl::NumICommaDashListToVector(std::string str)
 {
   if(str.find_first_not_of("0123456789,-")!=std::string::npos){
     throw fwk::Exception_tobefixed("CommaDashListToVector ");
   }
-  std::vector<int> ret;
+  std::vector<unsigned int> ret;
   int from=0;int to=0;
   while((to=str.find_first_of(",-",from+1))!=std::string::npos){
     int to2=str.find_first_of(",-",to+1);
@@ -84,4 +84,32 @@ utl::NumICommaDashListToVector(std::string str)
     from=to+1;
   }
   return ret;
+}
+
+
+
+
+  int
+utl::ExtractFirstPrefix(std::set<std::string>&in,std::set<std::string>&out,std::string& group)
+{
+  out.clear();
+  auto init=in.begin();
+  if(init==in.end())return 0;
+  const auto& firstline=*init;
+  group=firstline.substr(0,firstline.find_first_of(" ,/"));
+  if(group.size()==0){
+    throw fwk::Exception_tobefixed("ExtractFirstPrefix syntax error: shouldn't start with slash");
+  }
+  if(firstline[group.size()]!='/'){
+    throw fwk::Exception_tobefixed("ExtractFirstPrefix syntax error X/Y/Z_<- missing slash");
+  }
+  long unsigned int numgrchan=group.size()+1; // +1 because of the '/'
+  while(init!=in.end() &&
+      init->find(group+"/")==0
+      ){
+    std::string line=init->substr(numgrchan);
+    out.insert(line);
+    in.erase(init);++init;
+  }
+  return out.size();
 }

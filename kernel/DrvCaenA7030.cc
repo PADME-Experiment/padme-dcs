@@ -3,22 +3,73 @@
 #include"fwk/utlMessageBus.h"
 #include<string>
 
-#include <caenlib/CAENHVWrapper.h>
+//#include <caenlib/CAENHVWrapper.h>
 
-    //void GetChParam(const std::string&par, void* res);
 
-    void DrvCaenA7030N::GetChParam_Name   (){char res[640];GetChParam("Name"   ,res);/*TODO da se polzva onazi fukciya za splitvaneto*/}
-    void DrvCaenA7030N::GetChParam_V0Set  (){float    res[fNumberOfChannels];GetChParam("V0Set"  ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesV0Set  [i]<<res[i];}}
-    void DrvCaenA7030N::GetChParam_I0Set  (){float    res[fNumberOfChannels];GetChParam("I0Set"  ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesI0Set  [i]<<res[i];}}
-    void DrvCaenA7030N::GetChParam_V1Set  (){float    res[fNumberOfChannels];GetChParam("V1Set"  ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesV1Set  [i]<<res[i];}}
-    void DrvCaenA7030N::GetChParam_I1Set  (){float    res[fNumberOfChannels];GetChParam("I1Set"  ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesI1Set  [i]<<res[i];}}
-    void DrvCaenA7030N::GetChParam_RUp    (){float    res[fNumberOfChannels];GetChParam("RUp"    ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesRUp    [i]<<res[i];}}
-    void DrvCaenA7030N::GetChParam_RDWn   (){float    res[fNumberOfChannels];GetChParam("RDWn"   ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesRDWn   [i]<<res[i];}}
-    void DrvCaenA7030N::GetChParam_Trip   (){float    res[fNumberOfChannels];GetChParam("Trip"   ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesTrip   [i]<<res[i];}}
-    void DrvCaenA7030N::GetChParam_SVMax  (){float    res[fNumberOfChannels];GetChParam("SVMax"  ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesSVMax  [i]<<res[i];}}
-    void DrvCaenA7030N::GetChParam_VMon   (){float    res[fNumberOfChannels];GetChParam("VMon"   ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesVMon   [i]<<res[i];}}
-    void DrvCaenA7030N::GetChParam_IMon   (){float    res[fNumberOfChannels];GetChParam("IMon"   ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesIMon   [i]<<res[i];}}
-    void DrvCaenA7030N::GetChParam_Status (){uint32_t res[fNumberOfChannels];GetChParam("Status" ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesStatus [i]<<res[i];}}
-    void DrvCaenA7030N::GetChParam_Pw     (){uint32_t res[fNumberOfChannels];GetChParam("Pw"     ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesPw     [i]<<res[i];}}
-    void DrvCaenA7030N::GetChParam_TripInt(){uint32_t res[fNumberOfChannels];GetChParam("TripInt",res);for(int i=0;i<fNumberOfChannels;++i){fValuesTripInt[i]<<res[i];}}
-    void DrvCaenA7030N::GetChParam_TripExt(){uint32_t res[fNumberOfChannels];GetChParam("TripExt",res);for(int i=0;i<fNumberOfChannels;++i){fValuesTripExt[i]<<res[i];}}
+
+
+  void
+DrvCaenA7030N::AssertNumberOfChannels()
+{
+  //TODO
+  //should throw special type
+  //when thrown board should be deleted
+}
+
+  void
+DrvCaenA7030N::AssertBoardType()
+{
+  //TODO
+  //should throw special type
+  //when thrown board should be deleted
+  if(fNumberOfChannels<1)throw fwk::Exception_tobefixed("fNumberoFChannels<1");
+  if(fNumberOfChannels!=48)throw fwk::Exception_tobefixed("fNumberoFChannels!=48");
+  fValuesName   .resize(fNumberOfChannels);
+  fValuesV0Set  .resize(fNumberOfChannels);
+  fValuesI0Set  .resize(fNumberOfChannels);
+  fValuesV1Set  .resize(fNumberOfChannels);
+  fValuesI1Set  .resize(fNumberOfChannels);
+  fValuesRUp    .resize(fNumberOfChannels);
+  fValuesRDWn   .resize(fNumberOfChannels);
+  fValuesTrip   .resize(fNumberOfChannels);
+  fValuesSVMax  .resize(fNumberOfChannels);
+  fValuesVMon   .resize(fNumberOfChannels);
+  fValuesIMon   .resize(fNumberOfChannels);
+  fValuesStatus .resize(fNumberOfChannels);
+  fValuesPw     .resize(fNumberOfChannels);
+  fValuesTripInt.resize(fNumberOfChannels);
+  fValuesTripExt.resize(fNumberOfChannels);
+}
+
+
+
+void DrvCaenA7030N::GetCaenChParam_Name   (){char res[640];GetCaenChParam("Name"   ,res);/*TODO da se polzva onazi fukciya za splitvaneto*/}
+void DrvCaenA7030N::GetCaenChParam_V0Set  (){float    res[fNumberOfChannels];GetCaenChParam("V0Set"  ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesV0Set  [i]<<res[i];}}
+void DrvCaenA7030N::GetCaenChParam_I0Set  (){float    res[fNumberOfChannels];GetCaenChParam("I0Set"  ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesI0Set  [i]<<res[i];}}
+void DrvCaenA7030N::GetCaenChParam_V1Set  (){float    res[fNumberOfChannels];GetCaenChParam("V1Set"  ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesV1Set  [i]<<res[i];}}
+void DrvCaenA7030N::GetCaenChParam_I1Set  (){float    res[fNumberOfChannels];GetCaenChParam("I1Set"  ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesI1Set  [i]<<res[i];}}
+void DrvCaenA7030N::GetCaenChParam_RUp    (){float    res[fNumberOfChannels];GetCaenChParam("RUp"    ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesRUp    [i]<<res[i];}}
+void DrvCaenA7030N::GetCaenChParam_RDWn   (){float    res[fNumberOfChannels];GetCaenChParam("RDWn"   ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesRDWn   [i]<<res[i];}}
+void DrvCaenA7030N::GetCaenChParam_Trip   (){float    res[fNumberOfChannels];GetCaenChParam("Trip"   ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesTrip   [i]<<res[i];}}
+void DrvCaenA7030N::GetCaenChParam_SVMax  (){float    res[fNumberOfChannels];GetCaenChParam("SVMax"  ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesSVMax  [i]<<res[i];}}
+void DrvCaenA7030N::GetCaenChParam_VMon   (){float    res[fNumberOfChannels];GetCaenChParam("VMon"   ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesVMon   [i]<<res[i];}}
+void DrvCaenA7030N::GetCaenChParam_IMon   (){float    res[fNumberOfChannels];GetCaenChParam("IMon"   ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesIMon   [i]<<res[i];}}
+void DrvCaenA7030N::GetCaenChParam_Status (){uint32_t res[fNumberOfChannels];GetCaenChParam("Status" ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesStatus [i]<<res[i];}}
+void DrvCaenA7030N::GetCaenChParam_Pw     (){uint32_t res[fNumberOfChannels];GetCaenChParam("Pw"     ,res);for(int i=0;i<fNumberOfChannels;++i){fValuesPw     [i]<<res[i];}}
+void DrvCaenA7030N::GetCaenChParam_TripInt(){uint32_t res[fNumberOfChannels];GetCaenChParam("TripInt",res);for(int i=0;i<fNumberOfChannels;++i){fValuesTripInt[i]<<res[i];}}
+void DrvCaenA7030N::GetCaenChParam_TripExt(){uint32_t res[fNumberOfChannels];GetCaenChParam("TripExt",res);for(int i=0;i<fNumberOfChannels;++i){fValuesTripExt[i]<<res[i];}}
+
+
+
+void DrvCaenA7030N::SetCaenChParam_Name   (int handle,const std::vector<uint32_t>&chlist,const std::vector<std::string>&vals){SetCaenChParam(handle,"Name"   ,chlist,vals);}
+void DrvCaenA7030N::SetCaenChParam_V0Set  (int handle,const std::vector<uint32_t>&chlist,const std::vector<float      >&vals){SetCaenChParam(handle,"V0Set"  ,chlist,vals);}
+void DrvCaenA7030N::SetCaenChParam_I0Set  (int handle,const std::vector<uint32_t>&chlist,const std::vector<float      >&vals){SetCaenChParam(handle,"I0Set"  ,chlist,vals);}
+void DrvCaenA7030N::SetCaenChParam_V1Set  (int handle,const std::vector<uint32_t>&chlist,const std::vector<float      >&vals){SetCaenChParam(handle,"V1Set"  ,chlist,vals);}
+void DrvCaenA7030N::SetCaenChParam_I1Set  (int handle,const std::vector<uint32_t>&chlist,const std::vector<float      >&vals){SetCaenChParam(handle,"I1Set"  ,chlist,vals);}
+void DrvCaenA7030N::SetCaenChParam_RUp    (int handle,const std::vector<uint32_t>&chlist,const std::vector<float      >&vals){SetCaenChParam(handle,"RUp"    ,chlist,vals);}
+void DrvCaenA7030N::SetCaenChParam_RDWn   (int handle,const std::vector<uint32_t>&chlist,const std::vector<float      >&vals){SetCaenChParam(handle,"RDWn"   ,chlist,vals);}
+void DrvCaenA7030N::SetCaenChParam_Trip   (int handle,const std::vector<uint32_t>&chlist,const std::vector<float      >&vals){SetCaenChParam(handle,"Trip"   ,chlist,vals);}
+void DrvCaenA7030N::SetCaenChParam_SVMax  (int handle,const std::vector<uint32_t>&chlist,const std::vector<float      >&vals){SetCaenChParam(handle,"SVMax"  ,chlist,vals);}
+void DrvCaenA7030N::SetCaenChParam_Pw     (int handle,const std::vector<uint32_t>&chlist,const std::vector<uint32_t   >&vals){SetCaenChParam(handle,"Pw"     ,chlist,vals);}
+void DrvCaenA7030N::SetCaenChParam_TripInt(int handle,const std::vector<uint32_t>&chlist,const std::vector<uint32_t   >&vals){SetCaenChParam(handle,"TripInt",chlist,vals);}
+void DrvCaenA7030N::SetCaenChParam_TripExt(int handle,const std::vector<uint32_t>&chlist,const std::vector<uint32_t   >&vals){SetCaenChParam(handle,"TripExt",chlist,vals);}

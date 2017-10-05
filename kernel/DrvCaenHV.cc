@@ -1,4 +1,5 @@
 #include "DrvCaenHV.h"   //in c file
+#include"fwk/utlCommaDashListToVector.h"
 #include <caenlib/CAENHVWrapper.h>
 #include<iostream>
 
@@ -52,25 +53,51 @@ DrvCaenHV_except::CAENWrapperRetStatus(int caenhandler,int retstatus, const std:
 
 
 
+
+
+
+
+
+
   void
+DrvCaenHV::SetParams(std::set<std::string>inset/**< [in] should be copy not reference!*/)
+{
+  int handle=ComInit();
+
+  std::string group;
+  std::set<std::string>subset;
+  while (utl::ExtractFirstPrefix(inset,subset,group)){
+    for(auto it=subset.begin();it!=subset.end();++it){
+      std::dynamic_pointer_cast<VCaenHVBoard>(Get(group))->SetParams(handle,subset);
+    }
+  }
+  ComDeinit(handle);
+}
+
+
+
+
+  int
 DrvCaenHV::ComInit()
 {
   CAENHVRESULT ret;
+  int handle;
   CAENHV_SYSTEM_TYPE_t sys_type = (CAENHV_SYSTEM_TYPE_t) SY4527; // 0: SY1527, 2: SY4527
   int link_type = LINKTYPE_TCPIP;
-  ret = CAENHV_InitSystem(sys_type, link_type, (void*)fIPAddress.c_str(), fUsername.c_str(), fPassword.c_str(), &fCaenCrateHandle);
+  ret = CAENHV_InitSystem(sys_type, link_type, (void*)fIPAddress.c_str(), fUsername.c_str(), fPassword.c_str(), &handle);
   if(ret != CAENHV_OK){
-    DrvCaenHV_except::CAENWrapperRetStatus(fCaenCrateHandle,ret,
+    DrvCaenHV_except::CAENWrapperRetStatus(handle,ret,
         "IP = "+fIPAddress+"  user = "+fUsername+"  pass = "+fPassword);
   }
+  return handle;
 }
 
   void
-DrvCaenHV::ComDeinit()
+DrvCaenHV::ComDeinit(int handle)
 {
-  int ret = CAENHV_DeinitSystem(fCaenCrateHandle);
+  int ret = CAENHV_DeinitSystem(handle);
   if(ret != CAENHV_OK)
-    DrvCaenHV_except::CAENWrapperRetStatus(fCaenCrateHandle,ret);
+    DrvCaenHV_except::CAENWrapperRetStatus(handle,ret);
 }
 
   void
@@ -164,7 +191,12 @@ DrvCaenHV::GetSysPropList() ///Get list of possible
   void
 DrvCaenHV::AssertInit()
 {
-  ComInit();
+  fCaenCrateHandle=ComInit();
+}
+  void
+DrvCaenHV::Deinitialize()
+{
+  ComDeinit(fCaenCrateHandle );
 }
 
 

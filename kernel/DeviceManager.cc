@@ -1,14 +1,16 @@
-#include "kernel/DeviceManager.h"   //in c file
-#include "yaml-cpp/yaml.h"
-#include "fwk/utlMessageBus.h"
-#include "DrvCaenHV.h"
-#include "DrvCaenA7030.h"
+#include"kernel/DeviceManager.h"   //in c file
+#include"DrvCaenHV.h"
+#include"DrvCaenA7030.h"
+#include"fwk/utlMessageBus.h"
+#include<yaml-cpp/yaml.h>
 #include<memory>
-
+#include<csignal>
 
 
 
 class HVDumper: public VDaemonSingleThread{
+// FIXME this is to be removed
+// FIXME EXAMPLE
   void OnStart() {}
   void OnCycle() {
     std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -29,9 +31,11 @@ DeviceManager::GetInstance()
   return a;
 }
 
+
   void
 DeviceManager::ProcessConfig(const std::string& cfg)
 {
+  TrapKillSignals();
 
   YAML::Node config = YAML::LoadFile(cfg);
   for(int nod_i=0;nod_i<config.size();++nod_i){
@@ -46,7 +50,6 @@ DeviceManager::ProcessConfig(const std::string& cfg)
       caen->SetIPAddress( config[nod_i]["Args"]["IPAddr"].as<std::string>());
       caen->SetUsername ( config[nod_i]["Args"]["User"  ].as<std::string>());
       caen->SetPassword ( config[nod_i]["Args"]["Pass"  ].as<std::string>());
-      //caen->ComInit();
     }else if(drvtype=="NYAKOJ DRUG DETEKTOR"){
     }
   }
@@ -70,30 +73,50 @@ DeviceManager::ProcessConfig(const std::string& cfg)
 
   VDeviceDriver::ElemIter devit;
   devit=static_cast<VDeviceDriver::ElemIter>(nullptr);
-  while(GetNext(devit)){devit->second->ConnectToDevice();}
-
+  while(GetNext(devit)){devit->second->AssertInit();}
 
   HVDumper hvdumper;
   hvdumper.Daemonize();
+  std::dynamic_pointer_cast<VDaemonSingleThread>(Get("CAENHV1"))->Daemonize();
 
-  std::dynamic_pointer_cast<VDaemonSingleThread>(DeviceManager::GetInstance().Get("CAENHV1"))->Daemonize();
+  MainLoop();
 
-  for(int i=0;i<30;++i){ //wait 30 sec
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-    INFO(std::to_string(i));
-  }
+
 
   INFO("will join caenhv");
   std::dynamic_pointer_cast<VDaemonSingleThread>(DeviceManager::GetInstance().Get("CAENHV1"))->JoinThread();
   SUCCESS("caenhv joined");
   INFO("will join hvdumper");
-    hvdumper.JoinThread();
+  hvdumper.JoinThread();
   SUCCESS("hvdumper joined");
 
   devit=static_cast<VDeviceDriver::ElemIter>(nullptr);
-  while(GetNext(devit)){devit->second->DisconnectDevice();}
-
+  while(GetNext(devit)){devit->second->Deinitialize();}
 
 
 }
 
+static bool gPrepareForQuit=false;
+
+  static void
+Sigint(int i)
+{
+  INFO("CTRL-C Received");
+  gPrepareForQuit=true;
+}
+
+  void
+DeviceManager::MainLoop()
+{
+  int i=0;
+  while(!gPrepareForQuit){
+    if((++i%10)==0)INFO("ALLIVE!");
+    std::this_thread::sleep_for( std::chrono::milliseconds(200));
+  }
+}
+
+  void
+DeviceManager::TrapKillSignals()
+{
+  signal(SIGINT , Sigint);
+}
