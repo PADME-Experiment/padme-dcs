@@ -76,8 +76,12 @@ DeviceManager::ProcessConfig(const std::string& cfg)
   while(GetNext(devit)){devit->second->AssertInit();}
 
   HVDumper hvdumper;
-  hvdumper.Daemonize();
+  ServiceTCPConfigure confTCP(33455);
+
   std::dynamic_pointer_cast<VDaemonSingleThread>(Get("CAENHV1"))->Daemonize();
+
+  hvdumper.Daemonize();
+  confTCP.Daemonize();
 
   MainLoop();
 

@@ -127,28 +127,28 @@ VDaemonServiceTCP::Service()
   close(new_fd);
 }
 
-  void
-VDaemonServiceTCP::ServiceLoop(const int fd)
-{
-  // FIXME this function should be pure virtual
-  // this is an example only
-  std::string received;
-  while(received.find("bye",0,3)==std::string::npos){
-    received.clear();
-    char buf[200];
-    int len=recv(fd,buf,sizeof(buf),0);
-    received.append(buf,len);
-    while(received.back()!='\n'){
-      int len=recv(fd,buf,sizeof(buf),0);
-      received.append(buf,len);
-    }
-    received.erase (received.end()-2, received.end());
-    int sentbytes=send(fd,received.data(),received.size(),0);
-
-    SUCCESS(received+"  size  "+std::to_string(received.size()));
-
-  }
-}
+//  void
+//VDaemonServiceTCP::ServiceLoop(const int fd)
+//{
+//  // FIXME this function should be pure virtual
+//  // this is an example only
+//  std::string received;
+//  while(received.find("bye",0,3)==std::string::npos){
+//    received.clear();
+//    char buf[200];
+//    int len=recv(fd,buf,sizeof(buf),0);
+//    received.append(buf,len);
+//    while(received.back()!='\n'){
+//      int len=recv(fd,buf,sizeof(buf),0);
+//      received.append(buf,len);
+//    }
+//    received.erase (received.end()-2, received.end());
+//    int sentbytes=send(fd,received.data(),received.size(),0);
+//
+//    SUCCESS(received+"  size  "+std::to_string(received.size()));
+//
+//  }
+//}
 
 #include"DeviceManager.h"
 

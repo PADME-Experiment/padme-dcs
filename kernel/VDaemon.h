@@ -44,7 +44,7 @@ class VDaemonServiceTCP:public VDaemonService{
     virtual ~VDaemonServiceTCP(){INFO("");Finalize();}
 
   protected:
-    virtual void ServiceLoop(const int fd);//=0{} FIXME should be pure virtual
+    virtual void ServiceLoop(const int fd)=0;//{} FIXME should be pure virtual
     void Service();
     void Initialize();
     void Finalize();
@@ -60,6 +60,7 @@ class VDaemonServiceTCP:public VDaemonService{
 #include<mutex>
 class ServiceTCPConfigure:public VDaemonServiceTCP{
   public:
+    ServiceTCPConfigure(int portN):VDaemonServiceTCP(portN){}
     void ServiceLoop(const int fd);
   private:
     std::mutex fGlobalSetParamsBarrier;
