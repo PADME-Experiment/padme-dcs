@@ -32,6 +32,7 @@ VDeviceDriver::SetParams(std::set<std::string>inset/**< [in] should be copy not 
   std::set<std::string>subset;
   while (utl::ExtractFirstPrefix(inset,subset,group)){
     for(auto it=subset.begin();it!=subset.end();++it){
+      INFO("calls group "+group);
       Get(group)->SetParams(subset);
     }
   }

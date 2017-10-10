@@ -27,9 +27,9 @@ VCaenHVBoard::SetCaenChParam(int handle,const std::string& parname,std::vector<u
   if(nch!=vals.size())throw fwk::Exception_tobefixed("SetCaenChParam vecotrs of different size");
   std::string allnames;
   for(auto it=vals.begin();it!=vals.end();++it)allnames.append(it->c_str(),it->size()+1); // +1 to add also '\0's
-  ushort arr[nch];
+  std::vector<ushort> arr(nch);
   for(int i=0;i<nch;++i)arr[i]=chans[i];
-  CAENHV_SetChParam(handle,fSlotNumber, parname.c_str(), nch, arr, (char*)allnames.c_str());
+  CAENHV_SetChParam(handle,fSlotNumber, parname.c_str(), nch, &(*arr.begin()), (char*)allnames.c_str());
 }
 
   void
@@ -38,9 +38,10 @@ VCaenHVBoard::SetCaenChParam(int handle,const std::string& parname,std::vector<u
   const unsigned nch=chans.size();
   if(nch>fNumberOfChannels)throw fwk::Exception_tobefixed("SetCaenChParam vector too big");
   if(nch!=vals.size())throw fwk::Exception_tobefixed("SetCaenChParam vecotrs of different size");
-  ushort arr[nch];
+  std::vector<ushort> arr(nch);
   for(int i=0;i<nch;++i)arr[i]=chans[i];
-  CAENHV_SetChParam(handle,fSlotNumber, parname.c_str(), nch, arr, &(vals[0]));
+  for(int i=0;i<nch;++i)INFO(std::to_string(chans[i])+"   "+std::to_string(vals[i]));
+  CAENHV_SetChParam(handle,fSlotNumber, parname.c_str(), nch, &(*arr.begin()), &(vals[0]));
 }
 
   void
@@ -49,9 +50,9 @@ VCaenHVBoard::SetCaenChParam(int handle,const std::string& parname,std::vector<u
   const unsigned nch=chans.size();
   if(nch>fNumberOfChannels)throw fwk::Exception_tobefixed("SetCaenChParam vector too big");
   if(nch!=vals.size())throw fwk::Exception_tobefixed("SetCaenChParam vecotrs of different size");
-  ushort arr[nch];
+  std::vector<ushort> arr(nch);
   for(int i=0;i<nch;++i)arr[i]=chans[i];
-  CAENHV_SetChParam(handle,fSlotNumber, parname.c_str(), nch, arr, &(vals[0]));
+  CAENHV_SetChParam(handle,fSlotNumber, parname.c_str(), nch, &(*arr.begin()), &(vals[0]));
 }
 
 
@@ -73,21 +74,21 @@ VCaenHVBoard::SetParams(int caenHandle,std::set<std::string>setstr)
     std::vector<unsigned int> vvalI;
     std::vector<float> vvalF;
 
-    if(liness>>cmd>>chans>>vals)throw fwk::Exception_tobefixed("VCaenHVBoard::SetParams line syntax error");
+    if(liness>>cmd>>chans>>vals)INFO("THROW");//throw fwk::Exception_tobefixed("VCaenHVBoard::SetParams line syntax error");
     if( cmd.begin()==cmd.end()     ||
         chans.begin()==chans.end() ||
         vals.begin()==vals.end()){
-    }throw fwk::Exception_tobefixed("VCaenHVBoard::SetParams line syntax error");
+    }INFO("THROW");//throw fwk::Exception_tobefixed("VCaenHVBoard::SetParams line syntax error");
 
     std::vector<unsigned int>vchans=utl::NumICommaDashListToVector(chans);
-    if(!(vchans.size()>0))throw fwk::Exception_tobefixed("VCaenHVBoard::SetParams syntax error vchans=0");
+    if(!(vchans.size()>0))INFO("THROW");//throw fwk::Exception_tobefixed("VCaenHVBoard::SetParams syntax error vchans=0");
 
     if(cmd=="Name"){
       vvalS=utl::StringCommaDashListToVector(vals);
       if(vvalS.size()==1){
         vvalS.resize(vchans.size(),vvalS[0]);
       }
-      if(vvalS.size()!=vchans.size())throw fwk::Exception_tobefixed("VCaenHVBoard::SetParams syntax error vchans.size!=vvalS.size");
+      if(vvalS.size()!=vchans.size())INFO("THROW");//throw fwk::Exception_tobefixed("VCaenHVBoard::SetParams syntax error vchans.size!=vvalS.size");
 
     }else if(
         cmd=="V0Set"||
@@ -101,6 +102,7 @@ VCaenHVBoard::SetParams(int caenHandle,std::set<std::string>setstr)
       auto vvalF=utl::NumFCommaDashListToVector(vals);
       if(vvalF.size()==1){
         vvalF.resize(vchans.size(),vvalF[0]);
+        INFO("setting float");
       }
       if(vvalF.size()!=vchans.size())throw fwk::Exception_tobefixed("VCaenHVBoard::SetParams syntax error vchans.size!=vvalF.size");
     } else if( cmd=="Pw"||

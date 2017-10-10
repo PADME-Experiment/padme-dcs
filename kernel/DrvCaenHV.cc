@@ -62,12 +62,15 @@ DrvCaenHV_except::CAENWrapperRetStatus(int caenhandler,int retstatus, const std:
   void
 DrvCaenHV::SetParams(std::set<std::string>inset/**< [in] should be copy not reference!*/)
 {
-  int handle=ComInit();
+  #warning
+  //int handle=ComInit();
+  int handle;
 
   std::string group;
   std::set<std::string>subset;
   while (utl::ExtractFirstPrefix(inset,subset,group)){
     for(auto it=subset.begin();it!=subset.end();++it){
+      INFO("DrvCaenHV calls group "+group);
       std::dynamic_pointer_cast<VCaenHVBoard>(Get(group))->SetParams(handle,subset);
     }
   }

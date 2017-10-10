@@ -29,7 +29,7 @@ class VDeviceDriver{
     bool HasParent()const{return (fParent.use_count()>0);}
     ///Parses commands in the strings and sets parameters.
     ///The default is to send the strings to sub-devices.
-    void SetParams(std::set<std::string>);
+    virtual void SetParams(std::set<std::string>);
 
     /**
      * Cycle through all devices.

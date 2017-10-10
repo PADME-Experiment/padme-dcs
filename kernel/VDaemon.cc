@@ -151,46 +151,63 @@ VDaemonServiceTCP::Service()
 //}
 
 #include"DeviceManager.h"
+#include<sstream>
+#include <algorithm>
 
   void
 ServiceTCPConfigure::ServiceLoop(const int fd)
 {
-  // FIXME this function should be pure virtual
-  // this is an example only
-  std::string tmpstr;
-  int sentbytes;
   std::set<std::string> listOfCmds;
-  while(tmpstr.find("bye",0,3)==std::string::npos){
-    tmpstr.clear();
-    char buf[200];
-    int len=recv(fd,buf,sizeof(buf),0);
-    tmpstr.append(buf,len);
-    while(tmpstr.back()!='\n'){
-      int len=recv(fd,buf,sizeof(buf),0);
-      tmpstr.append(buf,len);
+  int sentbytes;
+  char buf[5];
+  int len;
+
+  std::string tcpbuffer;
+  std::string tcpcurrent;
+  do{
+    do{
+      len=recv(fd,buf,sizeof(buf),0);
+      tcpbuffer.append(buf,len);
+      std::replace(tcpbuffer.begin(),tcpbuffer.end(),'\r', '#');
+      while(tcpbuffer.find("\n")!=std::string::npos){
+        const size_t firstBSn=tcpbuffer.find("\n");
+        tcpcurrent=tcpbuffer.substr(0,firstBSn-1); // -1 because of \r
+        tcpbuffer.erase(0,firstBSn+1);
+        //INFO("insert "+tcpcurrent);
+        listOfCmds.insert(tcpcurrent);
+      }
+      //INFO("inside while");
+    }while(len>=0&&tcpcurrent!="bye"&&tcpcurrent!="do!"); //empty line to execute
+    //INFO("outside while");
+    if(len<0)ERROR("except len<0");
+
+    std::string tmpstr;
+    try{
+      sentbytes=0;
+      tmpstr="Processing . . .\r\n";
+      send(fd,tmpstr.data(),tmpstr.size(),0);
+      //INFO("send");
+      //do{ // tova neshot cikli....
+      //  sentbytes+=send(fd,tmpstr.substr(sentbytes).data(),tmpstr.size()-sentbytes,0);
+      //}while(sentbytes==tmpstr.size());
+      { // This block defines the mutex scope
+        // Multiple clients may be connected. Use of mutex
+        // might be an overkill but is definitely safer!
+        std::lock_guard<std::mutex> guard(fGlobalSetParamsBarrier);
+        DeviceManager::GetInstance().SetParams(listOfCmds);
+      }
+      tmpstr="DONE\r\n\r\n";
+      sentbytes=send(fd,tmpstr.data(),tmpstr.size(),0);
     }
-    tmpstr.erase (tmpstr.end()-2, tmpstr.end()); //removes \r\n
-    listOfCmds.insert(tmpstr);
-  }
-  try{
-    tmpstr="Processing\r\n";
-    sentbytes=send(fd,tmpstr.data(),tmpstr.size(),0);
-    { // This block defines the mutex scope
-      // Multiple clients may be connected. Use of mutex
-      // might be an overkill but is definitely safer!
-      std::lock_guard<std::mutex> guard(fGlobalSetParamsBarrier);
-      DeviceManager::GetInstance().SetParams(listOfCmds);}
-    tmpstr="DONE\r\n\r\n";
-    sentbytes=send(fd,tmpstr.data(),tmpstr.size(),0);
-  }
-  catch(const fwk::Exception&e){//FIXME
-    tmpstr=e.what();
-    sentbytes=send(fd,tmpstr.data(),tmpstr.size(),0);
-  }
+    catch(const fwk::Exception&e){//FIXME
+      tmpstr=e.what();
+      sentbytes=send(fd,tmpstr.data(),tmpstr.size(),0);
+    }
+  }while(tcpcurrent!="bye");
+
 }
 
 
 
-#include<set>
 
 

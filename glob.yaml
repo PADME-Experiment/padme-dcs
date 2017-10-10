@@ -4,6 +4,6 @@
   DriverType: "CAEN_SY4527"
 
 - Args: {Slot: 0, NChannels: 48}
-  Label: "CAENHV1.board1"
+  Label: "board1"
   ParentLabel: "CAENHV1"
   DriverType: CAEN_A7030N

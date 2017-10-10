@@ -73,17 +73,18 @@ DeviceManager::ProcessConfig(const std::string& cfg)
 
   VDeviceDriver::ElemIter devit;
   devit=static_cast<VDeviceDriver::ElemIter>(nullptr);
-  while(GetNext(devit)){devit->second->AssertInit();}
+  //while(GetNext(devit)){devit->second->AssertInit();}
 
   HVDumper hvdumper;
   ServiceTCPConfigure confTCP(33455);
 
+  confTCP.Daemonize();
+  MainLoop();
+
+
   std::dynamic_pointer_cast<VDaemonSingleThread>(Get("CAENHV1"))->Daemonize();
 
   hvdumper.Daemonize();
-  confTCP.Daemonize();
-
-  MainLoop();
 
 
 

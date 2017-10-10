@@ -97,17 +97,18 @@ utl::ExtractFirstPrefix(std::set<std::string>&in,std::set<std::string>&out,std::
   if(init==in.end())return 0;
   const auto& firstline=*init;
   group=firstline.substr(0,firstline.find_first_of(" ,/"));
-  if(group.size()==0){
-    throw fwk::Exception_tobefixed("ExtractFirstPrefix syntax error: shouldn't start with slash");
-  }
-  if(firstline[group.size()]!='/'){
-    throw fwk::Exception_tobefixed("ExtractFirstPrefix syntax error X/Y/Z_<- missing slash");
-  }
+  //if(group.size()==0){
+  //  throw fwk::Exception_tobefixed("ExtractFirstPrefix syntax error: shouldn't start with slash");
+  //}
+  //if(firstline[group.size()]!='/'){
+  //  throw fwk::Exception_tobefixed("ExtractFirstPrefix syntax error X/Y/Z_<- missing slash");
+  //}
   long unsigned int numgrchan=group.size()+1; // +1 because of the '/'
   while(init!=in.end() &&
       init->find(group+"/")==0
       ){
     std::string line=init->substr(numgrchan);
+    INFO(line);
     out.insert(line);
     in.erase(init);++init;
   }

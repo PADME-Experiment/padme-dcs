@@ -28,6 +28,8 @@ vsplit DeviceManager.cc
 
 tabnew ../fwk/utlCommaDashListToVector.h
 vsplit ../fwk/utlCommaDashListToVector.cc
+vsplit ../fwk/utlMessageBus.h
+vsplit ../fwk/utlMessageBus.cc
 vsplit ../test.cc
 
 tabnew ../PadmeHV-tmp/HVcontrol.c
