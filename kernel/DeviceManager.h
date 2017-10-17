@@ -2,23 +2,33 @@
 #define  _DCS_kernel_DeviceManager_h_ 1
 #include "kernel/DeviceManager.h"   //in c file
 #include "VDeviceDriver.h"
+#include "VDaemon.h"
 
 #include<string>
 #include<map>
 #include<memory>
 
-class DeviceManager:public VDeviceDriver{
+class DeviceManager:public VDeviceBase{
+  public:
+    void AssertInit();
+    void Daemonize();
+    void Finalize();
   public:
     static DeviceManager& GetInstance();
-    void ProcessConfig(const std::string& cfg);
-    void AssertInit(){}
-    void Daemonize(){}
-    void MainLoop();
-    void TrapKillSignals();
+    void Configure(const std::string& cfg);
+
   private:
-  //std::list<VServices>
-    DeviceManager():VDeviceDriver("padme",std::shared_ptr<VDeviceDriver>(nullptr)){}
+std::shared_ptr<VDaemonBase> AddDaemon(const std::string& lab, std::shared_ptr<VDaemonBase>ptr);
+    std::map<std::string,std::shared_ptr<VDaemonBase>> fDems;
+    DeviceManager():VDeviceBase("PADME",std::shared_ptr<VDeviceBase>(nullptr)){TrapKillSignals();}
     ~DeviceManager(){}
+
+  public:
+    void MainLoop();
+  private:
+    void TrapKillSignals();
+    static void Sigint(int i);
+    static bool fsPrepareForQuit;
 };
 
 

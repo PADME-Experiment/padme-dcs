@@ -9,7 +9,13 @@
 
 int main(){
 
-  DeviceManager::GetInstance().ProcessConfig("glob.yaml");
+
+  DeviceManager& devmngr=DeviceManager::GetInstance();
+  INFO("Configure"   );devmngr.Configure("glob.yaml");SUCCESS("Configure"   );
+  INFO("AssertInit()");devmngr.AssertInit();          SUCCESS("AssertInit()");
+  INFO("Daemonize();");devmngr.Daemonize();           SUCCESS("Daemonize();");
+  INFO("MainLoop(); ");devmngr.MainLoop();            SUCCESS("MainLoop(); ");
+  INFO("Finalize(); ");devmngr.Finalize();            SUCCESS("Finalize(); ");
 
   try{
   }

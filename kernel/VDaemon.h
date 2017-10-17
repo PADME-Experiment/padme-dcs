@@ -1,16 +1,32 @@
 #ifndef  _DCS_kernel_VDaemon_h_
 #define  _DCS_kernel_VDaemon_h_ 1
-#include <thread>
-#include <mutex>
-#include<list>
 #include "fwk/utlMessageBus.h"
 
-class VDaemonSingleThread{
+#include<thread>
+#include<mutex>
+#include<list>
+#include<string>
+
+
+class VDaemonBase{
+  public:
+    VDaemonBase(){}
+    virtual ~VDaemonBase(){}
+    virtual void Daemonize ()=0;
+    virtual void AssertInit()=0;
+    virtual void Finalize  ()=0;
+    virtual const std::string& GetName()const =0;
+};
+
+class VDaemonSingleThread:public VDaemonBase{
+  public:
+    void Daemonize ();
+    virtual void AssertInit(){}
+    virtual void Finalize  (){}
   public:
     VDaemonSingleThread():fRun(false){}
     virtual ~VDaemonSingleThread(){}
 
-    void Daemonize();
     void KillThread();
     void StopThread();
     void JoinThread();
@@ -25,22 +41,28 @@ class VDaemonSingleThread{
     bool fRun;
 };
 
-class VDaemonService{
+class VDaemonService:public VDaemonBase{
+  public:
+    void Daemonize ();
+    virtual void AssertInit(){}
+    virtual void Finalize  (){}
   public:
     virtual ~VDaemonService(){}
+    VDaemonService(const std::string&lab):fLabel(lab){}
     void KillAll(); // TODO REMOVE
-    void Daemonize();
+    const std::string& GetName()const{return fLabel;}
   protected:
     virtual void Service()=0;
+    std::string fLabel; ///< full path PADME/xxx/yyy/zzz
 
-    protected:
+  protected:
     //std::list<std::unique_ptr<std::thread>> fThreads;
     //std::mutex fDaemonizeBarrier;
 };
 
 class VDaemonServiceTCP:public VDaemonService{
   public:
-    VDaemonServiceTCP(int port):fPort(port){Initialize();}
+    VDaemonServiceTCP(const std::string&lab,int port):fPort(port),VDaemonService(lab){Initialize();}
     virtual ~VDaemonServiceTCP(){INFO("");Finalize();}
 
   protected:
@@ -60,14 +82,15 @@ class VDaemonServiceTCP:public VDaemonService{
 #include<mutex>
 class ServiceTCPConfigure:public VDaemonServiceTCP{
   public:
-    ServiceTCPConfigure(int portN):VDaemonServiceTCP(portN){}
+    ServiceTCPConfigure(const std::string&lab,int portN):VDaemonServiceTCP(lab,portN){}
     void ServiceLoop(const int fd);
+    ~ServiceTCPConfigure(){INFO("");}
   private:
     std::mutex fGlobalSetParamsBarrier;
 };
 
-class ServiceTCPInfo:public VDaemonServiceTCP{
-};
+//class ServiceTCPInfo:public VDaemonServiceTCP{
+//};
 
 
 

@@ -110,8 +110,9 @@ class DrvCaenHV_except::Except_USERPASSFAILED       : public DrvCaenHV_except {p
 
 
 
-class DrvCaenHV:public VDeviceDriver, public VDaemonSingleThread{
+class DrvCaenHV:public VDeviceDriver{
   public:
+    void Finalize(){Deinitialize();JoinThread();}
     //DrvCaenHV(){INFO("DEBUG");}
     DrvCaenHV(const std::string&lab,std::shared_ptr<VDeviceDriver>a)
     :VDeviceDriver(lab,a)

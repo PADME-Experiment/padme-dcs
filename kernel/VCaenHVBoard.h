@@ -23,13 +23,14 @@ class CaenHVValue:public VValue<T>{
 //};
 
 
-class VCaenHVBoard:public VDeviceDriver{
+class VCaenHVBoard:public VDeviceBase{
   public:
-    VCaenHVBoard(const std::string& s, std::shared_ptr<VDeviceDriver>d):
-      VDeviceDriver(s,d),
+    VCaenHVBoard(const std::string& s, std::shared_ptr<VDeviceBase>d):
+      VDeviceBase(s,d),
       fSlotNumber(-1),
       fNumberOfChannels(-1)
   {}
+  void Finalize(){}
 
 
     /**Parses the commands and calls the needed A7030

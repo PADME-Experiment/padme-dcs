@@ -10,38 +10,64 @@
 #include<set>
 #include<sstream>
 
-
-class VDeviceDriver{
+/// Any hardware piece. Crate or board
+class VDeviceBase{
   public:
-    typedef std::map<std::string,std::shared_ptr<VDeviceDriver>>::iterator ElemIter;
-    VDeviceDriver(const std::string& lab,std::shared_ptr<VDeviceDriver> par):fLabel(lab),fParent(par){}
-    virtual ~VDeviceDriver(){}
-    std::shared_ptr<VDeviceDriver> AddDevice(const std::string& lab, std::shared_ptr<VDeviceDriver>ptr);
-    std::shared_ptr<VDeviceDriver>Get(const std::string& str){return fAllDevs.at(str);} //TODO try throw proper exception
-    std::shared_ptr<VDeviceDriver>GetParent(){if(fParent.use_count()==0)throw FIXME_EXCEPTION("Parent doesnt exist ");else return fParent;}
+    VDeviceBase(const std::string& lab,std::shared_ptr<VDeviceBase> par):fLabel(lab),fParent(par){}
+    virtual ~VDeviceBase(){}
+  public:
+    virtual void AssertInit()=0;
+    virtual void Finalize  ()=0;
     const std::string& GetName()const{return fLabel;}
+
+    typedef std::map<std::string,std::shared_ptr<VDeviceBase>>::iterator ElemIter;
+    /**
+     * Cycle through all devices.
+     * \returns false when there are no more devices.
+     * If called with argument =nullptr cycle starts from
+     * the first element. Otherwise, it gives the next one.
+     * When last element is reached the pointer is =nullptr.
+     */
+    bool GetNext(ElemIter& it /**<[inout]*/);
+    std::shared_ptr<VDeviceBase>GetParent(){if(fParent.use_count()==0)throw FIXME_EXCEPTION("Parent doesnt exist ");else return fParent;}
+    std::shared_ptr<VDeviceBase>AddDevice(const std::string& lab, std::shared_ptr<VDeviceBase>ptr);
+    std::shared_ptr<VDeviceBase>Get(const std::string& str){return fDevs.at(str);} //TODO try throw proper exception
+    /*
+     * Parses commands in the strings and sets parameters.
+     * The default is to send the strings to sub-devices.
+     */
+    virtual void SetParams(std::set<std::string>);
+    bool HasParent()const{return (fParent.use_count()>0);}
+  protected:
+    std::string fLabel; ///< full path PADME/xxx/yyy/zzz
+    std::map<std::string,std::shared_ptr<VDeviceBase>> fDevs;
+    std::shared_ptr<VDeviceBase> fParent;
+  public:
+  virtual void DebugUpdate(){}
+  virtual void DebugDump(){}
+};
+
+
+
+/// Any primary device. Those wich will be part of the main
+/// layout
+class VDeviceDriver:public VDeviceBase, public VDaemonSingleThread{
+  public:
+    VDeviceDriver(const std::string& lab,std::shared_ptr<VDeviceDriver> par):VDeviceBase(lab,par){}
+    virtual ~VDeviceDriver(){}
+
+    const std::string& GetName()const{return VDeviceBase::GetName();}
+
+
     virtual void DebugUpdate(){}
     virtual void DebugDump(){}
     ///Connect to the device and keep the connection
     virtual void ConnectToDevice(){} //TODO should be pure maybe
     ///Disconnect from the device
     virtual void DisconnectDevice(){} //TODO should be pure maybe
-    bool HasParent()const{return (fParent.use_count()>0);}
-    ///Parses commands in the strings and sets parameters.
-    ///The default is to send the strings to sub-devices.
-    virtual void SetParams(std::set<std::string>);
 
-    /**
-     * Cycle through all devices.
-     * \returns false when there are no more devices.
-     */
-    bool GetNext(ElemIter& it /**<[inout]*/);
-    virtual void AssertInit(){}
-    virtual void Deinitialize(){}
-  protected:
-    std::string fLabel;
-    std::map<std::string,std::shared_ptr<VDeviceDriver>> fAllDevs;
-    std::shared_ptr<VDeviceDriver> fParent;
+    //virtual void AssertInit()=0;
+    //virtual void Deinitialize(){}
 };
 
 

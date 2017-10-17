@@ -62,7 +62,7 @@ DrvCaenHV_except::CAENWrapperRetStatus(int caenhandler,int retstatus, const std:
   void
 DrvCaenHV::SetParams(std::set<std::string>inset/**< [in] should be copy not reference!*/)
 {
-  #warning
+  #warning CAEN ComInit
   //int handle=ComInit();
   int handle;
 
@@ -194,12 +194,16 @@ DrvCaenHV::GetSysPropList() ///Get list of possible
   void
 DrvCaenHV::AssertInit()
 {
-  fCaenCrateHandle=ComInit();
+  INFO("DrvCaenHV::AssertInit()");
+#warning CAEN ComInit
+  //fCaenCrateHandle=ComInit();
+  for(auto it=fDevs.begin();it!=fDevs.end();++it){it->second.get()->AssertInit();}
 }
   void
 DrvCaenHV::Deinitialize()
 {
-  ComDeinit(fCaenCrateHandle );
+#warning CAEN ComDeinit
+  //ComDeinit(fCaenCrateHandle );
 }
 
 

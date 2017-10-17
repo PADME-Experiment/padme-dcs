@@ -8,16 +8,22 @@
 
 
 
-class HVDumper: public VDaemonSingleThread{
+class HVDumper: public VDaemonSingleThread,public VDaemonService{
 // FIXME this is to be removed
 // FIXME EXAMPLE
-  void OnStart() {}
-  void OnCycle() {
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-    DeviceManager::GetInstance().Get("CAENHV1")->DebugDump();
-    DeviceManager::GetInstance().Get("CAENHV1")->Get("CAENHV1.board1")->DebugDump();
-  }
-  void OnStop(){}
+  public:
+  void Daemonize(){VDaemonSingleThread::Daemonize();}
+  void Service(){}
+    HVDumper():VDaemonService("HVDumper"){}
+    void OnStart() {}
+    void OnCycle() {
+      std::this_thread::sleep_for(std::chrono::seconds(1));
+      DeviceManager::GetInstance().Get("CAENHV1")->DebugDump();
+      DeviceManager::GetInstance().Get("CAENHV1")->Get("board1")->DebugDump();
+    }
+    void OnStop(){}
+    void Finalize(){JoinThread();}
+    void AssertInit(){}
 };
 
 
@@ -31,22 +37,56 @@ DeviceManager::GetInstance()
   return a;
 }
 
+  std::shared_ptr<VDaemonBase>
+DeviceManager::AddDaemon(const std::string& lab, std::shared_ptr<VDaemonBase>ptr)
+{
+  // TODO: should also set the global name of the device PADME/xxx/yyy/zzz
+  // TODO: should check if the device existed before
+
+  fDems[lab]=ptr;
+  return ptr;
+}
+
+
+void DeviceManager::AssertInit(){
+  // note that DEVICES are FIRST
+for(auto it=fDevs. begin();it!=fDevs. end();++it){INFO(it->second.get()->GetName());it->second.get()->AssertInit();}
+for(auto it=fDems. begin();it!=fDems. end();++it){INFO(it->second.get()->GetName());it->second.get()->AssertInit();}
+}
+void DeviceManager::Daemonize (){
+  // note that DEVICES are FIRST
+for(auto it=fDevs. begin();it!=fDevs. end();++it){INFO(it->second.get()->GetName());auto dev=std::dynamic_pointer_cast<VDeviceDriver>(it->second);if(dev==nullptr){ERROR("throw");}dev->Daemonize ();}
+for(auto it=fDems. begin();it!=fDems. end();++it){INFO(it->second.get()->GetName());it->second.get()->Daemonize ();}
+}
+void DeviceManager::Finalize  (){
+  // note order is reverced
+  // reverce iterators are used
+  // and DEVICES are LAST
+for(auto it=fDems.rbegin();it!=fDems.rend();++it){INFO(it->second.get()->GetName());it->second.get()->Finalize  ();}
+for(auto it=fDevs.rbegin();it!=fDevs.rend();++it){INFO(it->second.get()->GetName());it->second.get()->Finalize  ();}
+fDems.clear();
+fDevs.clear();
+}
+
+
 
   void
-DeviceManager::ProcessConfig(const std::string& cfg)
+DeviceManager::Configure(const std::string& cfg)
 {
-  TrapKillSignals();
+  HasParent();
 
   YAML::Node config = YAML::LoadFile(cfg);
   for(int nod_i=0;nod_i<config.size();++nod_i){
     if(config[nod_i]["ParentLabel"].as<std::string>()!="PADME")
       continue; // non global device
+    // TODO this in principle is not needed. The parent
+    // devices should be defined in first place in the
+    // config file.
     const std::string& drvtype=config[nod_i]["DriverType"].as<std::string>();
     const std::string& devlble=config[nod_i]["Label"     ].as<std::string>();
     if(drvtype=="CAEN_SY4527"){
-      auto caen=std::dynamic_pointer_cast<DrvCaenHV>(
-          AddDevice(devlble,std::make_shared<DrvCaenHV>(devlble,nullptr))
-          );
+      auto caen=std::make_shared<DrvCaenHV>(devlble,nullptr);
+      AddDevice(devlble,caen);
       caen->SetIPAddress( config[nod_i]["Args"]["IPAddr"].as<std::string>());
       caen->SetUsername ( config[nod_i]["Args"]["User"  ].as<std::string>());
       caen->SetPassword ( config[nod_i]["Args"]["Pass"  ].as<std::string>());
@@ -60,61 +100,39 @@ DeviceManager::ProcessConfig(const std::string& cfg)
     const std::string& devlble=config[nod_i]["Label"      ].as<std::string>();
     const std::string& parlble=config[nod_i]["ParentLabel"].as<std::string>();
     if(drvtype=="CAEN_A7030N"){
-      auto board=std::dynamic_pointer_cast<DrvCaenA7030N>(
-          Get(parlble)->AddDevice(devlble,std::make_shared<DrvCaenA7030N>(devlble,Get(parlble)))
-          );
+      auto board=std::make_shared<DrvCaenA7030N>(devlble,Get(parlble));
+      Get(parlble)->AddDevice(devlble,board);
       board->GetParentInfo();
       board->SetNumChannels ( config[nod_i]["Args"]["NChannels"  ].as<unsigned int>());
       board->SetSlot        ( config[nod_i]["Args"]["Slot"       ].as<unsigned int>());
-      board->AssertInit();
+      //board->AssertInit();
     }else if(drvtype=="NYAKOJ DRUG DETEKTOR"){
     }
   }
-
-  VDeviceDriver::ElemIter devit;
-  devit=static_cast<VDeviceDriver::ElemIter>(nullptr);
-  //while(GetNext(devit)){devit->second->AssertInit();}
-
-  HVDumper hvdumper;
-  ServiceTCPConfigure confTCP(33455);
-
-  confTCP.Daemonize();
-  MainLoop();
-
-
-  std::dynamic_pointer_cast<VDaemonSingleThread>(Get("CAENHV1"))->Daemonize();
-
-  hvdumper.Daemonize();
-
-
-
-  INFO("will join caenhv");
-  std::dynamic_pointer_cast<VDaemonSingleThread>(DeviceManager::GetInstance().Get("CAENHV1"))->JoinThread();
-  SUCCESS("caenhv joined");
-  INFO("will join hvdumper");
-  hvdumper.JoinThread();
-  SUCCESS("hvdumper joined");
-
-  devit=static_cast<VDeviceDriver::ElemIter>(nullptr);
-  while(GetNext(devit)){devit->second->Deinitialize();}
+  //auto hvdumper=std::make_shared<HVDumper>();
+  //fDems.push_back(hvdumper);
+  AddDaemon("999TCPConf",std::make_shared<ServiceTCPConfigure>("TCPconf",33455));
 
 
 }
 
-static bool gPrepareForQuit=false;
 
-  static void
-Sigint(int i)
+
+
+bool DeviceManager::fsPrepareForQuit=false;
+
+  void
+DeviceManager::Sigint(int i)
 {
-  INFO("CTRL-C Received");
-  gPrepareForQuit=true;
+  INFO("CTRL-C Trapped");
+  fsPrepareForQuit=true;
 }
 
   void
 DeviceManager::MainLoop()
 {
   int i=0;
-  while(!gPrepareForQuit){
+  while(!fsPrepareForQuit){
     if((++i%10)==0)INFO("ALLIVE!");
     std::this_thread::sleep_for( std::chrono::milliseconds(200));
   }

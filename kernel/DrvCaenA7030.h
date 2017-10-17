@@ -13,7 +13,7 @@
 
 class DrvCaenA7030N:public VCaenHVBoard{
   public:
-    DrvCaenA7030N(const std::string& s, std::shared_ptr<VDeviceDriver>d):VCaenHVBoard(s,d){INFO("");}
+    DrvCaenA7030N(const std::string& s, std::shared_ptr<VDeviceBase>d):VCaenHVBoard(s,d){INFO("");}
     ~DrvCaenA7030N(){INFO("");}
     void SetNumberOfChannels(int i){fNumberOfChannels=i;}
     void SetSlotNumber(int i){fSlotNumber=i;}
