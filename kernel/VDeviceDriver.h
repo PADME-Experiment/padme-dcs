@@ -13,7 +13,7 @@
 /// Any hardware piece. Crate or board
 class VDeviceBase{
   public:
-    VDeviceBase(const std::string& lab,std::shared_ptr<VDeviceBase> par):fLabel(lab),fParent(par){}
+    VDeviceBase(const std::string& lab,VDeviceBase* par):fLabel(lab),fParent(par){}
     virtual ~VDeviceBase(){}
   public:
     virtual void AssertInit()=0;
@@ -29,7 +29,7 @@ class VDeviceBase{
      * When last element is reached the pointer is =nullptr.
      */
     bool GetNext(ElemIter& it /**<[inout]*/);
-    std::shared_ptr<VDeviceBase>GetParent(){if(fParent.use_count()==0)throw FIXME_EXCEPTION("Parent doesnt exist ");else return fParent;}
+    VDeviceBase*GetParent(){if(fParent==nullptr)throw FIXME_EXCEPTION("Parent doesnt exist ");else return fParent;}
     std::shared_ptr<VDeviceBase>AddDevice(const std::string& lab, std::shared_ptr<VDeviceBase>ptr);
     std::shared_ptr<VDeviceBase>Get(const std::string& str){return fDevs.at(str);} //TODO try throw proper exception
     /*
@@ -37,11 +37,11 @@ class VDeviceBase{
      * The default is to send the strings to sub-devices.
      */
     virtual void SetParams(std::set<std::string>);
-    bool HasParent()const{return (fParent.use_count()>0);}
+    bool HasParent()const{return (fParent!=nullptr);}
   protected:
     std::string fLabel; ///< full path PADME/xxx/yyy/zzz
     std::map<std::string,std::shared_ptr<VDeviceBase>> fDevs;
-    std::shared_ptr<VDeviceBase> fParent;
+    VDeviceBase* fParent;
   public:
   virtual void DebugUpdate(){}
   virtual void DebugDump(){}
@@ -53,7 +53,7 @@ class VDeviceBase{
 /// layout
 class VDeviceDriver:public VDeviceBase, public VDaemonSingleThread{
   public:
-    VDeviceDriver(const std::string& lab,std::shared_ptr<VDeviceDriver> par):VDeviceBase(lab,par){}
+    VDeviceDriver(const std::string& lab,VDeviceBase* par):VDeviceBase(lab,par){}
     virtual ~VDeviceDriver(){}
 
     const std::string& GetName()const{return VDeviceBase::GetName();}

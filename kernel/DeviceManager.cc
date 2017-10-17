@@ -47,25 +47,52 @@ DeviceManager::AddDaemon(const std::string& lab, std::shared_ptr<VDaemonBase>ptr
   return ptr;
 }
 
-
-void DeviceManager::AssertInit(){
+  void
+DeviceManager::AssertInit()
+{
   // note that DEVICES are FIRST
-for(auto it=fDevs. begin();it!=fDevs. end();++it){INFO(it->second.get()->GetName());it->second.get()->AssertInit();}
-for(auto it=fDems. begin();it!=fDems. end();++it){INFO(it->second.get()->GetName());it->second.get()->AssertInit();}
+  for(auto it=fDevs. begin();it!=fDevs. end();++it){
+    INFO(it->second.get()->GetName());
+    it->second.get()->AssertInit();
+  }
+  for(auto it=fDems. begin();it!=fDems. end();++it){
+    INFO(it->second.get()->GetName());
+    it->second.get()->AssertInit();
+  }
 }
-void DeviceManager::Daemonize (){
+  void
+DeviceManager::Daemonize ()
+{
   // note that DEVICES are FIRST
-for(auto it=fDevs. begin();it!=fDevs. end();++it){INFO(it->second.get()->GetName());auto dev=std::dynamic_pointer_cast<VDeviceDriver>(it->second);if(dev==nullptr){ERROR("throw");}dev->Daemonize ();}
-for(auto it=fDems. begin();it!=fDems. end();++it){INFO(it->second.get()->GetName());it->second.get()->Daemonize ();}
+  for(auto it=fDevs. begin();it!=fDevs. end();++it){
+    INFO(it->second.get()->GetName());
+    auto dev=std::dynamic_pointer_cast<VDeviceDriver>(it->second);
+    if(dev==nullptr)
+      ERROR("throw");
+    WARNING("Devices are not daemonized");
+    //dev->Daemonize ();
+  }
+  for(auto it=fDems. begin();it!=fDems. end();++it){
+    INFO(it->second.get()->GetName());
+    it->second.get()->Daemonize ();
+  }
 }
-void DeviceManager::Finalize  (){
+  void
+DeviceManager::Finalize  ()
+{
   // note order is reverced
   // reverce iterators are used
   // and DEVICES are LAST
-for(auto it=fDems.rbegin();it!=fDems.rend();++it){INFO(it->second.get()->GetName());it->second.get()->Finalize  ();}
-for(auto it=fDevs.rbegin();it!=fDevs.rend();++it){INFO(it->second.get()->GetName());it->second.get()->Finalize  ();}
-fDems.clear();
-fDevs.clear();
+  for(auto it=fDems.rbegin();it!=fDems.rend();++it){
+    INFO(it->second.get()->GetName());
+    it->second.get()->Finalize  ();
+  }
+  for(auto it=fDevs.rbegin();it!=fDevs.rend();++it){
+    INFO(it->second.get()->GetName());
+    it->second.get()->Finalize  ();
+  }
+  fDems.clear();
+  fDevs.clear();
 }
 
 
@@ -77,41 +104,34 @@ DeviceManager::Configure(const std::string& cfg)
 
   YAML::Node config = YAML::LoadFile(cfg);
   for(int nod_i=0;nod_i<config.size();++nod_i){
-    if(config[nod_i]["ParentLabel"].as<std::string>()!="PADME")
-      continue; // non global device
-    // TODO this in principle is not needed. The parent
-    // devices should be defined in first place in the
-    // config file.
     const std::string& drvtype=config[nod_i]["DriverType"].as<std::string>();
     const std::string& devlble=config[nod_i]["Label"     ].as<std::string>();
+    const std::string& parlble=config[nod_i]["ParentLabel"].as<std::string>();
     if(drvtype=="CAEN_SY4527"){
-      auto caen=std::make_shared<DrvCaenHV>(devlble,nullptr);
+      auto caen=std::make_shared<DrvCaenHV>(devlble,this); //potential problem
       AddDevice(devlble,caen);
       caen->SetIPAddress( config[nod_i]["Args"]["IPAddr"].as<std::string>());
       caen->SetUsername ( config[nod_i]["Args"]["User"  ].as<std::string>());
       caen->SetPassword ( config[nod_i]["Args"]["Pass"  ].as<std::string>());
-    }else if(drvtype=="NYAKOJ DRUG DETEKTOR"){
-    }
-  }
-  for(int nod_i=0;nod_i<config.size();++nod_i){
-    if(config[nod_i]["ParentLabel"].as<std::string>().size()==0)
-      continue;
-    const std::string& drvtype=config[nod_i]["DriverType" ].as<std::string>();
-    const std::string& devlble=config[nod_i]["Label"      ].as<std::string>();
-    const std::string& parlble=config[nod_i]["ParentLabel"].as<std::string>();
-    if(drvtype=="CAEN_A7030N"){
-      auto board=std::make_shared<DrvCaenA7030N>(devlble,Get(parlble));
+    }else if(drvtype=="CAEN_A7030N"){
+      auto board=std::make_shared<DrvCaenA7030N>(devlble,Get(parlble).get());
       Get(parlble)->AddDevice(devlble,board);
       board->GetParentInfo();
       board->SetNumChannels ( config[nod_i]["Args"]["NChannels"  ].as<unsigned int>());
       board->SetSlot        ( config[nod_i]["Args"]["Slot"       ].as<unsigned int>());
       //board->AssertInit();
-    }else if(drvtype=="NYAKOJ DRUG DETEKTOR"){
+    }else if(drvtype=="ServiceTCPConfigure"){
+      unsigned int portn=config[nod_i]["Args"]["TCPPortNumber"  ].as<unsigned int>();
+      auto service=std::make_shared<ServiceTCPConfigure>(devlble,portn);
+      AddDaemon(devlble,service);
     }
   }
+
+
+
+
   //auto hvdumper=std::make_shared<HVDumper>();
   //fDems.push_back(hvdumper);
-  AddDaemon("999TCPConf",std::make_shared<ServiceTCPConfigure>("TCPconf",33455));
 
 
 }

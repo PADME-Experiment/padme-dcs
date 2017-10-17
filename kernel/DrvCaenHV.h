@@ -114,8 +114,8 @@ class DrvCaenHV:public VDeviceDriver{
   public:
     void Finalize(){Deinitialize();JoinThread();}
     //DrvCaenHV(){INFO("DEBUG");}
-    DrvCaenHV(const std::string&lab,std::shared_ptr<VDeviceDriver>a)
-    :VDeviceDriver(lab,a)
+    DrvCaenHV(const std::string&lab,VDeviceBase*parp)
+    :VDeviceDriver(lab,parp)
   {
     INFO("pars");
   }

@@ -24,7 +24,7 @@ class VDaemonSingleThread:public VDaemonBase{
     virtual void AssertInit(){}
     virtual void Finalize  (){}
   public:
-    VDaemonSingleThread():fRun(false){}
+    VDaemonSingleThread():fRun(false),fThread(nullptr){}
     virtual ~VDaemonSingleThread(){}
 
     void KillThread();

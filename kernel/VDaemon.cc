@@ -25,6 +25,10 @@ VDaemonSingleThread::StartCycling()
   void
 VDaemonSingleThread::JoinThread()
 {
+  if(fThread==nullptr){
+    ERROR("not threaded");
+    return;
+  }
   fRun=false;
   fThread->join();
   delete fThread;

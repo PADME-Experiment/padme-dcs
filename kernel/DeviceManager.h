@@ -8,7 +8,7 @@
 #include<map>
 #include<memory>
 
-class DeviceManager:public VDeviceBase{
+class DeviceManager:public VDeviceBase,std::enable_shared_from_this<DeviceManager>{
   public:
     void AssertInit();
     void Daemonize();
@@ -20,7 +20,7 @@ class DeviceManager:public VDeviceBase{
   private:
 std::shared_ptr<VDaemonBase> AddDaemon(const std::string& lab, std::shared_ptr<VDaemonBase>ptr);
     std::map<std::string,std::shared_ptr<VDaemonBase>> fDems;
-    DeviceManager():VDeviceBase("PADME",std::shared_ptr<VDeviceBase>(nullptr)){TrapKillSignals();}
+    DeviceManager():VDeviceBase("PADME",nullptr){TrapKillSignals();}
     ~DeviceManager(){}
 
   public:

@@ -25,7 +25,7 @@ class CaenHVValue:public VValue<T>{
 
 class VCaenHVBoard:public VDeviceBase{
   public:
-    VCaenHVBoard(const std::string& s, std::shared_ptr<VDeviceBase>d):
+    VCaenHVBoard(const std::string& s, VDeviceBase*d):
       VDeviceBase(s,d),
       fSlotNumber(-1),
       fNumberOfChannels(-1)

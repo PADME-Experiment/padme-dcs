@@ -15,7 +15,7 @@ VCaenHVBoard::GetCaenChParam(const std::string&par, void* res)
   std::vector<ushort> allch;
   allch.resize(fNumberOfChannels);
   for(int i=0;i<fNumberOfChannels;++i)allch[i]=i;
-  CAENHV_GetChParam(std::dynamic_pointer_cast<DrvCaenHV>(GetParent())->GetCaenCrateHandle(),fSlotNumber, 
+  CAENHV_GetChParam(static_cast<DrvCaenHV*>(GetParent())->GetCaenCrateHandle(),fSlotNumber, 
       par.c_str(), unsigned(fNumberOfChannels), &(*allch.begin()), res);
 }
 

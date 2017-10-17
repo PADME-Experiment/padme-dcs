@@ -7,3 +7,8 @@
   Label: "board1"
   ParentLabel: "CAENHV1"
   DriverType: CAEN_A7030N
+
+- Args: {TCPPortNumber: 33455}
+  Label: "tcp_conf"
+  ParentLabel: "PADME"
+  DriverType: ServiceTCPConfigure
