@@ -6,7 +6,46 @@
   DrvCaenHV_except&
 DrvCaenHV_except::CAENWrapperRetStatus(int caenhandler,int retstatus, const std::string& add)
 { std::string a(CAENHV_GetError(caenhandler));
-  std::string str("CAENHVWrapper returned error ("+std::to_string(retstatus)+") : '" + a + "'");
+std::string error=(
+retstatus==0     ? "Command wrapper correctly executed"                                            :
+retstatus==1     ? "Error of operatived system"                                                    :
+retstatus==2     ? "Write error in communication channel"                                          :
+retstatus==3     ? "Read error in communication channel"                                           :
+retstatus==4     ? "Time out in server communication"                                              :
+retstatus==5     ? "Command Front End application is down"                                         :
+retstatus==6     ? "Communication with system not yet connected by a Login command"                :
+retstatus==7     ? "Communication with a not present board/slot"                                   :
+retstatus==8     ? "Communication with RS232 not yet implemented"                                  :
+retstatus==9     ? "User memory not sufficient"                                                    :
+retstatus==10    ? "Value out of range"                                                            :
+retstatus==11    ? "Execute command not yet implemented"                                           :
+retstatus==12    ? "Get Property not yet implemented"                                              :
+retstatus==13    ? "Set Property not yet implemented"                                              :
+retstatus==14    ? "Property not found"                                                            :
+retstatus==15    ? "Execute command not found"                                                     :
+retstatus==16    ? "No System property"                                                            :
+retstatus==17    ? "No get property"                                                               :
+retstatus==18    ? "No set property"                                                               :
+retstatus==19    ? "No execute command"                                                            :
+retstatus==20    ? "Device configuration changed"                                                  :
+retstatus==21    ? "Property of param not found"                                                   :
+retstatus==22    ? "Param not found"                                                               :
+retstatus==23    ? "No data present"                                                               :
+retstatus==24    ? "Device already open"                                                           :
+retstatus==25    ? "To Many devices opened"                                                        :
+retstatus==26    ? "Function Parameter not valid"                                                  :
+retstatus==27    ? "Function not available for the connected device"                               :
+retstatus==0x1001? "Device already connected"                                                      :
+retstatus==0x1002? "Device not connected"                                                          :
+retstatus==0x1003? "Operating system error"                                                        :
+retstatus==0x1004? "Login failed"                                                                  :
+retstatus==0x1005? "Logout failed"                                                                 :
+retstatus==0x1006? "Link type not supported"                                                       :
+retstatus==0x1007? "Login failed for username/password ( SY4527 / SY5527 )"                        :
+"Unknown");
+
+
+  std::string str("CAENHVWrapper returned error ("+std::to_string(retstatus)+") : '" + a + "'  "+error);
   if(add.size()>0)str+="   "+add;
 
   switch (retstatus){
