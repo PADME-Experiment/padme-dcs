@@ -29,6 +29,10 @@ utl::NumFCommaDashListToVector(std::string str)
   }
   std::vector<float> ret;
   int from=0;int to=0;
+  if(str.find_first_of(",")==std::string::npos){
+      ret.push_back(std::stof(str));
+      return ret;
+  }
   while((to=str.find_first_of(",",from+1))!=std::string::npos){
     int to2=str.find_first_of(",",to+1);
     float left,right;
@@ -58,6 +62,10 @@ utl::NumICommaDashListToVector(std::string str)
   }
   std::vector<unsigned int> ret;
   int from=0;int to=0;
+  if(str.find_first_of(",-")==std::string::npos){
+      ret.push_back(std::stoi(str));
+      return ret;
+  }
   while((to=str.find_first_of(",-",from+1))!=std::string::npos){
     int to2=str.find_first_of(",-",to+1);
     int left,right;
@@ -113,4 +121,16 @@ utl::ExtractFirstPrefix(std::set<std::string>&in,std::set<std::string>&out,std::
     in.erase(init);++init;
   }
   return out.size();
+}
+
+  void
+utl::ConvCharListVector(unsigned short n,const char* l,std::vector<std::string>&v)
+{
+  v.clear();
+  int len=0;
+  for(int i=0;i<n;++i){
+    std::string tmp(&l[len]);
+    len+=tmp.size()+1;
+    v.push_back(tmp);
+  }
 }

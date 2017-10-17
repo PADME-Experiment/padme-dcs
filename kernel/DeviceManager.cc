@@ -8,13 +8,13 @@
 
 
 
-class HVDumper: public VDaemonSingleThread,public VDaemonService{
-// FIXME this is to be removed
-// FIXME EXAMPLE
+class HVDumper: public VDeviceDriver{
+  // FIXME this is to be removed
+  // FIXME EXAMPLE
   public:
-  void Daemonize(){VDaemonSingleThread::Daemonize();}
-  void Service(){}
-    HVDumper():VDaemonService("HVDumper"){}
+    //void Daemonize(){VDaemonSingleThread::Daemonize();}
+    void Service(){}
+    HVDumper():VDeviceDriver("HVDumper",nullptr){}
     void OnStart() {}
     void OnCycle() {
       std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -51,10 +51,7 @@ DeviceManager::AddDaemon(const std::string& lab, std::shared_ptr<VDaemonBase>ptr
 DeviceManager::AssertInit()
 {
   // note that DEVICES are FIRST
-  for(auto it=fDevs. begin();it!=fDevs. end();++it){
-    INFO(it->second.get()->GetName());
-    it->second.get()->AssertInit();
-  }
+  this->VDeviceBase::AssertInit();
   for(auto it=fDems. begin();it!=fDems. end();++it){
     INFO(it->second.get()->GetName());
     it->second.get()->AssertInit();
@@ -69,8 +66,8 @@ DeviceManager::Daemonize ()
     auto dev=std::dynamic_pointer_cast<VDeviceDriver>(it->second);
     if(dev==nullptr)
       ERROR("throw");
-    WARNING("Devices are not daemonized");
-    //dev->Daemonize ();
+    //WARNING("Devices are not daemonized");
+    dev->Daemonize ();
   }
   for(auto it=fDems. begin();it!=fDems. end();++it){
     INFO(it->second.get()->GetName());
@@ -87,10 +84,7 @@ DeviceManager::Finalize  ()
     INFO(it->second.get()->GetName());
     it->second.get()->Finalize  ();
   }
-  for(auto it=fDevs.rbegin();it!=fDevs.rend();++it){
-    INFO(it->second.get()->GetName());
-    it->second.get()->Finalize  ();
-  }
+  this->VDeviceBase::Finalize();
   fDems.clear();
   fDevs.clear();
 }
@@ -100,8 +94,6 @@ DeviceManager::Finalize  ()
   void
 DeviceManager::Configure(const std::string& cfg)
 {
-  HasParent();
-
   YAML::Node config = YAML::LoadFile(cfg);
   for(int nod_i=0;nod_i<config.size();++nod_i){
     const std::string& drvtype=config[nod_i]["DriverType"].as<std::string>();
@@ -130,8 +122,8 @@ DeviceManager::Configure(const std::string& cfg)
 
 
 
-  //auto hvdumper=std::make_shared<HVDumper>();
-  //fDems.push_back(hvdumper);
+  auto hvdumper=std::make_shared<HVDumper>();
+  AddDaemon("hvdumper",hvdumper);
 
 
 }

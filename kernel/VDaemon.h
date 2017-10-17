@@ -47,7 +47,7 @@ class VDaemonService:public VDaemonBase{
     virtual void AssertInit(){}
     virtual void Finalize  (){}
   public:
-    virtual ~VDaemonService(){}
+    virtual ~VDaemonService(){INFO(fLabel);}
     VDaemonService(const std::string&lab):fLabel(lab){}
     void KillAll(); // TODO REMOVE
     const std::string& GetName()const{return fLabel;}
@@ -62,13 +62,13 @@ class VDaemonService:public VDaemonBase{
 
 class VDaemonServiceTCP:public VDaemonService{
   public:
-    VDaemonServiceTCP(const std::string&lab,int port):fPort(port),VDaemonService(lab){Initialize();}
-    virtual ~VDaemonServiceTCP(){INFO("");Finalize();}
+    VDaemonServiceTCP(const std::string&lab,int port):fPort(port),VDaemonService(lab){}
+    virtual ~VDaemonServiceTCP(){}
 
   protected:
-    virtual void ServiceLoop(const int fd)=0;//{} FIXME should be pure virtual
+    virtual void ServiceLoop(const int fd)=0;
     void Service();
-    void Initialize();
+    void AssertInit();
     void Finalize();
 
   protected:

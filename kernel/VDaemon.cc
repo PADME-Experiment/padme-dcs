@@ -8,7 +8,7 @@ VDaemonSingleThread::Daemonize()
   INFO("");
   fRun=true;
   INFO("will start");
- fThread=new std::thread (&VDaemonSingleThread::StartCycling,this);
+  fThread=new std::thread (&VDaemonSingleThread::StartCycling,this);
   INFO("started");
 }
 
@@ -78,7 +78,7 @@ VDaemonService::KillAll()
 
 
   void
-VDaemonServiceTCP::Initialize()
+VDaemonServiceTCP::AssertInit()
 {
   struct addrinfo hints;
   struct addrinfo *servinfo;
@@ -161,14 +161,15 @@ VDaemonServiceTCP::Service()
   void
 ServiceTCPConfigure::ServiceLoop(const int fd)
 {
-  std::set<std::string> listOfCmds;
   int sentbytes;
   char buf[5];
   int len;
 
-  std::string tcpbuffer;
   std::string tcpcurrent;
   do{
+    std::set<std::string> listOfCmds;
+    tcpcurrent="";
+    std::string tcpbuffer;
     do{
       len=recv(fd,buf,sizeof(buf),0);
       tcpbuffer.append(buf,len);
@@ -178,20 +179,18 @@ ServiceTCPConfigure::ServiceLoop(const int fd)
         tcpcurrent=tcpbuffer.substr(0,firstBSn-1); // -1 because of \r
         tcpbuffer.erase(0,firstBSn+1);
         //INFO("insert "+tcpcurrent);
+        if(tcpcurrent=="bye"||tcpcurrent=="do")break;
         listOfCmds.insert(tcpcurrent);
+        //INFO("ADD " +tcpcurrent);
       }
-      //INFO("inside while");
-    }while(len>=0&&tcpcurrent!="bye"&&tcpcurrent!="do!"); //empty line to execute
-    //INFO("outside while");
-    if(len<0)ERROR("except len<0");
+    }while(len>=0&&tcpcurrent!="bye"&&tcpcurrent!="do"); //empty line to execute
 
     std::string tmpstr;
     try{
       sentbytes=0;
       tmpstr="Processing . . .\r\n";
       send(fd,tmpstr.data(),tmpstr.size(),0);
-      //INFO("send");
-      //do{ // tova neshot cikli....
+      //do{ // tova nesho cikli....
       //  sentbytes+=send(fd,tmpstr.substr(sentbytes).data(),tmpstr.size()-sentbytes,0);
       //}while(sentbytes==tmpstr.size());
       { // This block defines the mutex scope
@@ -203,15 +202,10 @@ ServiceTCPConfigure::ServiceLoop(const int fd)
       tmpstr="DONE\r\n\r\n";
       sentbytes=send(fd,tmpstr.data(),tmpstr.size(),0);
     }
-    catch(const fwk::Exception&e){//FIXME
-      tmpstr=e.what();
+    //catch(const fwk::Exception&e){//FIXME
+    catch(const std::exception&e){//FIXME
+      tmpstr=std::string(e.what())+"\n\n";
       sentbytes=send(fd,tmpstr.data(),tmpstr.size(),0);
     }
   }while(tcpcurrent!="bye");
-
 }
-
-
-
-
-

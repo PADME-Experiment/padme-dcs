@@ -11,6 +11,7 @@ namespace utl{
   std::vector<float>       NumFCommaDashListToVector  (std::string str);
   std::vector<std::string> StringCommaDashListToVector(std::string str);
   int ExtractFirstPrefix(std::set<std::string>&in,std::set<std::string>&out,std::string& group);
+  void ConvCharListVector(unsigned short n,const char* l,std::vector<std::string>&v);
 }
 
 #endif

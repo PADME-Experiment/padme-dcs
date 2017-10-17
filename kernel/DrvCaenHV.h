@@ -112,53 +112,15 @@ class DrvCaenHV_except::Except_USERPASSFAILED       : public DrvCaenHV_except {p
 
 class DrvCaenHV:public VDeviceDriver{
   public:
-    void Finalize(){Deinitialize();JoinThread();}
-    //DrvCaenHV(){INFO("DEBUG");}
-    DrvCaenHV(const std::string&lab,VDeviceBase*parp)
-    :VDeviceDriver(lab,parp)
-  {
-    INFO("pars");
-  }
-    ~DrvCaenHV(){
-      //ComDeinit();
-      INFO("");
-    }
-    ///Opens a Caen comm and passes the handle to subdevices
-    void SetParams(std::set<std::string>);
-    void OnStart() {/* TODO opens handle and call all daughter AssertInits*/}
-    void OnCycle() {std::this_thread::sleep_for(std::chrono::seconds(3));DebugUpdate();
-      VDeviceDriver::ElemIter devit;
-      devit=static_cast<VDeviceDriver::ElemIter>(nullptr);
-      while(GetNext(devit)){devit->second->DebugUpdate();}
-    }
+    DrvCaenHV(const std::string&lab,VDeviceBase*parp):VDeviceDriver(lab,parp){}
+    ~DrvCaenHV(){}
+    void OnStart() {}
+    void OnCycle();
     void OnStop()  {}
-    //void ConnectToDevice() {fCaenCrateHandle=ComInit  ();}
-    //void DisconnectDevice(){ComDeinit();}
-    void DebugUpdate(){
-      INFO("");
-      GetSysProp_Sessions      ();
-      GetSysProp_ModelName     ();
-      GetSysProp_SwRelease     ();
-      GetSysProp_GenSignCfg    ();
-      GetSysProp_FrontPanIn    ();
-      GetSysProp_FrontPanOut   ();
-      GetSysProp_ResFlagCfg    ();
-      GetSysProp_HvPwSM        ();
-      GetSysProp_HVFanStat     ();
-      GetSysProp_ClkFreq       ();
-      GetSysProp_HVClkConf     ();
-      GetSysProp_IPAddr        ();
-      GetSysProp_IPNetMsk      ();
-      GetSysProp_IPGw          ();
-      GetSysProp_PWCurrent     ();
-      GetSysProp_OutputLevel   ();
-      GetSysProp_SymbolicName  ();
-      GetSysProp_CmdQueueStatus();
-      GetSysProp_CPULoad       ();
-      GetSysProp_MemoryStatus  ();
-      //DebugDump();
-    }
 
+    void Finalize();
+    void AssertInit();
+    void SetParams(std::set<std::string>);
 
   public:
     void GetCrateMap();
@@ -166,14 +128,8 @@ class DrvCaenHV:public VDeviceDriver{
     void GetSysPropList();
     void SetIPAddress(const std::string&s){fIPAddress=s;}
     void SetUsername (const std::string&s){fUsername =s;}
-    void SetPassword (const std::string&s){fPassword =s;};
-    void AssertInit();
-    void Deinitialize();
+    void SetPassword (const std::string&s){fPassword =s;}
     int  GetCaenCrateHandle(){return fCaenCrateHandle;}
-
-
-
-
 
   private:
     void ComDeinit(int);
@@ -184,12 +140,6 @@ class DrvCaenHV:public VDeviceDriver{
     std::string fIPAddress;
     std::string fUsername;
     std::string fPassword;
-
-
-
-  private:
-    void ConvCharListVector(unsigned short n,const char*
-        l,std::vector<std::string>&v);
 
 
   public:
@@ -249,6 +199,30 @@ class DrvCaenHV:public VDeviceDriver{
 
 
   public: // DEBUG
+    void DebugUpdate(){
+      INFO("");
+      GetSysProp_Sessions      ();
+      GetSysProp_ModelName     ();
+      GetSysProp_SwRelease     ();
+      GetSysProp_GenSignCfg    ();
+      GetSysProp_FrontPanIn    ();
+      GetSysProp_FrontPanOut   ();
+      GetSysProp_ResFlagCfg    ();
+      GetSysProp_HvPwSM        ();
+      GetSysProp_HVFanStat     ();
+      GetSysProp_ClkFreq       ();
+      GetSysProp_HVClkConf     ();
+      GetSysProp_IPAddr        ();
+      GetSysProp_IPNetMsk      ();
+      GetSysProp_IPGw          ();
+      GetSysProp_PWCurrent     ();
+      GetSysProp_OutputLevel   ();
+      GetSysProp_SymbolicName  ();
+      GetSysProp_CmdQueueStatus();
+      GetSysProp_CPULoad       ();
+      GetSysProp_MemoryStatus  ();
+      //DebugDump();
+    }
     void DebugDump(){
       std::stringstream ss;
       ss.str(std::string());ss.clear();ss<<"fSessions       "<<fSessions      .GetVal()<<" @- "<<fSessions      .GetAge();INFO(ss.str());

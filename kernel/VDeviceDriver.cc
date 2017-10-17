@@ -32,10 +32,13 @@ VDeviceBase::GetNext(ElemIter& it)
   void
 VDeviceBase::SetParams(std::set<std::string>inset/**< [in] should be copy not reference!*/)
 {
+  INFO(std::to_string(inset.size())+" lines to be proc");
   std::string group;
   std::set<std::string>subset;
   while (utl::ExtractFirstPrefix(inset,subset,group)){
     for(auto it=subset.begin();it!=subset.end();++it){
+      if(group.size()==0)
+        throw fwk::Exception_tobefixed("empty group");
       INFO("calls group "+group);
       Get(group)->SetParams(subset);
     }

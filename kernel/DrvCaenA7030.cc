@@ -11,6 +11,8 @@
   void
 DrvCaenA7030N::AssertNumberOfChannels()
 {
+  INFO(std::to_string(fNumberOfChannels));
+
   //TODO
   //should throw special type
   //when thrown board should be deleted
@@ -22,6 +24,7 @@ DrvCaenA7030N::AssertBoardType()
   //TODO
   //should throw special type
   //when thrown board should be deleted
+  INFO(std::to_string(fNumberOfChannels));
   if(fNumberOfChannels<1)throw fwk::Exception_tobefixed("fNumberoFChannels<1");
   if(fNumberOfChannels!=48)throw fwk::Exception_tobefixed("fNumberoFChannels!=48");
   fValuesName   .resize(fNumberOfChannels);

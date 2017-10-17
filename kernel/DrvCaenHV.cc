@@ -62,9 +62,8 @@ DrvCaenHV_except::CAENWrapperRetStatus(int caenhandler,int retstatus, const std:
   void
 DrvCaenHV::SetParams(std::set<std::string>inset/**< [in] should be copy not reference!*/)
 {
-  #warning CAEN ComInit
-  //int handle=ComInit();
-  int handle;
+  //#warning CAEN ComInit
+  int handle=ComInit();
 
   std::string group;
   std::set<std::string>subset;
@@ -74,6 +73,7 @@ DrvCaenHV::SetParams(std::set<std::string>inset/**< [in] should be copy not refe
       std::dynamic_pointer_cast<VCaenHVBoard>(Get(group))->SetParams(handle,subset);
     }
   }
+//#warning CAEN DeComInit
   ComDeinit(handle);
 }
 
@@ -123,8 +123,8 @@ DrvCaenHV::GetCrateMap()
     DrvCaenHV_except::CAENWrapperRetStatus(fCaenCrateHandle,ret);
   std::vector<std::string>modelVec;
   std::vector<std::string>descrVec;
-  ConvCharListVector(nrslots,modellist,modelVec);
-  ConvCharListVector(nrslots,descrlist,descrVec);
+  utl::ConvCharListVector(nrslots,modellist,modelVec);
+  utl::ConvCharListVector(nrslots,descrlist,descrVec);
 
   for(int i=0;i<nrslots;++i){
     std::cout
@@ -157,7 +157,7 @@ DrvCaenHV::GetExecCommList() ///Get list of possible
   if(ret!=CAENHV_OK)
     DrvCaenHV_except::CAENWrapperRetStatus(fCaenCrateHandle,ret);
   std::vector<std::string> list;
-  ConvCharListVector(numcom,comnamelist,list);
+  utl::ConvCharListVector(numcom,comnamelist,list);
   int len=0;
   for(int i=0;i<numcom;++i){
     std::cout<<list[i]<<"   ";
@@ -179,7 +179,7 @@ DrvCaenHV::GetSysPropList() ///Get list of possible
     DrvCaenHV_except::CAENWrapperRetStatus(fCaenCrateHandle,ret);
 
   std::vector<std::string> list;
-  ConvCharListVector(numcom,comnamelist,list);
+  utl::ConvCharListVector(numcom,comnamelist,list);
 
   int len=0;
   for(int i=0;i<numcom;++i){
@@ -195,34 +195,27 @@ DrvCaenHV::GetSysPropList() ///Get list of possible
 DrvCaenHV::AssertInit()
 {
   INFO("DrvCaenHV::AssertInit()");
-#warning CAEN ComInit
-  //fCaenCrateHandle=ComInit();
-  for(auto it=fDevs.begin();it!=fDevs.end();++it){it->second.get()->AssertInit();}
+//#warning CAEN ComInit
+  fCaenCrateHandle=ComInit();
+  AssertInitAllOwned();
 }
   void
-DrvCaenHV::Deinitialize()
+DrvCaenHV::Finalize()
 {
-#warning CAEN ComDeinit
-  //ComDeinit(fCaenCrateHandle );
+  this->VDeviceBase::Finalize();
+//#warning CAEN ComDeinit
+  ComDeinit(fCaenCrateHandle );
+  JoinThread();
 }
 
 
-
-
-//TODO: tazi funkciya da otide v utl ili fwk
-  void
-DrvCaenHV::ConvCharListVector(unsigned short n,const char* l,std::vector<std::string>&v)
-{
-  v.clear();
-  int len=0;
-  for(int i=0;i<n;++i){
-    std::string tmp(&l[len]);
-    len+=tmp.size()+1;
-    v.push_back(tmp);
-  }
+void
+DrvCaenHV::OnCycle(){
+  std::this_thread::sleep_for(std::chrono::seconds(3));DebugUpdate();
+  VDeviceDriver::ElemIter devit;
+  devit=static_cast<VDeviceDriver::ElemIter>(nullptr);
+  while(GetNext(devit)){devit->second->DebugUpdate();}
 }
-
-
 
   void
 DrvCaenHV::GetSysProp(const std::string&cmd, void* res)

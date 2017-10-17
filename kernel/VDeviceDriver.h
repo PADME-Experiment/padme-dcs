@@ -13,13 +13,15 @@
 /// Any hardware piece. Crate or board
 class VDeviceBase{
   public:
-    VDeviceBase(const std::string& lab,VDeviceBase* par):fLabel(lab),fParent(par){}
-    virtual ~VDeviceBase(){}
+    VDeviceBase(const std::string& lab,VDeviceBase* par):fParent(par){
+      fLabel=(HasParent()?GetParent()->GetName()+"/"+lab:lab);}
+    virtual ~VDeviceBase(){INFO(fLabel);}
+  protected:
+    void AssertInitAllOwned(){INFO(fLabel);for(auto it=fDevs. begin();it!=fDevs. end();++it){it->second.get()->AssertInit();}}
   public:
-    virtual void AssertInit()=0;
-    virtual void Finalize  ()=0;
+    virtual void AssertInit(){AssertInitAllOwned();}
+    void Finalize  (){for(auto it=fDevs.rbegin();it!=fDevs.rend();++it){it->second.get()->Finalize  ();}}
     const std::string& GetName()const{return fLabel;}
-
     typedef std::map<std::string,std::shared_ptr<VDeviceBase>>::iterator ElemIter;
     /**
      * Cycle through all devices.
@@ -43,14 +45,16 @@ class VDeviceBase{
     std::map<std::string,std::shared_ptr<VDeviceBase>> fDevs;
     VDeviceBase* fParent;
   public:
-  virtual void DebugUpdate(){}
-  virtual void DebugDump(){}
+    virtual void DebugUpdate(){}
+    virtual void DebugDump(){}
 };
 
 
 
-/// Any primary device. Those wich will be part of the main
-/// layout
+/* Any primary device. Those wich will be part of the main
+ * layout and which will maintain connection with physical
+ * devices
+ */
 class VDeviceDriver:public VDeviceBase, public VDaemonSingleThread{
   public:
     VDeviceDriver(const std::string& lab,VDeviceBase* par):VDeviceBase(lab,par){}

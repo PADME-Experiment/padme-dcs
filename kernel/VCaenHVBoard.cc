@@ -29,7 +29,8 @@ VCaenHVBoard::SetCaenChParam(int handle,const std::string& parname,std::vector<u
   for(auto it=vals.begin();it!=vals.end();++it)allnames.append(it->c_str(),it->size()+1); // +1 to add also '\0's
   std::vector<ushort> arr(nch);
   for(int i=0;i<nch;++i)arr[i]=chans[i];
-  CAENHV_SetChParam(handle,fSlotNumber, parname.c_str(), nch, &(*arr.begin()), (char*)allnames.c_str());
+  int ret=CAENHV_SetChParam(handle,fSlotNumber, parname.c_str(), nch, &(*arr.begin()), (char*)allnames.c_str());
+  if(ret!=CAENHV_OK) DrvCaenHV_except::CAENWrapperRetStatus(handle,ret,"try to set "+parname);
 }
 
   void
@@ -41,7 +42,9 @@ VCaenHVBoard::SetCaenChParam(int handle,const std::string& parname,std::vector<u
   std::vector<ushort> arr(nch);
   for(int i=0;i<nch;++i)arr[i]=chans[i];
   for(int i=0;i<nch;++i)INFO(std::to_string(chans[i])+"   "+std::to_string(vals[i]));
-  CAENHV_SetChParam(handle,fSlotNumber, parname.c_str(), nch, &(*arr.begin()), &(vals[0]));
+  INFO(parname);
+  int ret=CAENHV_SetChParam(handle,fSlotNumber, parname.c_str(), nch, &(*arr.begin()), &(vals[0]));
+  if(ret!=CAENHV_OK) DrvCaenHV_except::CAENWrapperRetStatus(handle,ret,"try to set "+parname);
 }
 
   void
@@ -52,7 +55,8 @@ VCaenHVBoard::SetCaenChParam(int handle,const std::string& parname,std::vector<u
   if(nch!=vals.size())throw fwk::Exception_tobefixed("SetCaenChParam vecotrs of different size");
   std::vector<ushort> arr(nch);
   for(int i=0;i<nch;++i)arr[i]=chans[i];
-  CAENHV_SetChParam(handle,fSlotNumber, parname.c_str(), nch, &(*arr.begin()), &(vals[0]));
+  int ret=CAENHV_SetChParam(handle,fSlotNumber, parname.c_str(), nch, &(*arr.begin()), &(vals[0]));
+  if(ret!=CAENHV_OK) DrvCaenHV_except::CAENWrapperRetStatus(handle,ret,"try to set "+parname);
 }
 
 
@@ -75,10 +79,13 @@ VCaenHVBoard::SetParams(int caenHandle,std::set<std::string>setstr)
     std::vector<float> vvalF;
 
     if(liness>>cmd>>chans>>vals)INFO("THROW");//throw fwk::Exception_tobefixed("VCaenHVBoard::SetParams line syntax error");
-    if( cmd.begin()==cmd.end()     ||
-        chans.begin()==chans.end() ||
-        vals.begin()==vals.end()){
-    }INFO("THROW");//throw fwk::Exception_tobefixed("VCaenHVBoard::SetParams line syntax error");
+    INFO("cmd  "+cmd  );
+    INFO("chans"+chans);
+    INFO("vals "+vals );
+    if( cmd.size()==0     ||
+        chans.size()==0 ||
+        vals.size()==0  ){
+      INFO("THROW");}//throw fwk::Exception_tobefixed("VCaenHVBoard::SetParams line syntax error");
 
     std::vector<unsigned int>vchans=utl::NumICommaDashListToVector(chans);
     if(!(vchans.size()>0))INFO("THROW");//throw fwk::Exception_tobefixed("VCaenHVBoard::SetParams syntax error vchans=0");
@@ -99,11 +106,13 @@ VCaenHVBoard::SetParams(int caenHandle,std::set<std::string>setstr)
         cmd=="RDWn" ||
         cmd=="Trip" ||
         cmd=="SVMax"){
-      auto vvalF=utl::NumFCommaDashListToVector(vals);
+      vvalF=utl::NumFCommaDashListToVector(vals);
       if(vvalF.size()==1){
         vvalF.resize(vchans.size(),vvalF[0]);
         INFO("setting float");
       }
+      INFO("vchans.size"+std::to_string(vchans.size()));
+      INFO("vvalF.size"+std::to_string(vvalF.size()));
       if(vvalF.size()!=vchans.size())throw fwk::Exception_tobefixed("VCaenHVBoard::SetParams syntax error vchans.size!=vvalF.size");
     } else if( cmd=="Pw"||
         cmd=="TripInt"  ||
@@ -156,19 +165,19 @@ VCaenHVBoard::DebugDump()
 
   ss.str(std::string());ss.clear(); ss<<"V0Set  "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesV0Set[i].GetVal()<<"("<<fValuesV0Set[i].GetAge()<<"s)"; } INFO(ss.str());
 
-//  ss.str(std::string());ss.clear(); ss<<"I0Set  "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesI0Set[i].GetVal()<<"("<<fValuesI0Set[i].GetAge()<<"s)"; } INFO(ss.str());
-//  ss.str(std::string());ss.clear(); ss<<"V1Set  "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesV1Set[i].GetVal()<<"("<<fValuesV1Set[i].GetAge()<<"s)"; } INFO(ss.str());
-//  ss.str(std::string());ss.clear(); ss<<"I1Set  "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesI1Set[i].GetVal()<<"("<<fValuesI1Set[i].GetAge()<<"s)"; } INFO(ss.str());
-//  ss.str(std::string());ss.clear(); ss<<"RUp    "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesRUp  [i].GetVal()<<"("<<fValuesRUp  [i].GetAge()<<"s)"; } INFO(ss.str());
-//  ss.str(std::string());ss.clear(); ss<<"RDWn   "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesRDWn [i].GetVal()<<"("<<fValuesRDWn [i].GetAge()<<"s)"; } INFO(ss.str());
-//  ss.str(std::string());ss.clear(); ss<<"Trip   "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesTrip [i].GetVal()<<"("<<fValuesTrip [i].GetAge()<<"s)"; } INFO(ss.str());
-//  ss.str(std::string());ss.clear(); ss<<"SVMax  "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesSVMax[i].GetVal()<<"("<<fValuesSVMax[i].GetAge()<<"s)"; } INFO(ss.str());
-  ss.str(std::string());ss.clear(); ss<<"VMon   "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesVMon [i].GetVal()<<"("<<fValuesVMon [i].GetAge()<<"s)"; } INFO(ss.str());
-  ss.str(std::string());ss.clear(); ss<<"IMon   "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesIMon [i].GetVal()<<"("<<fValuesIMon [i].GetAge()<<"s)"; } INFO(ss.str());
+  //  ss.str(std::string());ss.clear(); ss<<"I0Set  "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesI0Set[i].GetVal()<<"("<<fValuesI0Set[i].GetAge()<<"s)"; } INFO(ss.str());
+  //  ss.str(std::string());ss.clear(); ss<<"V1Set  "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesV1Set[i].GetVal()<<"("<<fValuesV1Set[i].GetAge()<<"s)"; } INFO(ss.str());
+  //  ss.str(std::string());ss.clear(); ss<<"I1Set  "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesI1Set[i].GetVal()<<"("<<fValuesI1Set[i].GetAge()<<"s)"; } INFO(ss.str());
+  //  ss.str(std::string());ss.clear(); ss<<"RUp    "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesRUp  [i].GetVal()<<"("<<fValuesRUp  [i].GetAge()<<"s)"; } INFO(ss.str());
+  //  ss.str(std::string());ss.clear(); ss<<"RDWn   "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesRDWn [i].GetVal()<<"("<<fValuesRDWn [i].GetAge()<<"s)"; } INFO(ss.str());
+  //  ss.str(std::string());ss.clear(); ss<<"Trip   "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesTrip [i].GetVal()<<"("<<fValuesTrip [i].GetAge()<<"s)"; } INFO(ss.str());
+  //  ss.str(std::string());ss.clear(); ss<<"SVMax  "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesSVMax[i].GetVal()<<"("<<fValuesSVMax[i].GetAge()<<"s)"; } INFO(ss.str());
+  //ss.str(std::string());ss.clear(); ss<<"VMon   "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesVMon [i].GetVal()<<"("<<fValuesVMon [i].GetAge()<<"s)"; } INFO(ss.str());
+  //ss.str(std::string());ss.clear(); ss<<"IMon   "; for(int i=0;i<fNumberOfChannels;++i){ ss<<fValuesIMon [i].GetVal()<<"("<<fValuesIMon [i].GetAge()<<"s)"; } INFO(ss.str());
 
   ss.str(std::string());ss.clear(); ss<<"Status    "; for(int i=0;i<fNumberOfChannels;++i){ ss<<" 0x"<<std::bitset<16>(fValuesStatus [i].GetVal())<<"("<<fValuesStatus [i].GetAge()<<"s)"; } INFO(ss.str());
-  ss.str(std::string());ss.clear(); ss<<"Pw        "; for(int i=0;i<fNumberOfChannels;++i){ ss<<" 0x"<<std::bitset< 3>(fValuesPw     [i].GetVal())<<"("<<fValuesPw     [i].GetAge()<<"s)"; } INFO(ss.str());
-//  ss.str(std::string());ss.clear(); ss<<"TripIntPw "; for(int i=0;i<fNumberOfChannels;++i){ ss<<" 0x"<<std::bitset< 3>(fValuesTripInt[i].GetVal())<<"("<<fValuesTripInt[i].GetAge()<<"s)"; } INFO(ss.str());
-//  ss.str(std::string());ss.clear(); ss<<"TripExtPw "; for(int i=0;i<fNumberOfChannels;++i){ ss<<" 0x"<<std::bitset< 3>(fValuesTripExt[i].GetVal())<<"("<<fValuesTripExt[i].GetAge()<<"s)"; } INFO(ss.str());
+  //ss.str(std::string());ss.clear(); ss<<"Pw        "; for(int i=0;i<fNumberOfChannels;++i){ ss<<" 0x"<<std::bitset< 3>(fValuesPw     [i].GetVal())<<"("<<fValuesPw     [i].GetAge()<<"s)"; } INFO(ss.str());
+  //  ss.str(std::string());ss.clear(); ss<<"TripIntPw "; for(int i=0;i<fNumberOfChannels;++i){ ss<<" 0x"<<std::bitset< 3>(fValuesTripInt[i].GetVal())<<"("<<fValuesTripInt[i].GetAge()<<"s)"; } INFO(ss.str());
+  //  ss.str(std::string());ss.clear(); ss<<"TripExtPw "; for(int i=0;i<fNumberOfChannels;++i){ ss<<" 0x"<<std::bitset< 3>(fValuesTripExt[i].GetVal())<<"("<<fValuesTripExt[i].GetAge()<<"s)"; } INFO(ss.str());
 }
 
