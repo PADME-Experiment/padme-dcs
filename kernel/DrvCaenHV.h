@@ -13,6 +13,7 @@
 #include<memory>
 #include<cstdint>
 #include<sstream>
+#include<mutex>
 class DrvCaenHV_except:public fwk::Exception{
   public:
     class Except_OK                   ;
@@ -129,14 +130,20 @@ class DrvCaenHV:public VDeviceDriver{
     void SetIPAddress(const std::string&s){fIPAddress=s;}
     void SetUsername (const std::string&s){fUsername =s;}
     void SetPassword (const std::string&s){fPassword =s;}
-    int  GetCaenCrateHandle(){return fCaenCrateHandle;}
+    //int  GetCaenCrateHandle(){return fCaenCrateHandle;}
 
   private:
     void ComDeinit(int);
     int  ComInit();
 
+  public:
+    const int & GetCaenCrateHandle()const{return fCaenCrateHandle;}
+    std::mutex& GetCaenCrateHandle_mutex(){return fCaenCrateHandle_mutex;}
+
   private:
-    int fCaenCrateHandle; ///< This handle is to be used only for reading. All Setters shoul open new one!!!
+    int fCaenCrateHandle; ///< This handle is to be used only for reading.
+    std::mutex fCaenCrateHandle_mutex;///< mutex barrier for multithreading
+    //std::lock_guard<std::mutex> guard(fCaenCrateHandle_mutex);
     std::string fIPAddress;
     std::string fUsername;
     std::string fPassword;

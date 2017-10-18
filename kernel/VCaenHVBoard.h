@@ -8,6 +8,7 @@
 #include<vector>
 
 #include<cstdint>
+#include<mutex>
 
 template<class T>
 class CaenHVValue:public VValue<T>{
@@ -25,11 +26,7 @@ class CaenHVValue:public VValue<T>{
 
 class VCaenHVBoard:public VDeviceBase{
   public:
-    VCaenHVBoard(const std::string& s, VDeviceBase*d):
-      VDeviceBase(s,d),
-      fSlotNumber(-1),
-      fNumberOfChannels(-1)
-  {}
+    VCaenHVBoard(const std::string& s, VDeviceBase*d);
   void Finalize(){}
 
 
@@ -38,7 +35,7 @@ class VCaenHVBoard:public VDeviceBase{
      * string to arguments or throw exception in case of
      * problem.
      */
-    void SetParams(int caenHandle,std::set<std::string>);
+    void SetParams(std::set<std::string>);
     virtual ~VCaenHVBoard(){}
     void SetNumChannels(unsigned int i){fNumberOfChannels=i;}
     void SetSlot       (unsigned int i){fSlotNumber      =i;}
@@ -47,6 +44,9 @@ class VCaenHVBoard:public VDeviceBase{
       AssertNumberOfChannels();
       AssertBoardType();
     }
+    private:
+    const int &fCaenCrateHandle;
+    std::mutex&fCaenCrateHandle_mutex;
   protected:
     virtual void AssertNumberOfChannels()=0;
     virtual void AssertBoardType()=0;
@@ -64,9 +64,9 @@ class VCaenHVBoard:public VDeviceBase{
 
     void GetCaenChParam(const std::string&par, void* res);
     //void SetCaenChParam(const std::string&par, void* res);
-    void SetCaenChParam(int handle,const std::string& parname,std::vector<uint32_t> chans, std::vector<uint32_t   >vals);
-    void SetCaenChParam(int handle,const std::string& parname,std::vector<uint32_t> chans, std::vector<float      >vals);
-    void SetCaenChParam(int handle,const std::string& parname,std::vector<uint32_t> chans, std::vector<std::string>vals);
+    void SetCaenChParam(const std::string& parname,std::vector<uint32_t> chans, std::vector<uint32_t   >vals);
+    void SetCaenChParam(const std::string& parname,std::vector<uint32_t> chans, std::vector<float      >vals);
+    void SetCaenChParam(const std::string& parname,std::vector<uint32_t> chans, std::vector<std::string>vals);
 
   public:// FIXME debug only
     void GetParentInfo(){INFO(GetParent()->GetName());}
@@ -91,18 +91,18 @@ class VCaenHVBoard:public VDeviceBase{
     void DebugDump();
 
   protected: // CAEN Set functions. These to be called from the setting parser (separete thread)
-    virtual void SetCaenChParam_Name   (int handle,const std::vector<uint32_t>&chlist,const std::vector<std::string>&vals)=0;
-    virtual void SetCaenChParam_V0Set  (int handle,const std::vector<uint32_t>&chlist,const std::vector<float      >&vals)=0;
-    virtual void SetCaenChParam_I0Set  (int handle,const std::vector<uint32_t>&chlist,const std::vector<float      >&vals)=0;
-    virtual void SetCaenChParam_V1Set  (int handle,const std::vector<uint32_t>&chlist,const std::vector<float      >&vals)=0;
-    virtual void SetCaenChParam_I1Set  (int handle,const std::vector<uint32_t>&chlist,const std::vector<float      >&vals)=0;
-    virtual void SetCaenChParam_RUp    (int handle,const std::vector<uint32_t>&chlist,const std::vector<float      >&vals)=0;
-    virtual void SetCaenChParam_RDWn   (int handle,const std::vector<uint32_t>&chlist,const std::vector<float      >&vals)=0;
-    virtual void SetCaenChParam_Trip   (int handle,const std::vector<uint32_t>&chlist,const std::vector<float      >&vals)=0;
-    virtual void SetCaenChParam_SVMax  (int handle,const std::vector<uint32_t>&chlist,const std::vector<float      >&vals)=0;
-    virtual void SetCaenChParam_Pw     (int handle,const std::vector<uint32_t>&chlist,const std::vector<uint32_t   >&vals)=0;
-    virtual void SetCaenChParam_TripInt(int handle,const std::vector<uint32_t>&chlist,const std::vector<uint32_t   >&vals)=0;
-    virtual void SetCaenChParam_TripExt(int handle,const std::vector<uint32_t>&chlist,const std::vector<uint32_t   >&vals)=0;
+    virtual void SetCaenChParam_Name   (const std::vector<uint32_t>&chlist,const std::vector<std::string>&vals)=0;
+    virtual void SetCaenChParam_V0Set  (const std::vector<uint32_t>&chlist,const std::vector<float      >&vals)=0;
+    virtual void SetCaenChParam_I0Set  (const std::vector<uint32_t>&chlist,const std::vector<float      >&vals)=0;
+    virtual void SetCaenChParam_V1Set  (const std::vector<uint32_t>&chlist,const std::vector<float      >&vals)=0;
+    virtual void SetCaenChParam_I1Set  (const std::vector<uint32_t>&chlist,const std::vector<float      >&vals)=0;
+    virtual void SetCaenChParam_RUp    (const std::vector<uint32_t>&chlist,const std::vector<float      >&vals)=0;
+    virtual void SetCaenChParam_RDWn   (const std::vector<uint32_t>&chlist,const std::vector<float      >&vals)=0;
+    virtual void SetCaenChParam_Trip   (const std::vector<uint32_t>&chlist,const std::vector<float      >&vals)=0;
+    virtual void SetCaenChParam_SVMax  (const std::vector<uint32_t>&chlist,const std::vector<float      >&vals)=0;
+    virtual void SetCaenChParam_Pw     (const std::vector<uint32_t>&chlist,const std::vector<uint32_t   >&vals)=0;
+    virtual void SetCaenChParam_TripInt(const std::vector<uint32_t>&chlist,const std::vector<uint32_t   >&vals)=0;
+    virtual void SetCaenChParam_TripExt(const std::vector<uint32_t>&chlist,const std::vector<uint32_t   >&vals)=0;
 
   protected: // CAEN Get functions. These to be called from update function
     virtual void GetCaenChParam_Name   ()=0;

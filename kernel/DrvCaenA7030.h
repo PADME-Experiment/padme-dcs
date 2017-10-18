@@ -21,18 +21,18 @@ class DrvCaenA7030N:public VCaenHVBoard{
     void AssertNumberOfChannels();
     void AssertBoardType();
   protected: // CAEN Set functions. These to be called from the setting parser (separete thread)
-    void SetCaenChParam_Name   (int handle,const std::vector<uint32_t>&chlist,const std::vector<std::string>&vals);
-    void SetCaenChParam_V0Set  (int handle,const std::vector<uint32_t>&chlist,const std::vector<float      >&vals);
-    void SetCaenChParam_I0Set  (int handle,const std::vector<uint32_t>&chlist,const std::vector<float      >&vals);
-    void SetCaenChParam_V1Set  (int handle,const std::vector<uint32_t>&chlist,const std::vector<float      >&vals);
-    void SetCaenChParam_I1Set  (int handle,const std::vector<uint32_t>&chlist,const std::vector<float      >&vals);
-    void SetCaenChParam_RUp    (int handle,const std::vector<uint32_t>&chlist,const std::vector<float      >&vals);
-    void SetCaenChParam_RDWn   (int handle,const std::vector<uint32_t>&chlist,const std::vector<float      >&vals);
-    void SetCaenChParam_Trip   (int handle,const std::vector<uint32_t>&chlist,const std::vector<float      >&vals);
-    void SetCaenChParam_SVMax  (int handle,const std::vector<uint32_t>&chlist,const std::vector<float      >&vals);
-    void SetCaenChParam_Pw     (int handle,const std::vector<uint32_t>&chlist,const std::vector<uint32_t   >&vals);
-    void SetCaenChParam_TripInt(int handle,const std::vector<uint32_t>&chlist,const std::vector<uint32_t   >&vals);
-    void SetCaenChParam_TripExt(int handle,const std::vector<uint32_t>&chlist,const std::vector<uint32_t   >&vals);
+    void SetCaenChParam_Name   (const std::vector<uint32_t>&chlist,const std::vector<std::string>&vals);
+    void SetCaenChParam_V0Set  (const std::vector<uint32_t>&chlist,const std::vector<float      >&vals);
+    void SetCaenChParam_I0Set  (const std::vector<uint32_t>&chlist,const std::vector<float      >&vals);
+    void SetCaenChParam_V1Set  (const std::vector<uint32_t>&chlist,const std::vector<float      >&vals);
+    void SetCaenChParam_I1Set  (const std::vector<uint32_t>&chlist,const std::vector<float      >&vals);
+    void SetCaenChParam_RUp    (const std::vector<uint32_t>&chlist,const std::vector<float      >&vals);
+    void SetCaenChParam_RDWn   (const std::vector<uint32_t>&chlist,const std::vector<float      >&vals);
+    void SetCaenChParam_Trip   (const std::vector<uint32_t>&chlist,const std::vector<float      >&vals);
+    void SetCaenChParam_SVMax  (const std::vector<uint32_t>&chlist,const std::vector<float      >&vals);
+    void SetCaenChParam_Pw     (const std::vector<uint32_t>&chlist,const std::vector<uint32_t   >&vals);
+    void SetCaenChParam_TripInt(const std::vector<uint32_t>&chlist,const std::vector<uint32_t   >&vals);
+    void SetCaenChParam_TripExt(const std::vector<uint32_t>&chlist,const std::vector<uint32_t   >&vals);
 
   protected: // CAEN Get functions. These to be called from update function
     void GetCaenChParam_Name   ();

@@ -64,15 +64,15 @@ void DrvCaenA7030N::GetCaenChParam_TripExt(){std::vector<uint32_t>res(fNumberOfC
 
 
 
-void DrvCaenA7030N::SetCaenChParam_Name   (int handle,const std::vector<uint32_t>&chlist,const std::vector<std::string>&vals){SetCaenChParam(handle,"Name"   ,chlist,vals);}
-void DrvCaenA7030N::SetCaenChParam_V0Set  (int handle,const std::vector<uint32_t>&chlist,const std::vector<float      >&vals){SetCaenChParam(handle,"V0Set"  ,chlist,vals);}
-void DrvCaenA7030N::SetCaenChParam_I0Set  (int handle,const std::vector<uint32_t>&chlist,const std::vector<float      >&vals){SetCaenChParam(handle,"I0Set"  ,chlist,vals);}
-void DrvCaenA7030N::SetCaenChParam_V1Set  (int handle,const std::vector<uint32_t>&chlist,const std::vector<float      >&vals){SetCaenChParam(handle,"V1Set"  ,chlist,vals);}
-void DrvCaenA7030N::SetCaenChParam_I1Set  (int handle,const std::vector<uint32_t>&chlist,const std::vector<float      >&vals){SetCaenChParam(handle,"I1Set"  ,chlist,vals);}
-void DrvCaenA7030N::SetCaenChParam_RUp    (int handle,const std::vector<uint32_t>&chlist,const std::vector<float      >&vals){SetCaenChParam(handle,"RUp"    ,chlist,vals);}
-void DrvCaenA7030N::SetCaenChParam_RDWn   (int handle,const std::vector<uint32_t>&chlist,const std::vector<float      >&vals){SetCaenChParam(handle,"RDWn"   ,chlist,vals);}
-void DrvCaenA7030N::SetCaenChParam_Trip   (int handle,const std::vector<uint32_t>&chlist,const std::vector<float      >&vals){SetCaenChParam(handle,"Trip"   ,chlist,vals);}
-void DrvCaenA7030N::SetCaenChParam_SVMax  (int handle,const std::vector<uint32_t>&chlist,const std::vector<float      >&vals){SetCaenChParam(handle,"SVMax"  ,chlist,vals);}
-void DrvCaenA7030N::SetCaenChParam_Pw     (int handle,const std::vector<uint32_t>&chlist,const std::vector<uint32_t   >&vals){SetCaenChParam(handle,"Pw"     ,chlist,vals);}
-void DrvCaenA7030N::SetCaenChParam_TripInt(int handle,const std::vector<uint32_t>&chlist,const std::vector<uint32_t   >&vals){SetCaenChParam(handle,"TripInt",chlist,vals);}
-void DrvCaenA7030N::SetCaenChParam_TripExt(int handle,const std::vector<uint32_t>&chlist,const std::vector<uint32_t   >&vals){SetCaenChParam(handle,"TripExt",chlist,vals);}
+void DrvCaenA7030N::SetCaenChParam_Name   (const std::vector<uint32_t>&chlist,const std::vector<std::string>&vals){SetCaenChParam("Name"   ,chlist,vals);}
+void DrvCaenA7030N::SetCaenChParam_V0Set  (const std::vector<uint32_t>&chlist,const std::vector<float      >&vals){SetCaenChParam("V0Set"  ,chlist,vals);}
+void DrvCaenA7030N::SetCaenChParam_I0Set  (const std::vector<uint32_t>&chlist,const std::vector<float      >&vals){SetCaenChParam("I0Set"  ,chlist,vals);}
+void DrvCaenA7030N::SetCaenChParam_V1Set  (const std::vector<uint32_t>&chlist,const std::vector<float      >&vals){SetCaenChParam("V1Set"  ,chlist,vals);}
+void DrvCaenA7030N::SetCaenChParam_I1Set  (const std::vector<uint32_t>&chlist,const std::vector<float      >&vals){SetCaenChParam("I1Set"  ,chlist,vals);}
+void DrvCaenA7030N::SetCaenChParam_RUp    (const std::vector<uint32_t>&chlist,const std::vector<float      >&vals){SetCaenChParam("RUp"    ,chlist,vals);}
+void DrvCaenA7030N::SetCaenChParam_RDWn   (const std::vector<uint32_t>&chlist,const std::vector<float      >&vals){SetCaenChParam("RDWn"   ,chlist,vals);}
+void DrvCaenA7030N::SetCaenChParam_Trip   (const std::vector<uint32_t>&chlist,const std::vector<float      >&vals){SetCaenChParam("Trip"   ,chlist,vals);}
+void DrvCaenA7030N::SetCaenChParam_SVMax  (const std::vector<uint32_t>&chlist,const std::vector<float      >&vals){SetCaenChParam("SVMax"  ,chlist,vals);}
+void DrvCaenA7030N::SetCaenChParam_Pw     (const std::vector<uint32_t>&chlist,const std::vector<uint32_t   >&vals){SetCaenChParam("Pw"     ,chlist,vals);}
+void DrvCaenA7030N::SetCaenChParam_TripInt(const std::vector<uint32_t>&chlist,const std::vector<uint32_t   >&vals){SetCaenChParam("TripInt",chlist,vals);}
+void DrvCaenA7030N::SetCaenChParam_TripExt(const std::vector<uint32_t>&chlist,const std::vector<uint32_t   >&vals){SetCaenChParam("TripExt",chlist,vals);}

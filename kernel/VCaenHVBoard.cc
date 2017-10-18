@@ -8,6 +8,14 @@
 
 
 
+VCaenHVBoard::VCaenHVBoard(const std::string& s, VDeviceBase*d):
+  VDeviceBase(s,d),
+  fSlotNumber(-1),
+  fCaenCrateHandle      (static_cast<DrvCaenHV*>(d)->GetCaenCrateHandle()),
+  fCaenCrateHandle_mutex(static_cast<DrvCaenHV*>(d)->GetCaenCrateHandle_mutex()),
+  fNumberOfChannels(-1)
+{}
+
 
   void
 VCaenHVBoard::GetCaenChParam(const std::string&par, void* res)
@@ -15,12 +23,15 @@ VCaenHVBoard::GetCaenChParam(const std::string&par, void* res)
   std::vector<ushort> allch;
   allch.resize(fNumberOfChannels);
   for(int i=0;i<fNumberOfChannels;++i)allch[i]=i;
-  CAENHV_GetChParam(static_cast<DrvCaenHV*>(GetParent())->GetCaenCrateHandle(),fSlotNumber, 
+  int ret;
+  std::lock_guard<std::mutex> guard(fCaenCrateHandle_mutex);
+  ret=CAENHV_GetChParam(fCaenCrateHandle,fSlotNumber,
       par.c_str(), unsigned(fNumberOfChannels), &(*allch.begin()), res);
+  if(ret!=CAENHV_OK) DrvCaenHV_except::CAENWrapperRetStatus(fCaenCrateHandle,ret,"try to get "+par);
 }
 
   void
-VCaenHVBoard::SetCaenChParam(int handle,const std::string& parname,std::vector<uint32_t> chans, std::vector<std::string>vals)
+VCaenHVBoard::SetCaenChParam(const std::string& parname,std::vector<uint32_t> chans, std::vector<std::string>vals)
 {
   const unsigned nch=chans.size();
   if(nch>fNumberOfChannels)throw fwk::Exception_tobefixed("SetCaenChParam vector too big");
@@ -29,12 +40,14 @@ VCaenHVBoard::SetCaenChParam(int handle,const std::string& parname,std::vector<u
   for(auto it=vals.begin();it!=vals.end();++it)allnames.append(it->c_str(),it->size()+1); // +1 to add also '\0's
   std::vector<ushort> arr(nch);
   for(int i=0;i<nch;++i)arr[i]=chans[i];
-  int ret=CAENHV_SetChParam(handle,fSlotNumber, parname.c_str(), nch, &(*arr.begin()), (char*)allnames.c_str());
-  if(ret!=CAENHV_OK) DrvCaenHV_except::CAENWrapperRetStatus(handle,ret,"try to set "+parname);
+  int ret;
+  std::lock_guard<std::mutex> guard(fCaenCrateHandle_mutex);
+  ret=CAENHV_SetChParam(fCaenCrateHandle,fSlotNumber, parname.c_str(), nch, &(*arr.begin()), (char*)allnames.c_str());
+  if(ret!=CAENHV_OK) DrvCaenHV_except::CAENWrapperRetStatus(fCaenCrateHandle,ret,"try to set "+parname);
 }
 
   void
-VCaenHVBoard::SetCaenChParam(int handle,const std::string& parname,std::vector<uint32_t> chans, std::vector<float>vals)
+VCaenHVBoard::SetCaenChParam(const std::string& parname,std::vector<uint32_t> chans, std::vector<float>vals)
 {
   const unsigned nch=chans.size();
   if(nch>fNumberOfChannels)throw fwk::Exception_tobefixed("SetCaenChParam vector too big");
@@ -43,26 +56,30 @@ VCaenHVBoard::SetCaenChParam(int handle,const std::string& parname,std::vector<u
   for(int i=0;i<nch;++i)arr[i]=chans[i];
   for(int i=0;i<nch;++i)INFO(std::to_string(chans[i])+"   "+std::to_string(vals[i]));
   INFO(parname);
-  int ret=CAENHV_SetChParam(handle,fSlotNumber, parname.c_str(), nch, &(*arr.begin()), &(vals[0]));
-  if(ret!=CAENHV_OK) DrvCaenHV_except::CAENWrapperRetStatus(handle,ret,"try to set "+parname);
+  int ret;
+  std::lock_guard<std::mutex> guard(fCaenCrateHandle_mutex);
+  ret=CAENHV_SetChParam(fCaenCrateHandle,fSlotNumber, parname.c_str(), nch, &(*arr.begin()), &(vals[0]));
+  if(ret!=CAENHV_OK) DrvCaenHV_except::CAENWrapperRetStatus(fCaenCrateHandle,ret,"try to set "+parname);
 }
 
   void
-VCaenHVBoard::SetCaenChParam(int handle,const std::string& parname,std::vector<uint32_t> chans, std::vector<uint32_t>vals)
+VCaenHVBoard::SetCaenChParam(const std::string& parname,std::vector<uint32_t> chans, std::vector<uint32_t>vals)
 {
   const unsigned nch=chans.size();
   if(nch>fNumberOfChannels)throw fwk::Exception_tobefixed("SetCaenChParam vector too big");
   if(nch!=vals.size())throw fwk::Exception_tobefixed("SetCaenChParam vecotrs of different size");
   std::vector<ushort> arr(nch);
   for(int i=0;i<nch;++i)arr[i]=chans[i];
-  int ret=CAENHV_SetChParam(handle,fSlotNumber, parname.c_str(), nch, &(*arr.begin()), &(vals[0]));
-  if(ret!=CAENHV_OK) DrvCaenHV_except::CAENWrapperRetStatus(handle,ret,"try to set "+parname);
+  int ret;
+  std::lock_guard<std::mutex> guard(fCaenCrateHandle_mutex);
+  ret=CAENHV_SetChParam(fCaenCrateHandle,fSlotNumber, parname.c_str(), nch, &(*arr.begin()), &(vals[0]));
+  if(ret!=CAENHV_OK) DrvCaenHV_except::CAENWrapperRetStatus(fCaenCrateHandle,ret,"try to set "+parname);
 }
 
 
 
   void
-VCaenHVBoard::SetParams(int caenHandle,std::set<std::string>setstr)
+VCaenHVBoard::SetParams(std::set<std::string>setstr)
 {
   //TODO
   //parses the commands and calls the needed A7030 functions
@@ -124,18 +141,18 @@ VCaenHVBoard::SetParams(int caenHandle,std::set<std::string>setstr)
       if(vvalI.size()!=vchans.size())throw fwk::Exception_tobefixed("VCaenHVBoard::SetParams syntax error vchans.size!=vvalI.size");
     }else throw fwk::Exception_tobefixed("VCaenHVBoard::SetParams syntax error");
 
-    if(cmd=="Name"   )SetCaenChParam_Name   (caenHandle,vchans,vvalS);
-    if(cmd=="V0Set"  )SetCaenChParam_V0Set  (caenHandle,vchans,vvalF);
-    if(cmd=="I0Set"  )SetCaenChParam_I0Set  (caenHandle,vchans,vvalF);
-    if(cmd=="V1Set"  )SetCaenChParam_V1Set  (caenHandle,vchans,vvalF);
-    if(cmd=="I1Set"  )SetCaenChParam_I1Set  (caenHandle,vchans,vvalF);
-    if(cmd=="RUp"    )SetCaenChParam_RUp    (caenHandle,vchans,vvalF);
-    if(cmd=="RDWn"   )SetCaenChParam_RDWn   (caenHandle,vchans,vvalF);
-    if(cmd=="Trip"   )SetCaenChParam_Trip   (caenHandle,vchans,vvalF);
-    if(cmd=="SVMax"  )SetCaenChParam_SVMax  (caenHandle,vchans,vvalF);
-    if(cmd=="Pw"     )SetCaenChParam_Pw     (caenHandle,vchans,vvalI);
-    if(cmd=="TripInt")SetCaenChParam_TripInt(caenHandle,vchans,vvalI);
-    if(cmd=="TripExt")SetCaenChParam_TripExt(caenHandle,vchans,vvalI);
+    if(cmd=="Name"   )SetCaenChParam_Name   (vchans,vvalS);
+    if(cmd=="V0Set"  )SetCaenChParam_V0Set  (vchans,vvalF);
+    if(cmd=="I0Set"  )SetCaenChParam_I0Set  (vchans,vvalF);
+    if(cmd=="V1Set"  )SetCaenChParam_V1Set  (vchans,vvalF);
+    if(cmd=="I1Set"  )SetCaenChParam_I1Set  (vchans,vvalF);
+    if(cmd=="RUp"    )SetCaenChParam_RUp    (vchans,vvalF);
+    if(cmd=="RDWn"   )SetCaenChParam_RDWn   (vchans,vvalF);
+    if(cmd=="Trip"   )SetCaenChParam_Trip   (vchans,vvalF);
+    if(cmd=="SVMax"  )SetCaenChParam_SVMax  (vchans,vvalF);
+    if(cmd=="Pw"     )SetCaenChParam_Pw     (vchans,vvalI);
+    if(cmd=="TripInt")SetCaenChParam_TripInt(vchans,vvalI);
+    if(cmd=="TripExt")SetCaenChParam_TripExt(vchans,vvalI);
   }
 }
 

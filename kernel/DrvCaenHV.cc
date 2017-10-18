@@ -101,19 +101,14 @@ retstatus==0x1007? "Login failed for username/password ( SY4527 / SY5527 )"     
   void
 DrvCaenHV::SetParams(std::set<std::string>inset/**< [in] should be copy not reference!*/)
 {
-  //#warning CAEN ComInit
-  int handle=ComInit();
-
   std::string group;
   std::set<std::string>subset;
   while (utl::ExtractFirstPrefix(inset,subset,group)){
     for(auto it=subset.begin();it!=subset.end();++it){
       INFO("DrvCaenHV calls group "+group);
-      std::dynamic_pointer_cast<VCaenHVBoard>(Get(group))->SetParams(handle,subset);
+      std::dynamic_pointer_cast<VCaenHVBoard>(Get(group))->SetParams(subset);
     }
   }
-//#warning CAEN DeComInit
-  ComDeinit(handle);
 }
 
 
@@ -149,7 +144,10 @@ DrvCaenHV::GetCrateMap()
   char *modellist,*descrlist;
   unsigned char *firmwaremin,*firmawaremax;
 
-  int ret = CAENHV_GetCrateMap(fCaenCrateHandle,
+  int ret;
+  {
+    std::lock_guard<std::mutex> guard(fCaenCrateHandle_mutex);
+    ret = CAENHV_GetCrateMap(fCaenCrateHandle,
       &nrslots,            //ushort *NrOfSlot,
       &nrchlist,           //ushort **NrofChList,
       &modellist,          //char **ModelList,
@@ -157,6 +155,7 @@ DrvCaenHV::GetCrateMap()
       &sernumlist,         //ushort **SerNumList,
       &firmwaremin,        //uchar **FmwRelMinList,
       &firmawaremax);      //uchar **FmwRelMaxList);
+  }
 
   if(ret != CAENHV_OK)
     DrvCaenHV_except::CAENWrapperRetStatus(fCaenCrateHandle,ret);
@@ -192,9 +191,12 @@ DrvCaenHV::GetExecCommList() ///Get list of possible
   ushort numcom;
   char*comnamelist;
 
-  int ret=CAENHV_GetExecCommList(fCaenCrateHandle,&numcom,&comnamelist);
-  if(ret!=CAENHV_OK)
-    DrvCaenHV_except::CAENWrapperRetStatus(fCaenCrateHandle,ret);
+  int ret;
+  { std::lock_guard<std::mutex> guard(fCaenCrateHandle_mutex);
+    ret=CAENHV_GetExecCommList(fCaenCrateHandle,&numcom,&comnamelist);
+    if(ret!=CAENHV_OK) DrvCaenHV_except::CAENWrapperRetStatus(fCaenCrateHandle,ret);
+  }
+
   std::vector<std::string> list;
   utl::ConvCharListVector(numcom,comnamelist,list);
   int len=0;
@@ -213,7 +215,9 @@ DrvCaenHV::GetSysPropList() ///Get list of possible
   ushort numcom;
   char*comnamelist;
 
-  int ret=CAENHV_GetSysPropList(fCaenCrateHandle,&numcom,&comnamelist);
+  int ret;
+  { std::lock_guard<std::mutex> guard(fCaenCrateHandle_mutex);
+    ret=CAENHV_GetSysPropList(fCaenCrateHandle,&numcom,&comnamelist);}
   if(ret!=CAENHV_OK)
     DrvCaenHV_except::CAENWrapperRetStatus(fCaenCrateHandle,ret);
 
@@ -234,7 +238,7 @@ DrvCaenHV::GetSysPropList() ///Get list of possible
 DrvCaenHV::AssertInit()
 {
   INFO("DrvCaenHV::AssertInit()");
-//#warning CAEN ComInit
+  //#warning CAEN ComInit
   fCaenCrateHandle=ComInit();
   AssertInitAllOwned();
 }
@@ -242,7 +246,7 @@ DrvCaenHV::AssertInit()
 DrvCaenHV::Finalize()
 {
   this->VDeviceBase::Finalize();
-//#warning CAEN ComDeinit
+  //#warning CAEN ComDeinit
   ComDeinit(fCaenCrateHandle );
   JoinThread();
 }
@@ -259,7 +263,11 @@ DrvCaenHV::OnCycle(){
   void
 DrvCaenHV::GetSysProp(const std::string&cmd, void* res)
 {
-  int ret=CAENHV_GetSysProp(fCaenCrateHandle,cmd.c_str(),res);
+  int ret;
+  {
+    std::lock_guard<std::mutex> guard(fCaenCrateHandle_mutex);
+    ret=CAENHV_GetSysProp(fCaenCrateHandle,cmd.c_str(),res);
+  }
   if(ret!=CAENHV_OK)
     DrvCaenHV_except::CAENWrapperRetStatus(fCaenCrateHandle,ret);
 }
