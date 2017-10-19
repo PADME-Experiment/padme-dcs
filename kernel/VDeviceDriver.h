@@ -16,6 +16,11 @@ class VDeviceBase{
     VDeviceBase(const std::string& lab,VDeviceBase* par):fParent(par){
       fLabel=(HasParent()?GetParent()->GetName()+"/"+lab:lab);}
     virtual ~VDeviceBase(){INFO(fLabel);}
+  public:
+    typedef struct {
+      std::string cmd;
+      unsigned int interval;
+    } update_par_t;
   protected:
     void AssertInitAllOwned(){INFO(fLabel);for(auto it=fDevs. begin();it!=fDevs. end();++it){it->second.get()->AssertInit();}}
   public:
@@ -38,18 +43,32 @@ class VDeviceBase{
      * Parses commands in the strings and sets parameters.
      * The default is to send the strings to sub-devices.
      */
-    virtual void SetParams(std::set<std::string>);
+    void SetParams(std::set<std::string>);
+    void SetUpdate(const std::string&what,unsigned int interval);
     bool HasParent()const{return (fParent!=nullptr);}
+    ///Updates all parameters of the current device and all
+    ///sub devices
+    void UpdateAll();
   protected:
+    ///covers only "*" case but anything can be implemented
+    virtual void SetLocalUpdate(const std::string&what,unsigned int interval);
+    virtual void SetLocalParams(std::set<std::string>)=0;
+    virtual void UpdateAllLocal(const std::string&str)=0;
     std::string fLabel; ///< full path PADME/xxx/yyy/zzz
     std::map<std::string,std::shared_ptr<VDeviceBase>> fDevs;
     VDeviceBase* fParent;
   public:
-    virtual void DebugUpdate(){}
+    //virtual void DebugUpdate(){UpdateAllParameters();}  //TODO tezi da se mahnat
     virtual void DebugDump(){}
+
+  private:
+    std::multimap<time_t,update_par_t>fScheduledUpdates;
 };
 
 
+
+
+#include<ctime>
 
 /* Any primary device. Those wich will be part of the main
  * layout and which will maintain connection with physical
@@ -62,9 +81,6 @@ class VDeviceDriver:public VDeviceBase, public VDaemonSingleThread{
 
     const std::string& GetName()const{return VDeviceBase::GetName();}
 
-
-    virtual void DebugUpdate(){}
-    virtual void DebugDump(){}
     ///Connect to the device and keep the connection
     virtual void ConnectToDevice(){} //TODO should be pure maybe
     ///Disconnect from the device

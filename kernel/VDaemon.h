@@ -77,6 +77,11 @@ class VDaemonServiceTCP:public VDaemonService{
 
 };
 
+class ServiceTCPInfoAsk:public VDaemonServiceTCP{
+};
+class ServiceTCPInfoSubscribe:public VDaemonServiceTCP{
+};
+
 #include<string>
 #include<set>
 #include<mutex>

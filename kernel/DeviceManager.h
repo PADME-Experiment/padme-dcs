@@ -29,6 +29,12 @@ std::shared_ptr<VDaemonBase> AddDaemon(const std::string& lab, std::shared_ptr<V
     void TrapKillSignals();
     static void Sigint(int i);
     static bool fsPrepareForQuit;
+
+  private:
+    void SetLocalUpdate(const std::string&what,unsigned int interval){}
+    void SetLocalParams(std::set<std::string>){}
+    void UpdateAllLocal(const std::string&str){}
+
 };
 
 

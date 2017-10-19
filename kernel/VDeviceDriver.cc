@@ -30,6 +30,21 @@ VDeviceBase::GetNext(ElemIter& it)
 }
 
   void
+VDeviceBase::SetUpdate(const std::string&what,unsigned int interval)
+{
+  size_t slashp=what.find_first_of("/");
+  if(slashp!=std::string::npos||what=="*"){
+    auto group=what.substr(0,slashp);
+    auto newwhat=what.substr(slashp+1);
+    Get(group).get()->SetUpdate(newwhat,interval);
+  }
+  if(slashp==std::string::npos||what=="*"){
+    SetLocalUpdate(what,interval);
+  }
+}
+
+
+  void
 VDeviceBase::SetParams(std::set<std::string>inset/**< [in] should be copy not reference!*/)
 {
   INFO(std::to_string(inset.size())+" lines to be proc");
@@ -40,7 +55,34 @@ VDeviceBase::SetParams(std::set<std::string>inset/**< [in] should be copy not re
       if(group.size()==0)
         throw fwk::Exception_tobefixed("empty group");
       INFO("calls group "+group);
-      Get(group)->SetParams(subset);
+      Get(group)->SetLocalParams(subset);
     }
   }
+}
+
+
+  void
+VDeviceBase::UpdateAll()
+{
+  auto it=fScheduledUpdates.begin();
+  while(it!=fScheduledUpdates.end()&&std::difftime(std::time(nullptr),it->first)>=0){
+    const auto upd=it->second; //copy not reference
+    UpdateAllLocal(upd.cmd);
+    fScheduledUpdates.insert(std::multimap<time_t,update_par_t>::value_type(std::time(nullptr)+upd.interval, upd));
+  }
+
+  for(auto it=fDevs. begin();it!=fDevs. end();++it){it->second.get()->UpdateAll();
+  }
+}
+
+  void
+VDeviceBase::SetLocalUpdate(const std::string&what,unsigned int interval)
+{
+  if(what!="*"){
+    fwk::Exception_tobefixed("command "+what+" is not supported");
+  }
+  update_par_t upd;
+  upd.cmd=what;
+  upd.interval=interval;
+  fScheduledUpdates.insert(std::multimap<time_t,update_par_t>::value_type(0,upd));
 }

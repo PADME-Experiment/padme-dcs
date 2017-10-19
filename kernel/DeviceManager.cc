@@ -24,7 +24,11 @@ class HVDumper: public VDeviceDriver{
     void OnStop(){}
     void Finalize(){JoinThread();}
     void AssertInit(){}
+     private:
+     void SetLocalParams(std::set<std::string>){}
+     void UpdateAllLocal(const std::string&str){}
 };
+
 
 
 
@@ -99,12 +103,17 @@ DeviceManager::Configure(const std::string& cfg)
     const std::string& drvtype=config[nod_i]["DriverType"].as<std::string>();
     const std::string& devlble=config[nod_i]["Label"     ].as<std::string>();
     const std::string& parlble=config[nod_i]["ParentLabel"].as<std::string>();
-    if(drvtype=="CAEN_SY4527"){
+    if(drvtype=="CAEN_HVCrate"){
       auto caen=std::make_shared<DrvCaenHV>(devlble,this); //potential problem
       AddDevice(devlble,caen);
       caen->SetIPAddress( config[nod_i]["Args"]["IPAddr"].as<std::string>());
       caen->SetUsername ( config[nod_i]["Args"]["User"  ].as<std::string>());
-      caen->SetPassword ( config[nod_i]["Args"]["Pass"  ].as<std::string>());
+      auto updmap=config[nod_i]["Update"];
+      for(auto it=updmap.begin();it!=updmap.end();++it){
+        caen->SetUpdate(it->first.as<std::string>(),it->second.as<unsigned int>());
+      }
+    }else if(drvtype=="CAEN_SY4527"){
+
     }else if(drvtype=="CAEN_A7030N"){
       auto board=std::make_shared<DrvCaenA7030N>(devlble,Get(parlble).get());
       Get(parlble)->AddDevice(devlble,board);

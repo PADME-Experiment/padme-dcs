@@ -33,5 +33,10 @@ template <class T>
 class CaenHVCrateValue:public VValue<T>{
 };
 
+template<class T>
+class CaenHVBoardValue:public VValue<T>{
+  public:
+};
+
 
 #endif

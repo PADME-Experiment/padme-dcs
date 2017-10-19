@@ -98,18 +98,6 @@ retstatus==0x1007? "Login failed for username/password ( SY4527 / SY5527 )"     
 
 
 
-  void
-DrvCaenHV::SetParams(std::set<std::string>inset/**< [in] should be copy not reference!*/)
-{
-  std::string group;
-  std::set<std::string>subset;
-  while (utl::ExtractFirstPrefix(inset,subset,group)){
-    for(auto it=subset.begin();it!=subset.end();++it){
-      INFO("DrvCaenHV calls group "+group);
-      std::dynamic_pointer_cast<VCaenHVBoard>(Get(group))->SetParams(subset);
-    }
-  }
-}
 
 
 
@@ -137,101 +125,10 @@ DrvCaenHV::ComDeinit(int handle)
     DrvCaenHV_except::CAENWrapperRetStatus(handle,ret);
 }
 
-  void
-DrvCaenHV::GetCrateMap()
-{
-  ushort nrslots, *nrchlist, *sernumlist;
-  char *modellist,*descrlist;
-  unsigned char *firmwaremin,*firmawaremax;
-
-  int ret;
-  {
-    std::lock_guard<std::mutex> guard(fCaenCrateHandle_mutex);
-    ret = CAENHV_GetCrateMap(fCaenCrateHandle,
-      &nrslots,            //ushort *NrOfSlot,
-      &nrchlist,           //ushort **NrofChList,
-      &modellist,          //char **ModelList,
-      &descrlist,          //char **DescriptionList,
-      &sernumlist,         //ushort **SerNumList,
-      &firmwaremin,        //uchar **FmwRelMinList,
-      &firmawaremax);      //uchar **FmwRelMaxList);
-  }
-
-  if(ret != CAENHV_OK)
-    DrvCaenHV_except::CAENWrapperRetStatus(fCaenCrateHandle,ret);
-  std::vector<std::string>modelVec;
-  std::vector<std::string>descrVec;
-  utl::ConvCharListVector(nrslots,modellist,modelVec);
-  utl::ConvCharListVector(nrslots,descrlist,descrVec);
-
-  for(int i=0;i<nrslots;++i){
-    std::cout
-      <<"nrchlist    ["<<i<<"]'"<<nrchlist         [i] <<"'"<<std::endl
-      <<"modellist   ["<<i<<"]'"<<modelVec        [i] <<"'"<<std::endl
-      <<"descrlist   ["<<i<<"]'"<<descrVec        [i] <<"'"<<std::endl
-      <<"sernumlist  ["<<i<<"]'"<<sernumlist       [i] <<"'"<<std::endl
-      <<"firmwaremin ["<<i<<"]'"<<int(firmwaremin  [i])<<"'"<<std::endl
-      <<"firmawaremax["<<i<<"]'"<<int(firmawaremax [i])<<"'"<<std::endl
-      <<std::endl;
-  }
-
-  std::cerr<<"bef del "<<__FILE__<<__LINE__<<__func__<<std::endl;
-  CAENHV_Free(nrchlist    );/// must be dealocated by the user
-  CAENHV_Free(modellist   );/// must be dealocated by the user
-  CAENHV_Free(descrlist   );/// must be dealocated by the user
-  CAENHV_Free(sernumlist  );/// must be dealocated by the user
-  CAENHV_Free(firmwaremin );/// must be dealocated by the user
-  CAENHV_Free(firmawaremax);/// must be dealocated by the user
-}
 
 
-  void
-DrvCaenHV::GetExecCommList() ///Get list of possible 
-{
-  ushort numcom;
-  char*comnamelist;
-
-  int ret;
-  { std::lock_guard<std::mutex> guard(fCaenCrateHandle_mutex);
-    ret=CAENHV_GetExecCommList(fCaenCrateHandle,&numcom,&comnamelist);
-    if(ret!=CAENHV_OK) DrvCaenHV_except::CAENWrapperRetStatus(fCaenCrateHandle,ret);
-  }
-
-  std::vector<std::string> list;
-  utl::ConvCharListVector(numcom,comnamelist,list);
-  int len=0;
-  for(int i=0;i<numcom;++i){
-    std::cout<<list[i]<<"   ";
-  } std::cout<<std::endl;
-
-  CAENHV_Free(comnamelist);
-
-}
 
 
-  void
-DrvCaenHV::GetSysPropList() ///Get list of possible 
-{
-  ushort numcom;
-  char*comnamelist;
-
-  int ret;
-  { std::lock_guard<std::mutex> guard(fCaenCrateHandle_mutex);
-    ret=CAENHV_GetSysPropList(fCaenCrateHandle,&numcom,&comnamelist);}
-  if(ret!=CAENHV_OK)
-    DrvCaenHV_except::CAENWrapperRetStatus(fCaenCrateHandle,ret);
-
-  std::vector<std::string> list;
-  utl::ConvCharListVector(numcom,comnamelist,list);
-
-  int len=0;
-  for(int i=0;i<numcom;++i){
-    std::cout<<list[i]<<"   ";
-  } std::cout<<std::endl;
-
-  CAENHV_Free(comnamelist);
-
-}
 
 
   void
@@ -254,42 +151,8 @@ DrvCaenHV::Finalize()
 
 void
 DrvCaenHV::OnCycle(){
-  std::this_thread::sleep_for(std::chrono::seconds(3));DebugUpdate();
-  VDeviceDriver::ElemIter devit;
-  devit=static_cast<VDeviceDriver::ElemIter>(nullptr);
-  while(GetNext(devit)){devit->second->DebugUpdate();}
-}
-
-  void
-DrvCaenHV::GetSysProp(const std::string&cmd, void* res)
-{
-  int ret;
-  {
-    std::lock_guard<std::mutex> guard(fCaenCrateHandle_mutex);
-    ret=CAENHV_GetSysProp(fCaenCrateHandle,cmd.c_str(),res);
-  }
-  if(ret!=CAENHV_OK)
-    DrvCaenHV_except::CAENWrapperRetStatus(fCaenCrateHandle,ret);
+  std::this_thread::sleep_for(std::chrono::seconds(3));
+  UpdateAll();
 }
 
 
-void DrvCaenHV::GetSysProp_Sessions      (){char tmp[500];GetSysProp("Sessions"       , tmp);fSessions      <<tmp;}
-void DrvCaenHV::GetSysProp_ModelName     (){char tmp[80];GetSysProp("ModelName"      , tmp);fModelName     <<tmp;}
-void DrvCaenHV::GetSysProp_SwRelease     (){char tmp[80];GetSysProp("SwRelease"      , tmp);fSwRelease     <<tmp;}
-void DrvCaenHV::GetSysProp_GenSignCfg    (){uint16_t tmp;GetSysProp("GenSignCfg"     ,&tmp);fGenSignCfg    <<tmp;}
-void DrvCaenHV::GetSysProp_FrontPanIn    (){uint16_t tmp;GetSysProp("FrontPanIn"     ,&tmp);fFrontPanIn    <<tmp;}
-void DrvCaenHV::GetSysProp_FrontPanOut   (){uint16_t tmp;GetSysProp("FrontPanOut"    ,&tmp);fFrontPanOut   <<tmp;}
-void DrvCaenHV::GetSysProp_ResFlagCfg    (){uint16_t tmp;GetSysProp("ResFlagCfg"     ,&tmp);fResFlagCfg    <<tmp;}
-void DrvCaenHV::GetSysProp_HvPwSM        (){char tmp[80];GetSysProp("HvPwSM"         , tmp);fHvPwSM        <<tmp;}
-void DrvCaenHV::GetSysProp_HVFanStat     (){char tmp[80];GetSysProp("HVFanStat"      , tmp);fHVFanStat     <<tmp;}
-void DrvCaenHV::GetSysProp_ClkFreq       (){uint16_t tmp;GetSysProp("ClkFreq"        ,&tmp);fClkFreq       <<tmp;}
-void DrvCaenHV::GetSysProp_HVClkConf     (){char tmp[80];GetSysProp("HVClkConf"      , tmp);fHVClkConf     <<tmp;}
-void DrvCaenHV::GetSysProp_IPAddr        (){char tmp[80];GetSysProp("IPAddr"         , tmp);fIPAddr        <<tmp;}
-void DrvCaenHV::GetSysProp_IPNetMsk      (){char tmp[80];GetSysProp("IPNetMsk"       , tmp);fIPNetMsk      <<tmp;}
-void DrvCaenHV::GetSysProp_IPGw          (){char tmp[80];GetSysProp("IPGw"           , tmp);fIPGw          <<tmp;}
-void DrvCaenHV::GetSysProp_PWCurrent     (){char tmp[80];GetSysProp("PWCurrent"      , tmp);fPWCurrent     <<tmp;}
-void DrvCaenHV::GetSysProp_OutputLevel   (){uint16_t tmp;GetSysProp("OutputLevel"    ,&tmp);fOutputLevel   <<tmp;}
-void DrvCaenHV::GetSysProp_SymbolicName  (){char tmp[80];GetSysProp("SymbolicName"   , tmp);fSymbolicName  <<tmp;}
-void DrvCaenHV::GetSysProp_CmdQueueStatus(){uint16_t tmp;GetSysProp("CmdQueueStatus" ,&tmp);fCmdQueueStatus<<tmp;}
-void DrvCaenHV::GetSysProp_CPULoad       (){char tmp[80];GetSysProp("CPULoad"        , tmp);fCPULoad       <<tmp;}
-void DrvCaenHV::GetSysProp_MemoryStatus  (){char tmp[80];GetSysProp("MemoryStatus"   , tmp);fMemoryStatus  <<tmp;}

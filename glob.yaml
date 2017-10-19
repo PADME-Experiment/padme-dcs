@@ -1,6 +1,12 @@
 - Args: {IPAddr: 192.168.0.1, User: admin, Pass: admin}
   Label: "CAENHV1"
   ParentLabel: "PADME"
+  DriverType: "CAEN_HVCrate"
+  Update: {"*": 10}
+
+- Args: {"",""}
+  Label: "MainFrame"
+  ParentLabel: "CAENHV1"
   DriverType: "CAEN_SY4527"
 
 - Args: {Slot: 0, NChannels: 48}

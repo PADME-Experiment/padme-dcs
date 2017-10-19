@@ -18,6 +18,29 @@ VCaenHVBoard::VCaenHVBoard(const std::string& s, VDeviceBase*d):
 
 
   void
+VCaenHVBoard::UpdateAllLocal(const std::string&cmd)
+{
+  if(cmd=="*"){
+    //GetChParam_Name   ();
+    GetCaenChParam_V0Set  ();
+    GetCaenChParam_I0Set  ();
+    GetCaenChParam_V1Set  ();
+    GetCaenChParam_I1Set  ();
+    GetCaenChParam_RUp    ();
+    GetCaenChParam_RDWn   ();
+    GetCaenChParam_Trip   ();
+    GetCaenChParam_SVMax  ();
+    GetCaenChParam_VMon   ();
+    GetCaenChParam_IMon   ();
+    GetCaenChParam_Status ();
+    GetCaenChParam_Pw     ();
+    GetCaenChParam_TripInt();
+    GetCaenChParam_TripExt();
+  }else throw fwk::Exception_tobefixed("VCaenHVBoard::UpdateAllLocal unknown command "+cmd);
+}
+
+
+  void
 VCaenHVBoard::GetCaenChParam(const std::string&par, void* res)
 {
   std::vector<ushort> allch;
@@ -79,7 +102,7 @@ VCaenHVBoard::SetCaenChParam(const std::string& parname,std::vector<uint32_t> ch
 
 
   void
-VCaenHVBoard::SetParams(std::set<std::string>setstr)
+VCaenHVBoard::SetLocalParams(std::set<std::string>setstr)
 {
   //TODO
   //parses the commands and calls the needed A7030 functions

@@ -10,10 +10,6 @@
 #include<cstdint>
 #include<mutex>
 
-template<class T>
-class CaenHVValue:public VValue<T>{
-  public:
-};
 
 //class CaenHVChannel{
 //  public:
@@ -51,6 +47,9 @@ class VCaenHVBoard:public VDeviceBase{
     virtual void AssertNumberOfChannels()=0;
     virtual void AssertBoardType()=0;
 
+  private:
+    void SetLocalParams(std::set<std::string>);
+    void UpdateAllLocal(const std::string&str);
 
   protected:
     std::vector<int>         NumICommaDashListToVector  (std::string str);
@@ -70,24 +69,6 @@ class VCaenHVBoard:public VDeviceBase{
 
   public:// FIXME debug only
     void GetParentInfo(){INFO(GetParent()->GetName());}
-    void DebugUpdate(){
-      INFO("");
-      //GetChParam_Name   ();
-      GetCaenChParam_V0Set  ();
-      GetCaenChParam_I0Set  ();
-      GetCaenChParam_V1Set  ();
-      GetCaenChParam_I1Set  ();
-      GetCaenChParam_RUp    ();
-      GetCaenChParam_RDWn   ();
-      GetCaenChParam_Trip   ();
-      GetCaenChParam_SVMax  ();
-      GetCaenChParam_VMon   ();
-      GetCaenChParam_IMon   ();
-      GetCaenChParam_Status ();
-      GetCaenChParam_Pw     ();
-      GetCaenChParam_TripInt();
-      GetCaenChParam_TripExt();
-    }
     void DebugDump();
 
   protected: // CAEN Set functions. These to be called from the setting parser (separete thread)
@@ -122,23 +103,23 @@ class VCaenHVBoard:public VDeviceBase{
     virtual void GetCaenChParam_TripExt()=0;
 
   protected: // CAEN board variables
-    std::vector<CaenHVValue<std::string>>fValuesName   ;
-    std::vector<CaenHVValue<float      >>fValuesV0Set  ;
-    std::vector<CaenHVValue<float      >>fValuesI0Set  ;
-    std::vector<CaenHVValue<float      >>fValuesV1Set  ;
-    std::vector<CaenHVValue<float      >>fValuesI1Set  ;
-    std::vector<CaenHVValue<float      >>fValuesRUp    ;
-    std::vector<CaenHVValue<float      >>fValuesRDWn   ;
-    std::vector<CaenHVValue<float      >>fValuesTrip   ;
-    std::vector<CaenHVValue<float      >>fValuesSVMax  ;
-    std::vector<CaenHVValue<float      >>fValuesVMon   ;
-    std::vector<CaenHVValue<float      >>fValuesIMon   ;
-    std::vector<CaenHVValue<uint32_t   >>fValuesStatus ;
-    std::vector<CaenHVValue<uint32_t   >>fValuesPw     ;
-    std::vector<CaenHVValue<uint32_t   >>fValuesTripInt;
-    std::vector<CaenHVValue<uint32_t   >>fValuesTripExt;
-    //CaenHVValue<ushort>     POn    ;
-    //CaenHVValue<ushort>     PDwn   ;
+    std::vector<CaenHVBoardValue<std::string>>fValuesName   ;
+    std::vector<CaenHVBoardValue<float      >>fValuesV0Set  ;
+    std::vector<CaenHVBoardValue<float      >>fValuesI0Set  ;
+    std::vector<CaenHVBoardValue<float      >>fValuesV1Set  ;
+    std::vector<CaenHVBoardValue<float      >>fValuesI1Set  ;
+    std::vector<CaenHVBoardValue<float      >>fValuesRUp    ;
+    std::vector<CaenHVBoardValue<float      >>fValuesRDWn   ;
+    std::vector<CaenHVBoardValue<float      >>fValuesTrip   ;
+    std::vector<CaenHVBoardValue<float      >>fValuesSVMax  ;
+    std::vector<CaenHVBoardValue<float      >>fValuesVMon   ;
+    std::vector<CaenHVBoardValue<float      >>fValuesIMon   ;
+    std::vector<CaenHVBoardValue<uint32_t   >>fValuesStatus ;
+    std::vector<CaenHVBoardValue<uint32_t   >>fValuesPw     ;
+    std::vector<CaenHVBoardValue<uint32_t   >>fValuesTripInt;
+    std::vector<CaenHVBoardValue<uint32_t   >>fValuesTripExt;
+    //CaenHVBoardValue<ushort>     POn    ;
+    //CaenHVBoardValue<ushort>     PDwn   ;
 
 };
 

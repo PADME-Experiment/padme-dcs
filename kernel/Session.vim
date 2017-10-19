@@ -25,6 +25,7 @@ vsplit kernel.cc
 
 tabnew DeviceManager.h
 vsplit DeviceManager.cc
+vsplit ../glob.yaml
 
 tabnew ../fwk/utlCommaDashListToVector.h
 vsplit ../fwk/utlCommaDashListToVector.cc
