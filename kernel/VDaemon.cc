@@ -30,8 +30,11 @@ VDaemonSingleThread::JoinThread()
     return;
   }
   fRun=false;
+  INFO("will join");
   fThread->join();
+  INFO("will delete");
   delete fThread;
+  INFO("deleted");
 }
 
   void

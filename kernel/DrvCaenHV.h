@@ -128,7 +128,6 @@ class DrvCaenHV:public VDeviceDriver{
     void SetIPAddress(const std::string&s){fIPAddress=s;}
     void SetUsername (const std::string&s){fUsername =s;}
     void SetPassword (const std::string&s){fPassword =s;}
-    //void AddUpdate(const std::string&name="*",int interval=10){}//FIXME:TO BE IMPLEMENTED
 
   private:
     void ComDeinit(int);

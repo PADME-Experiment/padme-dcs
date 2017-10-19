@@ -22,7 +22,7 @@ class HVDumper: public VDeviceDriver{
       DeviceManager::GetInstance().Get("CAENHV1")->Get("board1")->DebugDump();
     }
     void OnStop(){}
-    void Finalize(){JoinThread();}
+    void Finalize(){INFO("");JoinThread();SUCCESS("");}
     void AssertInit(){}
      private:
      void SetLocalParams(std::set<std::string>){}
