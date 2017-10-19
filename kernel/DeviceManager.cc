@@ -17,7 +17,7 @@ class HVDumper: public VDeviceDriver{
     HVDumper():VDeviceDriver("HVDumper",nullptr){}
     void OnStart() {}
     void OnCycle() {
-      std::this_thread::sleep_for(std::chrono::seconds(1));
+      std::this_thread::sleep_for(std::chrono::seconds(5));
       DeviceManager::GetInstance().Get("CAENHV1")->DebugDump();
       DeviceManager::GetInstance().Get("CAENHV1")->Get("board1")->DebugDump();
     }

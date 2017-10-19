@@ -2,7 +2,7 @@
   Label: "CAENHV1"
   ParentLabel: "PADME"
   DriverType: "CAEN_HVCrate"
-  Update: {"*": 10}
+  Update: {"*": 3}
 
 - Args: {"",""}
   Label: "MainFrame"
