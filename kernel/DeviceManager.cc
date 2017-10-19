@@ -136,8 +136,8 @@ DeviceManager::Configure(const std::string& cfg)
 
 
 
-  auto hvdumper=std::make_shared<HVDumper>();
-  AddDaemon("hvdumper",hvdumper);
+  //auto hvdumper=std::make_shared<HVDumper>();
+  //AddDaemon("hvdumper",hvdumper);
 
 
 }
