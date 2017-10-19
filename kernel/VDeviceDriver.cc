@@ -33,7 +33,9 @@ VDeviceBase::GetNext(ElemIter& it)
 VDeviceBase::SetUpdate(const std::string&what,unsigned int interval)
 {
   size_t slashp=what.find_first_of("/");
-  if(slashp!=std::string::npos||what=="*"){
+  if(what=="*"){
+  }
+  if(slashp!=std::string::npos){
     auto group=what.substr(0,slashp);
     auto newwhat=what.substr(slashp+1);
     Get(group).get()->SetUpdate(newwhat,interval);

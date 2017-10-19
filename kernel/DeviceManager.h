@@ -7,6 +7,7 @@
 #include<string>
 #include<map>
 #include<memory>
+#include<ctime>
 
 class DeviceManager:public VDeviceBase{
   public:
@@ -18,9 +19,12 @@ class DeviceManager:public VDeviceBase{
     void Configure(const std::string& cfg);
 
   private:
-std::shared_ptr<VDaemonBase> AddDaemon(const std::string& lab, std::shared_ptr<VDaemonBase>ptr);
+    std::shared_ptr<VDaemonBase> AddDaemon(const std::string& lab, std::shared_ptr<VDaemonBase>ptr);
     std::map<std::string,std::shared_ptr<VDaemonBase>> fDems;
-    DeviceManager():VDeviceBase("PADME",nullptr){TrapKillSignals();}
+    DeviceManager():
+      fStartupTime(std::time(nullptr)),
+      VDeviceBase("PADME",nullptr)
+  {TrapKillSignals();}
     ~DeviceManager(){SUCCESS("");}
 
   public:
@@ -29,6 +33,7 @@ std::shared_ptr<VDaemonBase> AddDaemon(const std::string& lab, std::shared_ptr<V
     void TrapKillSignals();
     static void Sigint(int i);
     static bool fsPrepareForQuit;
+    time_t fStartupTime;
 
   private:
     void SetLocalUpdate(const std::string&what,unsigned int interval){}

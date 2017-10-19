@@ -58,6 +58,7 @@ DeviceManager::AssertInit()
   this->VDeviceBase::AssertInit();
   for(auto it=fDems. begin();it!=fDems. end();++it){
     INFO(it->second.get()->GetName());
+    //WARNING("Devices are not assertinit");
     it->second.get()->AssertInit();
   }
 }
@@ -103,6 +104,7 @@ DeviceManager::Configure(const std::string& cfg)
     const std::string& drvtype=config[nod_i]["DriverType"].as<std::string>();
     const std::string& devlble=config[nod_i]["Label"     ].as<std::string>();
     const std::string& parlble=config[nod_i]["ParentLabel"].as<std::string>();
+    INFO(devlble);
     if(drvtype=="CAEN_HVCrate"){
       auto caen=std::make_shared<DrvCaenHV>(devlble,this); //potential problem
       AddDevice(devlble,caen);
@@ -110,7 +112,9 @@ DeviceManager::Configure(const std::string& cfg)
       caen->SetUsername ( config[nod_i]["Args"]["User"  ].as<std::string>());
       auto updmap=config[nod_i]["Update"];
       for(auto it=updmap.begin();it!=updmap.end();++it){
-        caen->SetUpdate(it->first.as<std::string>(),it->second.as<unsigned int>());
+        caen->AddUpdateToTmpList(it->first.as<std::string>(),it->second.as<unsigned int>());
+        INFO(it->first.as<std::string>());
+        INFO(it->second.as<std::string>());
       }
     }else if(drvtype=="CAEN_SY4527"){
 
@@ -120,12 +124,12 @@ DeviceManager::Configure(const std::string& cfg)
       board->GetParentInfo();
       board->SetNumChannels ( config[nod_i]["Args"]["NChannels"  ].as<unsigned int>());
       board->SetSlot        ( config[nod_i]["Args"]["Slot"       ].as<unsigned int>());
-      //board->AssertInit();
     }else if(drvtype=="ServiceTCPConfigure"){
       unsigned int portn=config[nod_i]["Args"]["TCPPortNumber"  ].as<unsigned int>();
       auto service=std::make_shared<ServiceTCPConfigure>(devlble,portn);
       AddDaemon(devlble,service);
     }
+    SUCCESS(devlble);
   }
 
 
@@ -154,7 +158,17 @@ DeviceManager::MainLoop()
 {
   int i=0;
   while(!fsPrepareForQuit){
-    if((++i%10)==0)INFO("ALLIVE!");
+    unsigned int uptime=std::difftime(std::time(nullptr),fStartupTime);
+    unsigned int d=uptime/3600/24;
+    unsigned int h=(uptime/3600)%24;
+    unsigned int m=(uptime/60)%(60*24);
+    if((++i%10)==0)
+      INFO(
+          "UPTIME  "+
+          std::to_string(uptime)+"  ("+
+          std::to_string(d)+"d"+
+          std::to_string(h)+":"+
+          std::to_string(m)+")");
     std::this_thread::sleep_for( std::chrono::milliseconds(200));
   }
 }

@@ -44,6 +44,7 @@ class VDeviceBase{
      * The default is to send the strings to sub-devices.
      */
     void SetParams(std::set<std::string>);
+    /// This function should be called from AssertInit
     void SetUpdate(const std::string&what,unsigned int interval);
     bool HasParent()const{return (fParent!=nullptr);}
     ///Updates all parameters of the current device and all
@@ -88,6 +89,18 @@ class VDeviceDriver:public VDeviceBase, public VDaemonSingleThread{
 
     //virtual void AssertInit()=0;
     //virtual void Deinitialize(){}
+    void AddUpdateToTmpList(const std::string&what,unsigned int interval){
+      fUpdateListTemp.insert(std::multimap<std::string,unsigned int>::value_type(what,interval));
+    }
+    ///This is to be called from AsserInit
+    void ProcessUpdateListTemp(){
+      for(auto it=fUpdateListTemp.begin();it!=fUpdateListTemp.end();++it){
+        this->VDeviceBase::SetUpdate(it->first,it->second);
+      }
+      fUpdateListTemp.clear();
+    }
+
+    std::multimap<std::string,unsigned int>fUpdateListTemp;
 };
 
 

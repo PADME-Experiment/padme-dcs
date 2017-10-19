@@ -138,6 +138,7 @@ DrvCaenHV::AssertInit()
   //#warning CAEN ComInit
   fCaenCrateHandle=ComInit();
   AssertInitAllOwned();
+  ProcessUpdateListTemp();
 }
   void
 DrvCaenHV::Finalize()
