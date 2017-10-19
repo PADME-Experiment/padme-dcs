@@ -143,6 +143,7 @@ DrvCaenHV::AssertInit()
   void
 DrvCaenHV::Finalize()
 {
+  INFO("DrvCaenHV::Finalize()");
   this->VDeviceBase::Finalize();
   //#warning CAEN ComDeinit
   ComDeinit(fCaenCrateHandle );
@@ -152,6 +153,7 @@ DrvCaenHV::Finalize()
 
 void
 DrvCaenHV::OnCycle(){
+  INFO("DrvCaenHV::OnCycle()");
   std::this_thread::sleep_for(std::chrono::seconds(1));
   UpdateAll();
 }
