@@ -110,6 +110,7 @@ DeviceManager::Configure(const std::string& cfg)
       AddDevice(devlble,caen);
       caen->SetIPAddress( config[nod_i]["Args"]["IPAddr"].as<std::string>());
       caen->SetUsername ( config[nod_i]["Args"]["User"  ].as<std::string>());
+      caen->SetPassword ( config[nod_i]["Args"]["Pass"  ].as<std::string>());
       auto updmap=config[nod_i]["Update"];
       for(auto it=updmap.begin();it!=updmap.end();++it){
         caen->AddUpdateToTmpList(it->first.as<std::string>(),it->second.as<unsigned int>());
