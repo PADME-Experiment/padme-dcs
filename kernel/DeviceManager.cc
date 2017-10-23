@@ -70,8 +70,10 @@ DeviceManager::Daemonize ()
   for(auto it=fDevs. begin();it!=fDevs. end();++it){
     INFO(it->second.get()->GetName());
     auto dev=std::dynamic_pointer_cast<VDeviceDriver>(it->second);
-    if(dev==nullptr)
-      ERROR("throw");
+    if(dev==nullptr){
+      ERROR("Throw  "+it->second.get()->GetName()+" is NOT VDeviceDriver");
+      continue;
+    }
     //WARNING("Devices are not daemonized");
     dev->Daemonize ();
   }
@@ -120,7 +122,7 @@ DeviceManager::Configure(const std::string& cfg)
       }
     }else if(drvtype=="CAEN_SY4527"){
       auto caen=std::make_shared<DrvCaenSY4527>(devlble,Get(parlble).get());
-      AddDevice(devlble,caen);
+      Get(parlble)->AddDevice(devlble,caen);
       auto updmap=config[nod_i]["Update"];
       for(auto it=updmap.begin();it!=updmap.end();++it){
         caen->SetUpdate(it->first.as<std::string>(),it->second.as<unsigned int>());
@@ -150,8 +152,8 @@ DeviceManager::Configure(const std::string& cfg)
 
 
 
-  //auto hvdumper=std::make_shared<HVDumper>();
-  //AddDaemon("hvdumper",hvdumper);
+  auto hvdumper=std::make_shared<HVDumper>();
+  AddDaemon("hvdumper",hvdumper);
 
 
 }
