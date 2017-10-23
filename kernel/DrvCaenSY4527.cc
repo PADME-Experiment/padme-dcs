@@ -158,23 +158,23 @@ VCaenHVMainFrame::GetSysPropList() ///Get list of possible
 
 
 
-void DrvCaenSY4527::GetSysProp_Sessions      (){char tmp[500];GetSysProp("Sessions"       , tmp);fSessions      <<tmp;}
-void DrvCaenSY4527::GetSysProp_ModelName     (){char tmp[80] ;GetSysProp("ModelName"      , tmp);fModelName     <<tmp;}
-void DrvCaenSY4527::GetSysProp_SwRelease     (){char tmp[80] ;GetSysProp("SwRelease"      , tmp);fSwRelease     <<tmp;}
-void DrvCaenSY4527::GetSysProp_GenSignCfg    (){uint16_t tmp ;GetSysProp("GenSignCfg"     ,&tmp);fGenSignCfg    <<tmp;}
-void DrvCaenSY4527::GetSysProp_FrontPanIn    (){uint16_t tmp ;GetSysProp("FrontPanIn"     ,&tmp);fFrontPanIn    <<tmp;}
-void DrvCaenSY4527::GetSysProp_FrontPanOut   (){uint16_t tmp ;GetSysProp("FrontPanOut"    ,&tmp);fFrontPanOut   <<tmp;}
-void DrvCaenSY4527::GetSysProp_ResFlagCfg    (){uint16_t tmp ;GetSysProp("ResFlagCfg"     ,&tmp);fResFlagCfg    <<tmp;}
-void DrvCaenSY4527::GetSysProp_HvPwSM        (){char tmp[80] ;GetSysProp("HvPwSM"         , tmp);fHvPwSM        <<tmp;}
-void DrvCaenSY4527::GetSysProp_HVFanStat     (){char tmp[80] ;GetSysProp("HVFanStat"      , tmp);fHVFanStat     <<tmp;}
-void DrvCaenSY4527::GetSysProp_ClkFreq       (){uint16_t tmp ;GetSysProp("ClkFreq"        ,&tmp);fClkFreq       <<tmp;}
-void DrvCaenSY4527::GetSysProp_HVClkConf     (){char tmp[80] ;GetSysProp("HVClkConf"      , tmp);fHVClkConf     <<tmp;}
-void DrvCaenSY4527::GetSysProp_IPAddr        (){char tmp[80] ;GetSysProp("IPAddr"         , tmp);fIPAddr        <<tmp;}
-void DrvCaenSY4527::GetSysProp_IPNetMsk      (){char tmp[80] ;GetSysProp("IPNetMsk"       , tmp);fIPNetMsk      <<tmp;}
-void DrvCaenSY4527::GetSysProp_IPGw          (){char tmp[80] ;GetSysProp("IPGw"           , tmp);fIPGw          <<tmp;}
-void DrvCaenSY4527::GetSysProp_PWCurrent     (){char tmp[80] ;GetSysProp("PWCurrent"      , tmp);fPWCurrent     <<tmp;}
-void DrvCaenSY4527::GetSysProp_OutputLevel   (){uint16_t tmp ;GetSysProp("OutputLevel"    ,&tmp);fOutputLevel   <<tmp;}
-void DrvCaenSY4527::GetSysProp_SymbolicName  (){char tmp[80] ;GetSysProp("SymbolicName"   , tmp);fSymbolicName  <<tmp;}
-void DrvCaenSY4527::GetSysProp_CmdQueueStatus(){uint16_t tmp ;GetSysProp("CmdQueueStatus" ,&tmp);fCmdQueueStatus<<tmp;}
-void DrvCaenSY4527::GetSysProp_CPULoad       (){char tmp[80] ;GetSysProp("CPULoad"        , tmp);fCPULoad       <<tmp;}
-void DrvCaenSY4527::GetSysProp_MemoryStatus  (){char tmp[80] ;GetSysProp("MemoryStatus"   , tmp);fMemoryStatus  <<tmp;}
+void DrvCaenSY4527::GetSysProp_Sessions      (){char tmp[500];GetSysProp("Sessions"       , tmp);fSessions      .SetVal(tmp);}
+void DrvCaenSY4527::GetSysProp_ModelName     (){char tmp[80] ;GetSysProp("ModelName"      , tmp);fModelName     .SetVal(tmp);}
+void DrvCaenSY4527::GetSysProp_SwRelease     (){char tmp[80] ;GetSysProp("SwRelease"      , tmp);fSwRelease     .SetVal(tmp);}
+void DrvCaenSY4527::GetSysProp_GenSignCfg    (){uint16_t tmp ;GetSysProp("GenSignCfg"     ,&tmp);fGenSignCfg    .SetVal(tmp);}
+void DrvCaenSY4527::GetSysProp_FrontPanIn    (){uint16_t tmp ;GetSysProp("FrontPanIn"     ,&tmp);fFrontPanIn    .SetVal(tmp);}
+void DrvCaenSY4527::GetSysProp_FrontPanOut   (){uint16_t tmp ;GetSysProp("FrontPanOut"    ,&tmp);fFrontPanOut   .SetVal(tmp);}
+void DrvCaenSY4527::GetSysProp_ResFlagCfg    (){uint16_t tmp ;GetSysProp("ResFlagCfg"     ,&tmp);fResFlagCfg    .SetVal(tmp);}
+void DrvCaenSY4527::GetSysProp_HvPwSM        (){char tmp[80] ;GetSysProp("HvPwSM"         , tmp);fHvPwSM        .SetVal(tmp);}
+void DrvCaenSY4527::GetSysProp_HVFanStat     (){char tmp[80] ;GetSysProp("HVFanStat"      , tmp);fHVFanStat     .SetVal(tmp);}
+void DrvCaenSY4527::GetSysProp_ClkFreq       (){uint16_t tmp ;GetSysProp("ClkFreq"        ,&tmp);fClkFreq       .SetVal(tmp);}
+void DrvCaenSY4527::GetSysProp_HVClkConf     (){char tmp[80] ;GetSysProp("HVClkConf"      , tmp);fHVClkConf     .SetVal(tmp);}
+void DrvCaenSY4527::GetSysProp_IPAddr        (){char tmp[80] ;GetSysProp("IPAddr"         , tmp);fIPAddr        .SetVal(tmp);}
+void DrvCaenSY4527::GetSysProp_IPNetMsk      (){char tmp[80] ;GetSysProp("IPNetMsk"       , tmp);fIPNetMsk      .SetVal(tmp);}
+void DrvCaenSY4527::GetSysProp_IPGw          (){char tmp[80] ;GetSysProp("IPGw"           , tmp);fIPGw          .SetVal(tmp);}
+void DrvCaenSY4527::GetSysProp_PWCurrent     (){char tmp[80] ;GetSysProp("PWCurrent"      , tmp);fPWCurrent     .SetVal(tmp);}
+void DrvCaenSY4527::GetSysProp_OutputLevel   (){uint16_t tmp ;GetSysProp("OutputLevel"    ,&tmp);fOutputLevel   .SetVal(tmp);}
+void DrvCaenSY4527::GetSysProp_SymbolicName  (){char tmp[80] ;GetSysProp("SymbolicName"   , tmp);fSymbolicName  .SetVal(tmp);}
+void DrvCaenSY4527::GetSysProp_CmdQueueStatus(){uint16_t tmp ;GetSysProp("CmdQueueStatus" ,&tmp);fCmdQueueStatus.SetVal(tmp);}
+void DrvCaenSY4527::GetSysProp_CPULoad       (){char tmp[80] ;GetSysProp("CPULoad"        , tmp);fCPULoad       .SetVal(tmp);}
+void DrvCaenSY4527::GetSysProp_MemoryStatus  (){char tmp[80] ;GetSysProp("MemoryStatus"   , tmp);fMemoryStatus  .SetVal(tmp);}
