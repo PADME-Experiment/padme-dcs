@@ -70,8 +70,8 @@ VDeviceBase::UpdateAll()
   auto it=fScheduledUpdates.begin();
 
   while(it!=fScheduledUpdates.end()&&std::difftime(std::time(nullptr),it->first)>=0){
-    INFO("Inside while");
     const auto upd=it->second; //copy not reference
+    INFO(GetName()+"    Inside while "+upd.cmd+"  "+std::to_string(upd.interval));
     UpdateAllLocal(upd.cmd);
     it=fScheduledUpdates.erase(it);
     fScheduledUpdates.insert(std::multimap<time_t,update_par_t>::value_type(std::time(nullptr)+upd.interval, upd));
