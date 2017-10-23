@@ -66,6 +66,7 @@ VDeviceBase::SetParams(std::set<std::string>inset/**< [in] should be copy not re
   void
 VDeviceBase::UpdateAll()
 {
+  INFO(GetName());
   auto it=fScheduledUpdates.begin();
   while(it!=fScheduledUpdates.end()&&std::difftime(std::time(nullptr),it->first)>=0){
     const auto upd=it->second; //copy not reference

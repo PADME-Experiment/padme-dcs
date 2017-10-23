@@ -20,6 +20,7 @@ VCaenHVBoard::VCaenHVBoard(const std::string& s, VDeviceBase*d):
   void
 VCaenHVBoard::UpdateAllLocal(const std::string&cmd)
 {
+    INFO(cmd);
   if(cmd=="*"){
     //GetChParam_Name   ();
     GetCaenChParam_V0Set  ();
