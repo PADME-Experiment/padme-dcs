@@ -1,6 +1,7 @@
 #include"kernel/DeviceManager.h"   //in c file
 #include"DrvCaenHV.h"
 #include"DrvCaenA7030.h"
+#include"DrvCaenSY4527.h"
 #include"fwk/utlMessageBus.h"
 #include<yaml-cpp/yaml.h>
 #include<memory>
@@ -113,18 +114,31 @@ DeviceManager::Configure(const std::string& cfg)
       caen->SetPassword ( config[nod_i]["Args"]["Pass"  ].as<std::string>());
       auto updmap=config[nod_i]["Update"];
       for(auto it=updmap.begin();it!=updmap.end();++it){
-        caen->AddUpdateToTmpList(it->first.as<std::string>(),it->second.as<unsigned int>());
+        caen->SetUpdate(it->first.as<std::string>(),it->second.as<unsigned int>());
         INFO(it->first.as<std::string>());
         INFO(it->second.as<std::string>());
       }
     }else if(drvtype=="CAEN_SY4527"){
-
+      auto caen=std::make_shared<DrvCaenSY4527>(devlble,Get(parlble).get());
+      AddDevice(devlble,caen);
+      auto updmap=config[nod_i]["Update"];
+      for(auto it=updmap.begin();it!=updmap.end();++it){
+        caen->SetUpdate(it->first.as<std::string>(),it->second.as<unsigned int>());
+        INFO(it->first.as<std::string>());
+        INFO(it->second.as<std::string>());
+      }
     }else if(drvtype=="CAEN_A7030N"){
       auto board=std::make_shared<DrvCaenA7030N>(devlble,Get(parlble).get());
       Get(parlble)->AddDevice(devlble,board);
       board->GetParentInfo();
       board->SetNumChannels ( config[nod_i]["Args"]["NChannels"  ].as<unsigned int>());
       board->SetSlot        ( config[nod_i]["Args"]["Slot"       ].as<unsigned int>());
+      auto updmap=config[nod_i]["Update"];
+      for(auto it=updmap.begin();it!=updmap.end();++it){
+        board->SetUpdate(it->first.as<std::string>(),it->second.as<unsigned int>());
+        INFO(it->first.as<std::string>());
+        INFO(it->second.as<std::string>());
+      }
     }else if(drvtype=="ServiceTCPConfigure"){
       unsigned int portn=config[nod_i]["Args"]["TCPPortNumber"  ].as<unsigned int>();
       auto service=std::make_shared<ServiceTCPConfigure>(devlble,portn);

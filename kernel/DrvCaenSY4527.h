@@ -105,6 +105,8 @@ class VCaenHVMainFrame :public VDeviceBase{
 
 class DrvCaenSY4527:public VCaenHVMainFrame {
   public:
+    DrvCaenSY4527(const std::string& s, VDeviceBase*d):VCaenHVMainFrame(s,d){}
+    void AssertMainFrameType(){}
     void GetSysProp_Sessions      ();
     void GetSysProp_ModelName     ();
     void GetSysProp_SwRelease     ();
