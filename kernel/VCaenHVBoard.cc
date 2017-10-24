@@ -181,21 +181,21 @@ VCaenHVBoard::SetLocalParams(std::set<std::string>setstr)
   void
 VCaenHVBoard::GetInfoAllLocal(std::stringstream& ss)
 {
-  for(int i=0;i<fNumberOfChannels;++i){ss<<GetName()<<"/"<<i<<"  Name      "<<                       fValuesName   [i].GetVal() <<"  "<<fValuesName   [i].GetAge()<<std::endl;}
-  for(int i=0;i<fNumberOfChannels;++i){ss<<GetName()<<"/"<<i<<"  V0Set     "<<                       fValuesV0Set  [i].GetVal() <<"  "<<fValuesV0Set  [i].GetAge()<<std::endl;}
-  for(int i=0;i<fNumberOfChannels;++i){ss<<GetName()<<"/"<<i<<"  I0Set     "<<                       fValuesI0Set  [i].GetVal() <<"  "<<fValuesI0Set  [i].GetAge()<<std::endl;}
-  for(int i=0;i<fNumberOfChannels;++i){ss<<GetName()<<"/"<<i<<"  V1Set     "<<                       fValuesV1Set  [i].GetVal() <<"  "<<fValuesV1Set  [i].GetAge()<<std::endl;}
-  for(int i=0;i<fNumberOfChannels;++i){ss<<GetName()<<"/"<<i<<"  I1Set     "<<                       fValuesI1Set  [i].GetVal() <<"  "<<fValuesI1Set  [i].GetAge()<<std::endl;}
-  for(int i=0;i<fNumberOfChannels;++i){ss<<GetName()<<"/"<<i<<"  RUp       "<<                       fValuesRUp    [i].GetVal() <<"  "<<fValuesRUp    [i].GetAge()<<std::endl;}
-  for(int i=0;i<fNumberOfChannels;++i){ss<<GetName()<<"/"<<i<<"  RDWn      "<<                       fValuesRDWn   [i].GetVal() <<"  "<<fValuesRDWn   [i].GetAge()<<std::endl;}
-  for(int i=0;i<fNumberOfChannels;++i){ss<<GetName()<<"/"<<i<<"  Trip      "<<                       fValuesTrip   [i].GetVal() <<"  "<<fValuesTrip   [i].GetAge()<<std::endl;}
-  for(int i=0;i<fNumberOfChannels;++i){ss<<GetName()<<"/"<<i<<"  SVMax     "<<                       fValuesSVMax  [i].GetVal() <<"  "<<fValuesSVMax  [i].GetAge()<<std::endl;}
-  for(int i=0;i<fNumberOfChannels;++i){ss<<GetName()<<"/"<<i<<"  VMon      "<<                       fValuesVMon   [i].GetVal() <<"  "<<fValuesVMon   [i].GetAge()<<std::endl;}
-  for(int i=0;i<fNumberOfChannels;++i){ss<<GetName()<<"/"<<i<<"  IMon      "<<                       fValuesIMon   [i].GetVal() <<"  "<<fValuesIMon   [i].GetAge()<<std::endl;}
-  for(int i=0;i<fNumberOfChannels;++i){ss<<GetName()<<"/"<<i<<"  Status    "<<" 0x"<<std::bitset<16>(fValuesStatus [i].GetVal())<<"  "<<fValuesStatus [i].GetAge()<<std::endl;}
-  for(int i=0;i<fNumberOfChannels;++i){ss<<GetName()<<"/"<<i<<"  Pw        "<<" 0x"<<std::bitset< 3>(fValuesPw     [i].GetVal())<<"  "<<fValuesPw     [i].GetAge()<<std::endl;}
-  for(int i=0;i<fNumberOfChannels;++i){ss<<GetName()<<"/"<<i<<"  TripIntPw "<<" 0x"<<std::bitset< 3>(fValuesTripInt[i].GetVal())<<"  "<<fValuesTripInt[i].GetAge()<<std::endl;}
-  for(int i=0;i<fNumberOfChannels;++i){ss<<GetName()<<"/"<<i<<"  TripExtPw "<<" 0x"<<std::bitset< 3>(fValuesTripExt[i].GetVal())<<"  "<<fValuesTripExt[i].GetAge()<<std::endl;}
+  for(int i=0;i<fNumberOfChannels;++i){ss<<GetName()<<"/"<<i<<"  Name      "<<                       fValuesName   [i].GetVal() <<"  "<<fValuesName   [i].GetAge()<<"\r\n";}
+  for(int i=0;i<fNumberOfChannels;++i){ss<<GetName()<<"/"<<i<<"  V0Set     "<<                       fValuesV0Set  [i].GetVal() <<"  "<<fValuesV0Set  [i].GetAge()<<"\r\n";}
+  for(int i=0;i<fNumberOfChannels;++i){ss<<GetName()<<"/"<<i<<"  I0Set     "<<                       fValuesI0Set  [i].GetVal() <<"  "<<fValuesI0Set  [i].GetAge()<<"\r\n";}
+  for(int i=0;i<fNumberOfChannels;++i){ss<<GetName()<<"/"<<i<<"  V1Set     "<<                       fValuesV1Set  [i].GetVal() <<"  "<<fValuesV1Set  [i].GetAge()<<"\r\n";}
+  for(int i=0;i<fNumberOfChannels;++i){ss<<GetName()<<"/"<<i<<"  I1Set     "<<                       fValuesI1Set  [i].GetVal() <<"  "<<fValuesI1Set  [i].GetAge()<<"\r\n";}
+  for(int i=0;i<fNumberOfChannels;++i){ss<<GetName()<<"/"<<i<<"  RUp       "<<                       fValuesRUp    [i].GetVal() <<"  "<<fValuesRUp    [i].GetAge()<<"\r\n";}
+  for(int i=0;i<fNumberOfChannels;++i){ss<<GetName()<<"/"<<i<<"  RDWn      "<<                       fValuesRDWn   [i].GetVal() <<"  "<<fValuesRDWn   [i].GetAge()<<"\r\n";}
+  for(int i=0;i<fNumberOfChannels;++i){ss<<GetName()<<"/"<<i<<"  Trip      "<<                       fValuesTrip   [i].GetVal() <<"  "<<fValuesTrip   [i].GetAge()<<"\r\n";}
+  for(int i=0;i<fNumberOfChannels;++i){ss<<GetName()<<"/"<<i<<"  SVMax     "<<                       fValuesSVMax  [i].GetVal() <<"  "<<fValuesSVMax  [i].GetAge()<<"\r\n";}
+  for(int i=0;i<fNumberOfChannels;++i){ss<<GetName()<<"/"<<i<<"  VMon      "<<                       fValuesVMon   [i].GetVal() <<"  "<<fValuesVMon   [i].GetAge()<<"\r\n";}
+  for(int i=0;i<fNumberOfChannels;++i){ss<<GetName()<<"/"<<i<<"  IMon      "<<                       fValuesIMon   [i].GetVal() <<"  "<<fValuesIMon   [i].GetAge()<<"\r\n";}
+  for(int i=0;i<fNumberOfChannels;++i){ss<<GetName()<<"/"<<i<<"  Status    "<<" 0x"<<std::bitset<16>(fValuesStatus [i].GetVal())<<"  "<<fValuesStatus [i].GetAge()<<"\r\n";}
+  for(int i=0;i<fNumberOfChannels;++i){ss<<GetName()<<"/"<<i<<"  Pw        "<<" 0x"<<std::bitset< 3>(fValuesPw     [i].GetVal())<<"  "<<fValuesPw     [i].GetAge()<<"\r\n";}
+  for(int i=0;i<fNumberOfChannels;++i){ss<<GetName()<<"/"<<i<<"  TripIntPw "<<" 0x"<<std::bitset< 3>(fValuesTripInt[i].GetVal())<<"  "<<fValuesTripInt[i].GetAge()<<"\r\n";}
+  for(int i=0;i<fNumberOfChannels;++i){ss<<GetName()<<"/"<<i<<"  TripExtPw "<<" 0x"<<std::bitset< 3>(fValuesTripExt[i].GetVal())<<"  "<<fValuesTripExt[i].GetAge()<<"\r\n";}
 }
 
 
