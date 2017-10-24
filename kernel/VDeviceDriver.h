@@ -9,6 +9,7 @@
 #include<map>
 #include<set>
 #include<sstream>
+#include<functional>
 
 /// Any hardware piece. Crate or board
 class VDeviceBase{
@@ -18,7 +19,8 @@ class VDeviceBase{
     virtual ~VDeviceBase(){INFO(fLabel);}
   public:
     typedef struct {
-      std::string cmd;
+      std::string cmd; // TODO to be commented
+      std::function<void(void)> func;
       unsigned int interval;
     } update_par_t;
   protected:
@@ -44,17 +46,23 @@ class VDeviceBase{
      * The default is to send the strings to sub-devices.
      */
     void SetParams(std::set<std::string>);
-    /// This function should be called from AssertInit
+    /*
+     * SetUpdate interprets the command and schedules
+     * function. It should be virtual and should be
+     * overwritten in all drived classes. By default if
+     * (cmd=="*") sets UpdateAllLocal.
+     * This function should be called from AssertInit
+     */
     void SetUpdate(const std::string&what,unsigned int interval);
     bool HasParent()const{return (fParent!=nullptr);}
     ///Updates all parameters of the current device and all
     ///sub devices
-    void UpdateAll();
+    void Update();
   protected:
     ///covers only "*" case but anything can be implemented
-    virtual void SetLocalUpdate(const std::string&what,unsigned int interval);
+    //virtual void SetLocalUpdate(const std::string&what,unsigned int interval);
     virtual void SetLocalParams(std::set<std::string>)=0;
-    virtual void UpdateAllLocal(const std::string&str)=0;
+    virtual void UpdateAllLocalParams()=0;
     std::string fLabel; ///< full path PADME/xxx/yyy/zzz
     std::map<std::string,std::shared_ptr<VDeviceBase>> fDevs;
     VDeviceBase* fParent;
@@ -86,21 +94,13 @@ class VDeviceDriver:public VDeviceBase, public VDaemonSingleThread{
     virtual void ConnectToDevice(){} //TODO should be pure maybe
     ///Disconnect from the device
     virtual void DisconnectDevice(){} //TODO should be pure maybe
-
-    //virtual void AssertInit()=0;
-    //virtual void Deinitialize(){}
-    //void AddUpdateToTmpList(const std::string&what,unsigned int interval){
-    //  fUpdateListTemp.insert(std::multimap<std::string,unsigned int>::value_type(what,interval));
-    //}
-    ///This is to be called from AsserInit
-    //void ProcessUpdateListTemp(){
-    //  for(auto it=fUpdateListTemp.begin();it!=fUpdateListTemp.end();++it){
-    //    this->VDeviceBase::SetUpdate(it->first,it->second);
-    //  }
-    //  fUpdateListTemp.clear();
-    //}
-
-    //std::multimap<std::string,unsigned int>fUpdateListTemp;
+    void OnStart(){OnStartLocal();}
+    void OnCycle();
+    void OnStop (){OnStopLocal ();}
+  protected:
+    virtual void OnStartLocal()=0;
+    virtual void OnCycleLocal()=0;
+    virtual void OnStopLocal ()=0;
 };
 
 

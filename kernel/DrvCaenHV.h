@@ -115,11 +115,11 @@ class DrvCaenHV:public VDeviceDriver{
   public:
     DrvCaenHV(const std::string&lab,VDeviceBase*parp):VDeviceDriver(lab,parp){}
     ~DrvCaenHV(){}
-    void OnStart() {}
-    void OnCycle();
-    void OnStop()  {}
+    void OnStartLocal(){}
+    void OnCycleLocal(){}
+    void OnStopLocal (){}
     void SetLocalParams(std::set<std::string>){}
-    void UpdateAllLocal(const std::string&str){}
+    void UpdateAllLocalParams(){}
 
     void Finalize();
     void AssertInit();

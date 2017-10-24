@@ -39,6 +39,7 @@ class DeviceManager:public VDeviceBase{
     void SetLocalUpdate(const std::string&what,unsigned int interval){}
     void SetLocalParams(std::set<std::string>){}
     void UpdateAllLocal(const std::string&str){}
+    void UpdateAllLocalParams(){}
 
 };
 

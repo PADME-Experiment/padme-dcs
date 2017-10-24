@@ -16,13 +16,14 @@ class HVDumper: public VDeviceDriver{
     //void Daemonize(){VDaemonSingleThread::Daemonize();}
     void Service(){}
     HVDumper():VDeviceDriver("HVDumper",nullptr){}
-    void OnStart() {}
-    void OnCycle() {
+    void UpdateAllLocalParams(){}
+    void OnStartLocal() {}
+    void OnCycleLocal() {
       std::this_thread::sleep_for(std::chrono::seconds(5));
       DeviceManager::GetInstance().Get("CAENHV1")->DebugDump();
       DeviceManager::GetInstance().Get("CAENHV1")->Get("board1")->DebugDump();
     }
-    void OnStop(){}
+    void OnStopLocal(){}
     void Finalize(){INFO("");JoinThread();SUCCESS("");}
     void AssertInit(){}
      private:
@@ -175,18 +176,19 @@ DeviceManager::MainLoop()
 {
   int i=0;
   while(!fsPrepareForQuit){
-    unsigned int uptime=std::difftime(std::time(nullptr),fStartupTime);
-    unsigned int d=uptime/3600/24;
-    unsigned int h=(uptime/3600)%24;
-    unsigned int m=(uptime/60)%(60*24);
-    if((++i%10)==0)
+    if((++i%100)==0){
+      unsigned int uptime=std::difftime(std::time(nullptr),fStartupTime);
+      unsigned int d=uptime/3600/24;
+      unsigned int h=(uptime/3600)%24;
+      unsigned int m=(uptime/60/24)%(60);
       INFO(
           "UPTIME  "+
           std::to_string(uptime)+"  ("+
           std::to_string(d)+"d"+
-          std::to_string(h)+":"+
-          std::to_string(m)+")");
-    std::this_thread::sleep_for( std::chrono::milliseconds(200));
+          std::to_string(h)+"h"+
+          std::to_string(m)+"m)");
+    }
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
   }
 }
 

@@ -29,21 +29,6 @@ VDeviceBase::GetNext(ElemIter& it)
 
 }
 
-  void
-VDeviceBase::SetUpdate(const std::string&what,unsigned int interval)
-{
-  size_t slashp=what.find_first_of("/");
-  if(what=="*"){
-  }
-  if(slashp!=std::string::npos){
-    auto group=what.substr(0,slashp);
-    auto newwhat=what.substr(slashp+1);
-    Get(group).get()->SetUpdate(newwhat,interval);
-  }
-  if(slashp==std::string::npos||what=="*"){
-    SetLocalUpdate(what,interval);
-  }
-}
 
 
   void
@@ -62,34 +47,44 @@ VDeviceBase::SetParams(std::set<std::string>inset/**< [in] should be copy not re
   }
 }
 
+  void
+VDeviceBase::SetUpdate(const std::string&what,unsigned int interval)
+{
+  if(what=="*"){
+    update_par_t upd;
+    upd.cmd=what;
+    upd.func=std::bind(&VDeviceBase::UpdateAllLocalParams,this);
+    upd.interval=interval;
+    fScheduledUpdates.insert(std::multimap<time_t,update_par_t>::value_type(0,upd));
+  }else throw fwk::Exception_tobefixed("Unknown update commad '"+what+"'");
+}
 
   void
-VDeviceBase::UpdateAll()
+VDeviceBase::Update()
 {
   INFO(GetName());
   auto it=fScheduledUpdates.begin();
-
   while(it!=fScheduledUpdates.end()&&std::difftime(std::time(nullptr),it->first)>=0){
     const auto upd=it->second; //copy not reference
     INFO(GetName()+"    Inside while "+upd.cmd+"  "+std::to_string(upd.interval));
-    UpdateAllLocal(upd.cmd);
+    upd.func();
     it=fScheduledUpdates.erase(it);
     fScheduledUpdates.insert(std::multimap<time_t,update_par_t>::value_type(std::time(nullptr)+upd.interval, upd));
   }
 
   for(auto it=fDevs. begin();it!=fDevs. end();++it){
-    it->second.get()->UpdateAll();
+    it->second.get()->Update();
   }
 }
 
+
+
+
   void
-VDeviceBase::SetLocalUpdate(const std::string&what,unsigned int interval)
+VDeviceDriver::OnCycle()
 {
-  if(what!="*"){
-    fwk::Exception_tobefixed("command "+what+" is not supported");
-  }
-  update_par_t upd;
-  upd.cmd=what;
-  upd.interval=interval;
-  fScheduledUpdates.insert(std::multimap<time_t,update_par_t>::value_type(0,upd));
+  INFO(GetName());
+  std::this_thread::sleep_for(std::chrono::seconds(1));
+  Update();
+  OnCycleLocal();
 }

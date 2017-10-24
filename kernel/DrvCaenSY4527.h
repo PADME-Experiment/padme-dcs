@@ -21,7 +21,7 @@ class VCaenHVMainFrame :public VDeviceBase{
     virtual void AssertMainFrameType()=0;
     private:
     void SetLocalParams(std::set<std::string>){}
-    void UpdateAllLocal(const std::string&str);
+    void UpdateAllLocalParams();
   public:
     //TODO Setters for all parameters
     virtual void GetSysProp_Sessions      ()=0;

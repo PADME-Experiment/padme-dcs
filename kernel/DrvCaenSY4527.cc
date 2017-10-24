@@ -11,31 +11,30 @@ VCaenHVMainFrame::VCaenHVMainFrame(const std::string& s, VDeviceBase*d):
 {}
 
 
+
   void
-VCaenHVMainFrame::UpdateAllLocal(const std::string&cmd)
+VCaenHVMainFrame::UpdateAllLocalParams()
 {
-  if(cmd=="*"){
-      GetSysProp_Sessions      ();
-      GetSysProp_ModelName     ();
-      GetSysProp_SwRelease     ();
-      GetSysProp_GenSignCfg    ();
-      GetSysProp_FrontPanIn    ();
-      GetSysProp_FrontPanOut   ();
-      GetSysProp_ResFlagCfg    ();
-      GetSysProp_HvPwSM        ();
-      GetSysProp_HVFanStat     ();
-      GetSysProp_ClkFreq       ();
-      GetSysProp_HVClkConf     ();
-      GetSysProp_IPAddr        ();
-      GetSysProp_IPNetMsk      ();
-      GetSysProp_IPGw          ();
-      GetSysProp_PWCurrent     ();
-      GetSysProp_OutputLevel   ();
-      GetSysProp_SymbolicName  ();
-      GetSysProp_CmdQueueStatus();
-      GetSysProp_CPULoad       ();
-      GetSysProp_MemoryStatus  ();
-  }else throw fwk::Exception_tobefixed("VCaenHVMainFrame::UpdateAllLocal unknown command "+cmd);
+  GetSysProp_Sessions      ();
+  GetSysProp_ModelName     ();
+  GetSysProp_SwRelease     ();
+  GetSysProp_GenSignCfg    ();
+  GetSysProp_FrontPanIn    ();
+  GetSysProp_FrontPanOut   ();
+  GetSysProp_ResFlagCfg    ();
+  GetSysProp_HvPwSM        ();
+  GetSysProp_HVFanStat     ();
+  GetSysProp_ClkFreq       ();
+  GetSysProp_HVClkConf     ();
+  GetSysProp_IPAddr        ();
+  GetSysProp_IPNetMsk      ();
+  GetSysProp_IPGw          ();
+  GetSysProp_PWCurrent     ();
+  GetSysProp_OutputLevel   ();
+  GetSysProp_SymbolicName  ();
+  GetSysProp_CmdQueueStatus();
+  GetSysProp_CPULoad       ();
+  GetSysProp_MemoryStatus  ();
 }
 
 
@@ -53,13 +52,13 @@ VCaenHVMainFrame::GetCrateMap()
   {
     std::lock_guard<std::mutex> guard(fCaenCrateHandle_mutex);
     ret = CAENHV_GetCrateMap(fCaenCrateHandle,
-      &nrslots,            //ushort *NrOfSlot,
-      &nrchlist,           //ushort **NrofChList,
-      &modellist,          //char **ModelList,
-      &descrlist,          //char **DescriptionList,
-      &sernumlist,         //ushort **SerNumList,
-      &firmwaremin,        //uchar **FmwRelMinList,
-      &firmawaremax);      //uchar **FmwRelMaxList);
+        &nrslots,            //ushort *NrOfSlot,
+        &nrchlist,           //ushort **NrofChList,
+        &modellist,          //char **ModelList,
+        &descrlist,          //char **DescriptionList,
+        &sernumlist,         //ushort **SerNumList,
+        &firmwaremin,        //uchar **FmwRelMinList,
+        &firmawaremax);      //uchar **FmwRelMaxList);
   }
 
   if(ret != CAENHV_OK)

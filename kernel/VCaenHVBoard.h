@@ -49,7 +49,7 @@ class VCaenHVBoard:public VDeviceBase{
 
   private:
     void SetLocalParams(std::set<std::string>);
-    void UpdateAllLocal(const std::string&str);
+    void UpdateAllLocalParams();
 
   protected:
     std::vector<int>         NumICommaDashListToVector  (std::string str);
