@@ -218,13 +218,15 @@ ServiceTCPConfigure::ServiceLoop(const int fd)
   void
 ServiceTCPInfo::ServiceLoop(const int fd)
 {
-  for(;;){
+  int sent_b;
+  do{
     std::stringstream ss;
     DeviceManager::GetInstance().GetInfoAll(ss);
     std::string str;
     while(std::getline(ss,str)){
-      send(fd,str.data(),str.size(),0);
+      INFO(str);
+      sent_b=send(fd,str.data(),str.size(),0);
     }
     std::this_thread::sleep_for(std::chrono::seconds(1));
-  }
+  }while(sent_b>=0);
 }
