@@ -130,7 +130,12 @@ VDaemonServiceTCP::Service()
   socklen_t addr_size=sizeof(their_addr);
   int new_fd = accept(fServiceSocket, (struct sockaddr *)&their_addr, &addr_size);
   Daemonize();
-  ServiceLoop(new_fd);
+  try{
+    ServiceLoop(new_fd);
+  }
+  catch(const fwk::Exception& e){
+    ERROR(e.what());
+  }
   close(new_fd);
 }
 
@@ -211,22 +216,25 @@ ServiceTCPConfigure::ServiceLoop(const int fd)
       sentbytes=send(fd,tmpstr.data(),tmpstr.size(),0);
     }
   }while(tcpcurrent!="bye");
-}
+  }
 
 
 
   void
-ServiceTCPInfo::ServiceLoop(const int fd)
-{
-  int sent_b;
-  do{
-    std::stringstream ss;
-    DeviceManager::GetInstance().GetInfoAll(ss);
-    std::string str;
-    while(std::getline(ss,str)){
-      INFO(str);
-      sent_b=send(fd,str.data(),str.size(),0);
+    ServiceTCPInfo::ServiceLoop(const int fd)
+    {
+      int sent_b;
+      do{
+        std::stringstream ss;
+        DeviceManager::GetInstance().GetInfoAll(ss);
+        std::string str;
+        int cursent=0;
+        while(std::getline(ss,str)){
+          INFO(str);
+          str+="\r\n";
+          cursent+=sent_b=send(fd,&(str.data()[cursent]),str.size()-cursent,0);
+          if(sent_b<0)throw fwk::Exception_tobefixed("ServiceTCPInfo::ServiceLoop connecion closed");
+        }
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+      }while(1);
     }
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-  }while(sent_b>=0);
-}
