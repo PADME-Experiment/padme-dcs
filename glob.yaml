@@ -20,3 +20,8 @@
   Label: "tcp_conf"
   ParentLabel: "PADME"
   DriverType: ServiceTCPConfigure
+
+- Args: {TCPPortNumber: 33456}
+  Label: "tcp_info"
+  ParentLabel: "PADME"
+  DriverType: ServiceTCPInfo

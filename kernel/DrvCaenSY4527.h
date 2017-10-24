@@ -74,8 +74,10 @@ class VCaenHVMainFrame :public VDeviceBase{
     //CaenHVCrateValue<std::string> fCMDExecMode  ;  //not documented
 
 
-  public:
+  private:
+    void GetInfoAllLocal(std::stringstream& ss);
 
+  public:
     void DebugDump(){
       std::stringstream ss;
       ss.str(std::string());ss.clear();ss<<"fSessions       "<<fSessions      .GetVal()<<" @- "<<fSessions      .GetAge();INFO(ss.str());

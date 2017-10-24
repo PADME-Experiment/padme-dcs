@@ -78,6 +78,14 @@ VDeviceBase::Update()
 }
 
 
+void
+VDeviceBase::GetInfoAll(std::stringstream&ss)
+{
+  for(auto it=fDevs. begin();it!=fDevs. end();++it){
+    it->second.get()->GetInfoAll(ss);
+  }
+  GetInfoAllLocal(ss);
+}
 
 
   void

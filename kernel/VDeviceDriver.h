@@ -58,6 +58,8 @@ class VDeviceBase{
     ///Updates all parameters of the current device and all
     ///sub devices
     void Update();
+    void GetInfoAll(std::stringstream& ss);
+    virtual void GetInfoAllLocal(std::stringstream& ss){ss<<fLabel<<" NONE"<<std::endl;}
   protected:
     ///covers only "*" case but anything can be implemented
     //virtual void SetLocalUpdate(const std::string&what,unsigned int interval);

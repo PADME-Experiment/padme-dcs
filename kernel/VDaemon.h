@@ -94,8 +94,12 @@ class ServiceTCPConfigure:public VDaemonServiceTCP{
     std::mutex fGlobalSetParamsBarrier;
 };
 
-//class ServiceTCPInfo:public VDaemonServiceTCP{
-//};
+class ServiceTCPInfo:public VDaemonServiceTCP{
+  public:
+    ServiceTCPInfo(const std::string&lab,int portN):VDaemonServiceTCP(lab,portN){}
+    ~ServiceTCPInfo(){INFO("");}
+    void ServiceLoop(const int fd);
+};
 
 
 

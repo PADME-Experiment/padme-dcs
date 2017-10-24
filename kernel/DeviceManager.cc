@@ -146,7 +146,11 @@ DeviceManager::Configure(const std::string& cfg)
       unsigned int portn=config[nod_i]["Args"]["TCPPortNumber"  ].as<unsigned int>();
       auto service=std::make_shared<ServiceTCPConfigure>(devlble,portn);
       AddDaemon(devlble,service);
-    }
+    }else if(drvtype=="ServiceTCPInfo"){
+      unsigned int portn=config[nod_i]["Args"]["TCPPortNumber"  ].as<unsigned int>();
+      auto service=std::make_shared<ServiceTCPInfo>(devlble,portn);
+      AddDaemon(devlble,service);
+    }else throw fwk::Exception_tobefixed("Driver '"+drvtype+"' not known");
     SUCCESS(devlble);
   }
 

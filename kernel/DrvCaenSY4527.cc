@@ -148,6 +148,33 @@ VCaenHVMainFrame::GetSysPropList() ///Get list of possible
 
 
 
+  void
+VCaenHVMainFrame::GetInfoAllLocal(std::stringstream& ss)
+{
+  ss<<GetName()<<"   Sessions       "<<fSessions      .GetVal()<<"  "<<fSessions      .GetAge()<<std::endl;
+  ss<<GetName()<<"   ModelName      "<<fModelName     .GetVal()<<"  "<<fModelName     .GetAge()<<std::endl;
+  ss<<GetName()<<"   SwRelease      "<<fSwRelease     .GetVal()<<"  "<<fSwRelease     .GetAge()<<std::endl;
+  ss<<GetName()<<"   GenSignCfg     "<<fGenSignCfg    .GetVal()<<"  "<<fGenSignCfg    .GetAge()<<std::endl;
+  ss<<GetName()<<"   FrontPanIn     "<<fFrontPanIn    .GetVal()<<"  "<<fFrontPanIn    .GetAge()<<std::endl;
+  ss<<GetName()<<"   FrontPanOut    "<<fFrontPanOut   .GetVal()<<"  "<<fFrontPanOut   .GetAge()<<std::endl;
+  ss<<GetName()<<"   ResFlagCfg     "<<fResFlagCfg    .GetVal()<<"  "<<fResFlagCfg    .GetAge()<<std::endl;
+  ss<<GetName()<<"   HvPwSM         "<<fHvPwSM        .GetVal()<<"  "<<fHvPwSM        .GetAge()<<std::endl;
+  ss<<GetName()<<"   HVFanStat      "<<fHVFanStat     .GetVal()<<"  "<<fHVFanStat     .GetAge()<<std::endl;
+  ss<<GetName()<<"   ClkFreq        "<<fClkFreq       .GetVal()<<"  "<<fClkFreq       .GetAge()<<std::endl;
+  ss<<GetName()<<"   HVClkConf      "<<fHVClkConf     .GetVal()<<"  "<<fHVClkConf     .GetAge()<<std::endl;
+  ss<<GetName()<<"   IPAddr         "<<fIPAddr        .GetVal()<<"  "<<fIPAddr        .GetAge()<<std::endl;
+  ss<<GetName()<<"   IPNetMsk       "<<fIPNetMsk      .GetVal()<<"  "<<fIPNetMsk      .GetAge()<<std::endl;
+  ss<<GetName()<<"   IPGw           "<<fIPGw          .GetVal()<<"  "<<fIPGw          .GetAge()<<std::endl;
+  ss<<GetName()<<"   PWCurrent      "<<fPWCurrent     .GetVal()<<"  "<<fPWCurrent     .GetAge()<<std::endl;
+  ss<<GetName()<<"   OutputLevel    "<<fOutputLevel   .GetVal()<<"  "<<fOutputLevel   .GetAge()<<std::endl;
+  ss<<GetName()<<"   SymbolicName   "<<fSymbolicName  .GetVal()<<"  "<<fSymbolicName  .GetAge()<<std::endl;
+  ss<<GetName()<<"   CmdQueueStatus "<<fCmdQueueStatus.GetVal()<<"  "<<fCmdQueueStatus.GetAge()<<std::endl;
+  ss<<GetName()<<"   CPULoad        "<<fCPULoad       .GetVal()<<"  "<<fCPULoad       .GetAge()<<std::endl;
+  ss<<GetName()<<"   MemoryStatus   "<<fMemoryStatus  .GetVal()<<"  "<<fMemoryStatus  .GetAge()<<std::endl;
+}
+
+
+
 
 
 

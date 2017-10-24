@@ -101,6 +101,7 @@ class VCaenHVBoard:public VDeviceBase{
     virtual void GetCaenChParam_Pw     ()=0;
     virtual void GetCaenChParam_TripInt()=0;
     virtual void GetCaenChParam_TripExt()=0;
+    void GetInfoAllLocal(std::stringstream& ss);
 
   protected: // CAEN board variables
     std::vector<CaenHVBoardValue<std::string>>fValuesName   ;
