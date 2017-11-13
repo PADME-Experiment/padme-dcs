@@ -210,31 +210,30 @@ ServiceTCPConfigure::ServiceLoop(const int fd)
       tmpstr="DONE\r\n\r\n";
       sentbytes=send(fd,tmpstr.data(),tmpstr.size(),0);
     }
-    //catch(const fwk::Exception&e){//FIXME
     catch(const std::exception&e){//FIXME
       tmpstr=std::string(e.what())+"\n\n";
       sentbytes=send(fd,tmpstr.data(),tmpstr.size(),0);
     }
   }while(tcpcurrent!="bye");
-  }
+}
 
 
 
   void
-    ServiceTCPInfo::ServiceLoop(const int fd)
-    {
-      int sent_b;
-      do{
-        std::stringstream ss;
-        DeviceManager::GetInstance().GetInfoAll(ss);
-        std::string str;
-        int cursent=0;
-        while(std::getline(ss,str)){
-          INFO(str);
-          str+="\r\n";
-          cursent+=sent_b=send(fd,&(str.data()[cursent]),str.size()-cursent,0);
-          if(sent_b<0)throw fwk::Exception_tobefixed("ServiceTCPInfo::ServiceLoop connecion closed");
-        }
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-      }while(1);
+ServiceTCPInfo::ServiceLoop(const int fd)
+{
+  int sent_b;
+  do{
+    std::stringstream ss;
+    DeviceManager::GetInstance().GetInfoAll(ss);
+    std::string str;
+    int cursent=0;
+    while(std::getline(ss,str)){
+      INFO(str);
+      str+="\r\n";
+      cursent+=sent_b=send(fd,&(str.data()[cursent]),str.size()-cursent,0);
+      if(sent_b<0)throw fwk::Exception_tobefixed("ServiceTCPInfo::ServiceLoop connecion closed");
     }
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+  }while(1);
+}

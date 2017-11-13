@@ -1,6 +1,7 @@
 #include "DrvCaenSY4527.h"   //in c file
 #include"fwk/utlCommaDashListToVector.h"
-#include <caenlib/CAENHVWrapper.h>
+//#include <caenlib/CAENHVWrapper.h>
+#include "extern/CAENHVWrapper/CAENHVWrapper.h"
 
 
 

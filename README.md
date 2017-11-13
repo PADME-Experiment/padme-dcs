@@ -29,11 +29,13 @@
 There are available:
 - Crate [CAEN-SY1527LC]
 - HV board [CAEN-A1733]
+- Caen crate VME8100 [CAEN-VME8100], [VME8100 User manual](http://www.caen.it/servlet/checkCaenManualFile?Id=12684)
 
 
 [CAEN-SY4527]: http://www.caen.it/jsp/Template2/CaenProd.jsp?idmod=752&parent=20
 [CAEN-A4528]: http://www.caen.it/jsp/Template2/CaenProd.jsp?idmod=811&parent=20
 [CAEN-A7030]: http://www.caen.it/jsp/Template2/CaenProd.jsp?idmod=944&parent=20
+[CAEN-VME8100]: http://www.caen.it/jsp/Template2/CaenProd.jsp?parent=45&idmod=549
 
 
 [CAEN-SY1527LC]: http://www.caen.it/jsp/Template2/CaenProd.jsp?idmod=491&parent=20

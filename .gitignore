@@ -46,3 +46,12 @@ a.out
 *-tmp
 *.tmp
 /caenlib
+kernel/extern/*
+!kernel/extern/README.md
+!kernel/extern/lib
+!kernel/extern/lib/*
+
+
+
+test.cc
+t.cc

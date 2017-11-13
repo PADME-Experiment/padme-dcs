@@ -77,10 +77,10 @@ class VDaemonServiceTCP:public VDaemonService{
 
 };
 
-class ServiceTCPInfoAsk:public VDaemonServiceTCP{
-};
-class ServiceTCPInfoSubscribe:public VDaemonServiceTCP{
-};
+//class ServiceTCPInfoAsk:public VDaemonServiceTCP{
+//};
+//class ServiceTCPInfoSubscribe:public VDaemonServiceTCP{
+//};
 
 #include<string>
 #include<set>
@@ -94,6 +94,22 @@ class ServiceTCPConfigure:public VDaemonServiceTCP{
     std::mutex fGlobalSetParamsBarrier;
 };
 
+/**
+ * \brief Sends info for all channels of all systems
+ * \details This service is meant to provide status
+ * information to the GUI and Loggers.\n
+ * The format is:\n
+ * ```
+ * PADME/HW_device/[subdevice/[<...>]]/channel number Parameter Value seconds_from_last_update
+ * ```
+ * Example:
+ * ```
+ * PADME/HVCrate1/board1/0 VMon 1001 3
+ * PADME/HVCrate1/board1/1 VMon  999 3
+ * PADME/HVCrate1/board2/10 V0Set 1001 3
+ * PADME/HVCrate1/board2/11 V0Set  999 3
+ * ```
+ */
 class ServiceTCPInfo:public VDaemonServiceTCP{
   public:
     ServiceTCPInfo(const std::string&lab,int portN):VDaemonServiceTCP(lab,portN){}

@@ -1,7 +1,8 @@
 #include "VCaenHVBoard.h"   //in c file
 #include"DrvCaenHV.h"
 #include"fwk/utlCommaDashListToVector.h"
-#include <caenlib/CAENHVWrapper.h>
+//#include <caenlib/CAENHVWrapper.h>
+#include "extern/CAENHVWrapper/CAENHVWrapper.h"
 #include<vector>
 #include<bitset>
 #include<sstream>

@@ -3,21 +3,52 @@ All the drivers should be packed in the kernel.
 The kernel provides the communication with the hardware and represents the hardware status in the computer memory.
 It also allows users to get and set parameters to the hardware.
 
+### External dependences
+These dependencies should be satisfied by the user!
+1. CAENHVLibrary wrapper
+2. V8100SDK
+
 
 [svg](http://www.lnf.infn.it/~georgiev/padme-kernel.svg)
 [png](http://www.lnf.infn.it/~georgiev/padme-kernel.png)
 
-![img](http://www.lnf.infn.it/~georgiev/padme-kernel.png?sanitize=true)
+! [img](http://www.lnf.infn.it/~georgiev/padme-kernel.png?sanitize=true)
+![img](../docs/kernel.png)
 
 
 Parts of the kernel:
 
 ### Manager / Initialiser
 This should initialise everything.
-1. Read configuration from file
+1. Read configuration from file. It uses yaml configuration file. Example:
    ```
-    | Device ID | Driver  | parameters  
-    | CaenHV1   | drvCaen | "192.168.0.1" "admin" "admin"
+- Args: {IPAddr: 192.168.0.1, User: admin, Pass: admin}
+  Label: "CAENHV1"
+  ParentLabel: "PADME"
+  DriverType: "CAEN_HVCrate"
+  Update: {"*": 3}
+
+- Args: {"",""}
+  Label: "MainFrame"
+  ParentLabel: "CAENHV1"
+  DriverType: "CAEN_SY4527"
+  Update: {"*": 3}
+
+- Args: {Slot: 2, NChannels: 48}
+  Label: "board1"
+  ParentLabel: "CAENHV1"
+  DriverType: CAEN_A7030N
+  Update: {"*": 3}
+
+- Args: {TCPPortNumber: 33455}
+  Label: "tcp_conf"
+  ParentLabel: "PADME"
+  DriverType: ServiceTCPConfigure
+
+- Args: {TCPPortNumber: 33456}
+  Label: "tcp_info"
+  ParentLabel: "PADME"
+  DriverType: ServiceTCPInfo
    ```
 1. Initialise the drivers and keeps connection with HW
 1. Compare the actual configuration with what was expected from MapDB
