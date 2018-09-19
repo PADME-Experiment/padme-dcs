@@ -1,7 +1,7 @@
 # External dependencies
 
 The external dependencies shtould be solved by the user.
-- V8100 SDK
+- [V8100 SDK](http://www.caen.it/jsp/Template2/CaenProd.jsp?parent=45&idmod=549#)
 - CAENHVWrapper
 
 

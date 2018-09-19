@@ -1,4 +1,8 @@
 # padme-dcs
+
+[EXTERNAL DEPENDECIES TO BE SOLVED](kernel/extern/README.md)
+
+
 ## Detector Control System for the PADME experiment
 
 --------------------------------------
