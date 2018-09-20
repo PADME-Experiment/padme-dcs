@@ -101,7 +101,7 @@ class sipm_controller():
       self.SetVoltageAll([voltages]*16)
     elif len(voltages)==16:
       for c,v in enumerate(voltages):
-        self.SetVoltageCh(c,v)
+        self.SetVoltageCh(c+1,v)
     else:
       print("raise invalid number of elements")
 
@@ -160,6 +160,27 @@ class Manager():
       #"padmevetosipm17":[54.61,54.65,54.64,54.91,54.81,54.7 ,54.9 ,54.83,54.89,54.83,54.67,54.85,54.77,54.76,54.76,54.78],
       #"padmevetosipm18":[57.29,57.24,57.14,57.05,57.05,57.12,57.17,57.16,57.54,57.64,57.69,57.56,57.4 ,57.24,57.01,57.01],
       }
+  vtest={
+
+      "padmevetosipm19":[4,3,3,3,3,5,1,3,3,3,3,5,1,3,3,7], # pveto 1
+      "padmevetosipm13":[4,1,3,3,3,3,5,1,3,3,3,3,5,1,3,7], # pveto 2
+      "padmevetosipm15":[4,2,1,3,3,3,3,5,1,3,3,3,3,5,1,7], # pveto 3
+      "padmevetosipm21":[4,3,2,1,3,3,3,3,5,1,3,3,3,3,5,7], # pveto 4
+      "padmevetosipm23":[4,3,3,2,1,3,3,3,3,5,1,3,3,3,3,7], # pveto 5
+      "padmevetosipm16":[4,3,3,3,2,1,3,3,3,3,5,1,3,3,3,7], # pveto 6
+
+      "padmevetosipm07":[1,3,3,3,3,5,1,3,3,3,3,5,1,3,3,9], # eveto 1
+      "padmevetosipm22":[1,1,3,3,3,3,5,1,3,3,3,3,5,1,3,9], # eveto 2
+      "padmevetosipm24":[1,2,1,3,3,3,3,5,1,3,3,3,3,5,1,9], # eveto 3
+      "padmevetosipm14":[1,3,2,1,3,3,3,3,5,1,3,3,3,3,5,9], # eveto 4
+      "padmevetosipm08":[1,3,3,2,1,3,3,3,3,5,1,3,3,3,3,9], # eveto 5
+      "padmevetosipm10":[1,3,3,3,2,1,3,3,3,3,5,1,3,3,3,9], # eveto 6
+
+      #"padmevetosipm02":[57.42,57.4 ,57.46,57.42,57.4 ,57.43,57.45,57.52,57.45,57.56,57.5 ,57.47,57.62,57.55,57.03,57.05],
+      #"padmevetosipm11":[57.48,57.63,57.63,57.55,57.65,57.59,57.39,57.27,57.62,57.63,57.58,57.42,57.57,57.46,57.07,57.06],
+      #"padmevetosipm17":[54.61,54.65,54.64,54.91,54.81,54.7 ,54.9 ,54.83,54.89,54.83,54.67,54.85,54.77,54.76,54.76,54.78],
+      #"padmevetosipm18":[57.29,57.24,57.14,57.05,57.05,57.12,57.17,57.16,57.54,57.64,57.69,57.56,57.4 ,57.24,57.01,57.01],
+      }
   controllers={}
   def __init__(self):
     self.__setup()
@@ -180,10 +201,10 @@ class Manager():
 
   def switch_on_test(self):
     for host in self.controllers:
-      #self.controllers[host].SetVoltageAll(15)
+      self.controllers[host].SetVoltageAll(self.vtest[host])
       self.controllers[host].SwitchControllerHV(1)
       self.controllers[host].SwitchChannel(0,1)
-      self.controllers[host].SetVoltageAll(15)
+      self.controllers[host].SetVoltageAll(self.vtest[host])
 
   def switch_on(self):
     for host in self.controllers:
