@@ -55,9 +55,22 @@ SiPM card IDs?
 ???
 
 
+## VME Crates
+- [VME8100](http://www.caen.it/jsp/Template2/CaenProd.jsp?parent=45&idmod=549)
+
+## NIM Crates
+- [NIM8301](http://www.caen.it/jsp/Template2/CaenProd.jsp?parent=47&idmod=548)
+
+
+
+
+
 # Other subsystems
 
 ## Vacuum chamber
+The readings from the vacuum gague will be provided by memecached.
+Luca should send instructions.
+Emanuele and Fabio know how to use it.
 
 
 

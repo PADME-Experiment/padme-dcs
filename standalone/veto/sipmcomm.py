@@ -12,7 +12,7 @@ if len(sys.argv)!=2:
 mng=sipm.Manager()
 cmd=str(sys.argv[1])
 if cmd=='on':
-  mng.switch_on_test()
+  mng.switch_on()
   print('on')
 elif cmd=='off':
   mng.switch_off()
