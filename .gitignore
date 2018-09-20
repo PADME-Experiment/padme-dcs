@@ -51,6 +51,9 @@ kernel/extern/*
 !kernel/extern/lib
 !kernel/extern/lib/*
 
+*.pyc
+*.pyo
+__pycache__/
 
 
 test.cc
